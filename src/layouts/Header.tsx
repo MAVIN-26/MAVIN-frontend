@@ -2,25 +2,34 @@ import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import MavinLogo from '../components/MavinLogo'
 import LoginDropdown from '../components/LoginDropdown'
+import RegisterDropdown from '../components/RegisterDropdown'
 import UserDropdown from '../components/UserDropdown'
+import { useAuthStore } from '../store/authStore'
 
-// Temporary stub — will be replaced by real auth store in FE-1.2
-const useAuthStore = () => ({ isAuthenticated: false, user: null as null | { first_name: string; last_name: string } })
+type Panel = 'login' | 'register' | null
 
 export default function Header() {
   const { isAuthenticated, user } = useAuthStore()
-  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [panel, setPanel] = useState<Panel>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setDropdownOpen(false)
+        setPanel(null)
       }
     }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
   }, [])
+
+  const toggleAvatar = () => {
+    if (isAuthenticated) {
+      setPanel((v) => (v === 'login' ? null : 'login'))
+    } else {
+      setPanel((v) => (v ? null : 'login'))
+    }
+  }
 
   return (
     <header className="w-full border-b border-gray-200 bg-white sticky top-0 z-50">
@@ -70,22 +79,34 @@ export default function Header() {
           {/* Avatar / dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
-              onClick={() => setDropdownOpen((v) => !v)}
+              onClick={toggleAvatar}
               className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-white text-sm font-medium hover:bg-gray-700 transition-colors"
             >
               {isAuthenticated && user
                 ? user.first_name[0].toUpperCase()
-                : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                : (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                     <circle cx="12" cy="7" r="4" />
                   </svg>
+                )
               }
             </button>
 
-            {dropdownOpen && (
-              isAuthenticated && user
-                ? <UserDropdown user={user} onClose={() => setDropdownOpen(false)} />
-                : <LoginDropdown onClose={() => setDropdownOpen(false)} />
+            {panel && isAuthenticated && user && (
+              <UserDropdown user={user} onClose={() => setPanel(null)} />
+            )}
+            {panel === 'login' && !isAuthenticated && (
+              <LoginDropdown
+                onClose={() => setPanel(null)}
+                onSwitchToRegister={() => setPanel('register')}
+              />
+            )}
+            {panel === 'register' && !isAuthenticated && (
+              <RegisterDropdown
+                onClose={() => setPanel(null)}
+                onSwitchToLogin={() => setPanel('login')}
+              />
             )}
           </div>
         </div>
