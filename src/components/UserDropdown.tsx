@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useAuthStore } from '../store/authStore'
 
 interface Props {
   user: { first_name: string; last_name: string }
@@ -15,6 +16,7 @@ const menuItems = [
 ]
 
 export default function UserDropdown({ user, onClose }: Props) {
+  const logout = useAuthStore((s) => s.logout)
   return (
     <div className="absolute right-0 top-10 w-56 bg-white border border-gray-200 rounded-xl shadow-lg py-2 z-50">
       <div className="px-4 py-2 border-b border-gray-100">
@@ -34,7 +36,10 @@ export default function UserDropdown({ user, onClose }: Props) {
         ))}
         <li>
           <button
-            onClick={onClose}
+            onClick={async () => {
+              await logout()
+              onClose()
+            }}
             className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-50 transition-colors"
           >
             Выйти
