@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import RestaurantCard from '../components/RestaurantCard'
+import CategoryTabs from '../components/CategoryTabs'
 import { useRestaurants } from '../hooks/useRestaurants'
 
 export default function HomePage() {
@@ -22,6 +23,8 @@ export default function HomePage() {
   return (
     <section>
       <h1 className="text-2xl font-medium text-[#0C0310] mb-6">Рестораны</h1>
+
+      <CategoryTabs />
 
       {error && (
         <div className="mb-4 rounded-lg bg-red-50 text-red-700 text-sm px-4 py-3">
