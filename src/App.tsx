@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import MainLayout from './layouts/MainLayout'
+import AdminLayout from './layouts/AdminLayout'
 import ProtectedRoute from './components/ProtectedRoute'
 import RoleRoute from './components/RoleRoute'
 import { useAuthStore } from './store/authStore'
@@ -13,7 +14,11 @@ import PromoPage from './pages/PromoPage'
 import SubscriptionPage from './pages/SubscriptionPage'
 import ProfilePage from './pages/ProfilePage'
 import OwnerDashboard from './pages/owner/OwnerDashboard'
-import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminDashboardPage from './pages/admin/AdminDashboardPage'
+import AdminRestaurantsPage from './pages/admin/AdminRestaurantsPage'
+import AdminUsersPage from './pages/admin/AdminUsersPage'
+import AdminPromoPage from './pages/admin/AdminPromoPage'
+import AdminReferencesPage from './pages/admin/AdminReferencesPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 export default function App() {
@@ -28,6 +33,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Main (client) layout */}
         <Route element={<MainLayout />}>
           {/* Public */}
           <Route path="/" element={<HomePage />} />
@@ -49,15 +55,21 @@ export default function App() {
             </Route>
           </Route>
 
-          {/* Protected: site_admin only */}
-          <Route element={<ProtectedRoute />}>
-            <Route element={<RoleRoute roles={['site_admin']} />}>
-              <Route path="/admin/*" element={<AdminDashboard />} />
-            </Route>
-          </Route>
-
           {/* 404 */}
           <Route path="*" element={<NotFoundPage />} />
+        </Route>
+
+        {/* Site-admin layout — separate chrome (sidebar + minimal header) */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<RoleRoute roles={['site_admin']} />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboardPage />} />
+              <Route path="restaurants" element={<AdminRestaurantsPage />} />
+              <Route path="users" element={<AdminUsersPage />} />
+              <Route path="promo" element={<AdminPromoPage />} />
+              <Route path="references" element={<AdminReferencesPage />} />
+            </Route>
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
