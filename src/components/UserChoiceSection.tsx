@@ -1,22 +1,33 @@
+import { useEffect } from 'react'
 import { useUserChoice } from '../hooks/useMenu'
 import MenuItemCard from './MenuItemCard'
 import type { MenuItemPublic } from '../types/menuItem'
 
 interface Props {
   restaurantId: number
+  id?: string
   onItemClick?: (item: MenuItemPublic) => void
   onItemAdd?: (item: MenuItemPublic) => void
+  onEmptyChange?: (isEmpty: boolean) => void
 }
 
 export default function UserChoiceSection({
   restaurantId,
+  id,
   onItemClick,
   onItemAdd,
+  onEmptyChange,
 }: Props) {
   const { items, loading, error } = useUserChoice(restaurantId)
 
+  // Expose emptiness so parent can hide the nav chip for this section.
+  useEffect(() => {
+    if (loading || error) return
+    onEmptyChange?.(items.length === 0)
+  }, [loading, error, items.length, onEmptyChange])
+
   return (
-    <section className="flex flex-col gap-3">
+    <section id={id} className="flex flex-col gap-3 scroll-mt-24">
       <h2 className="text-lg font-semibold text-[#0C0310]">
         Выбор пользователей
       </h2>

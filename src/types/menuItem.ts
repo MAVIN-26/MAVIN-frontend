@@ -12,7 +12,7 @@ export interface MenuItemPublic {
   fats: number
   carbs: number
   weight_grams: number | null
-  menu_category_id: number | null
+  menu_category_id: number
   allergens: Allergen[]
 }
 

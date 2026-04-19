@@ -1,8 +1,18 @@
+import { useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useRestaurant } from '../hooks/useRestaurant'
 import { useFavoriteToggle } from '../hooks/useFavoriteToggle'
+import { useMenu } from '../hooks/useMenu'
+import { useMenuCategories } from '../hooks/useMenuCategories'
 import UserChoiceSection from '../components/UserChoiceSection'
+import MenuCategoriesNav, {
+  ALL_ID,
+  USER_CHOICE_ID,
+  categoryId,
+} from '../components/MenuCategoriesNav'
+import MenuCategorySection from '../components/MenuCategorySection'
 import type { RestaurantPublic } from '../types/restaurant'
+import type { MenuItemPublic } from '../types/menuItem'
 
 export default function RestaurantPage() {
   const { id } = useParams<{ id: string }>()
@@ -17,14 +27,85 @@ export default function RestaurantPage() {
           {error}
         </div>
       )}
-      {!loading && !error && data && (
+      {!loading && !error && data && <RestaurantContent restaurant={data} />}
+    </div>
+  )
+}
+
+function RestaurantContent({ restaurant }: { restaurant: RestaurantPublic }) {
+  const restaurantId = restaurant.id
+  const {
+    items: menu,
+    loading: menuLoading,
+    error: menuError,
+  } = useMenu(restaurantId)
+  const {
+    items: categories,
+    loading: categoriesLoading,
+    error: categoriesError,
+  } = useMenuCategories(restaurantId)
+
+  const [userChoiceEmpty, setUserChoiceEmpty] = useState(false)
+
+  // Group menu items by category in the same order categories come from API.
+  const itemsByCategory = useMemo(() => {
+    const map = new Map<number, MenuItemPublic[]>()
+    for (const cat of categories) map.set(cat.id, [])
+    for (const item of menu) {
+      const list = map.get(item.menu_category_id)
+      if (list) list.push(item)
+      // Items whose category is not in the list are skipped — by contract
+      // menu_category_id always references a category of this restaurant.
+    }
+    return map
+  }, [menu, categories])
+
+  return (
+    <>
+      <RestaurantHeader restaurant={restaurant} />
+
+      <MenuCategoriesNav
+        categories={categories}
+        hasUserChoice={!userChoiceEmpty}
+      />
+
+      {/* Anchor for the "Все" tab — whole menu area starts here. */}
+      <div id={ALL_ID} className="scroll-mt-24" />
+
+      <UserChoiceSection
+        restaurantId={restaurantId}
+        id={USER_CHOICE_ID}
+        onEmptyChange={setUserChoiceEmpty}
+      />
+
+      {menuLoading && <div className="text-sm text-[#8C8C8C]">Загрузка меню…</div>}
+      {menuError && (
+        <div className="text-sm text-red-600" role="alert">
+          {menuError}
+        </div>
+      )}
+      {categoriesError && (
+        <div className="text-sm text-red-600" role="alert">
+          {categoriesError}
+        </div>
+      )}
+
+      {!menuLoading && !categoriesLoading && (
         <>
-          <RestaurantHeader restaurant={data} />
-          <UserChoiceSection restaurantId={data.id} />
+          {categories.map((cat) => (
+            <MenuCategorySection
+              key={cat.id}
+              id={categoryId(cat.id)}
+              title={cat.name}
+              items={itemsByCategory.get(cat.id) ?? []}
+            />
+          ))}
+          {categories.length === 0 && menu.length === 0 && (
+            <div className="text-sm text-[#8C8C8C]">Меню пока пустое</div>
+          )}
         </>
       )}
-      {/* Следующие шаги: 2.2.4 табы+сетка, 2.2.5 фильтры, 2.2.6 модалка */}
-    </div>
+    </>
   )
 }
 
