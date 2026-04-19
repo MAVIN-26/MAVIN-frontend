@@ -3,11 +3,13 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
 import MyDataModal from '../components/MyDataModal'
 import MyAllergensModal from '../components/MyAllergensModal'
+import PasswordChangeModal from '../components/PasswordChangeModal'
 
 export default function ProfilePage() {
   const user = useAuthStore((s) => s.user)
   const [openMyData, setOpenMyData] = useState(false)
   const [openAllergens, setOpenAllergens] = useState(false)
+  const [openPassword, setOpenPassword] = useState(false)
 
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -101,10 +103,32 @@ export default function ProfilePage() {
         </div>
       </section>
 
+      <section className="bg-white border border-[#E5E5E5] rounded-2xl p-5">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-base font-semibold text-[#0C0310]">Пароль</h2>
+            <p className="mt-1 text-sm text-[#8C8C8C]">
+              Регулярно обновляйте пароль для безопасности аккаунта.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setOpenPassword(true)}
+            className="shrink-0 px-4 py-2 rounded-full border border-[#E5E5E5] text-sm text-[#0C0310] hover:bg-[#F0F0F0]"
+          >
+            Сменить пароль
+          </button>
+        </div>
+      </section>
+
       <MyDataModal open={openMyData} onClose={() => setOpenMyData(false)} />
       <MyAllergensModal
         open={openAllergens}
         onClose={() => setOpenAllergens(false)}
+      />
+      <PasswordChangeModal
+        open={openPassword}
+        onClose={() => setOpenPassword(false)}
       />
     </div>
   )
