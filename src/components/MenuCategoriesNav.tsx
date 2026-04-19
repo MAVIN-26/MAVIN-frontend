@@ -1,14 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
+import type { ReactNode } from 'react'
 import type { MenuCategory } from '../types/menuCategory'
 
 interface Props {
   categories: MenuCategory[]
   hasUserChoice: boolean
-  // chips that trigger filter panels — wired up in FE-2.2.5
   onOpenKbju?: () => void
   onOpenAllergens?: () => void
   kbjuActive?: boolean
   allergensActive?: boolean
+  // Slot for filter popovers rendered inside the right chip group so they
+  // position relative to the chips via `absolute top-full`.
+  kbjuSlot?: ReactNode
+  allergensSlot?: ReactNode
 }
 
 // Section DOM ids matching those rendered on RestaurantPage.
@@ -23,6 +27,8 @@ export default function MenuCategoriesNav({
   onOpenAllergens,
   kbjuActive = false,
   allergensActive = false,
+  kbjuSlot,
+  allergensSlot,
 }: Props) {
   const [activeId, setActiveId] = useState<string>(ALL_ID)
   const navRef = useRef<HTMLDivElement>(null)
@@ -86,12 +92,18 @@ export default function MenuCategoriesNav({
           )
         })}
         <div className="ml-auto flex gap-2 shrink-0">
-          <Chip label="КБЖУ" active={kbjuActive} onClick={onOpenKbju} />
-          <Chip
-            label="Аллергены"
-            active={allergensActive}
-            onClick={onOpenAllergens}
-          />
+          <div className="relative">
+            <Chip label="КБЖУ" active={kbjuActive} onClick={onOpenKbju} />
+            {kbjuSlot}
+          </div>
+          <div className="relative">
+            <Chip
+              label="Аллергены"
+              active={allergensActive}
+              onClick={onOpenAllergens}
+            />
+            {allergensSlot}
+          </div>
         </div>
       </div>
     </div>

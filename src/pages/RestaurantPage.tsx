@@ -4,6 +4,7 @@ import { useRestaurant } from '../hooks/useRestaurant'
 import { useFavoriteToggle } from '../hooks/useFavoriteToggle'
 import { useMenu } from '../hooks/useMenu'
 import { useMenuCategories } from '../hooks/useMenuCategories'
+import { useMenuFilters } from '../hooks/useMenuFilters'
 import UserChoiceSection from '../components/UserChoiceSection'
 import MenuCategoriesNav, {
   ALL_ID,
@@ -11,6 +12,8 @@ import MenuCategoriesNav, {
   categoryId,
 } from '../components/MenuCategoriesNav'
 import MenuCategorySection from '../components/MenuCategorySection'
+import KbjuFilter from '../components/KbjuFilter'
+import AllergensFilter from '../components/AllergensFilter'
 import type { RestaurantPublic } from '../types/restaurant'
 import type { MenuItemPublic } from '../types/menuItem'
 
@@ -35,10 +38,19 @@ export default function RestaurantPage() {
 function RestaurantContent({ restaurant }: { restaurant: RestaurantPublic }) {
   const restaurantId = restaurant.id
   const {
+    filters,
+    kbjuActive,
+    allergensActive,
+    excludeAllergenIds,
+    setKbju,
+    setExcludeAllergenIds,
+  } = useMenuFilters()
+
+  const {
     items: menu,
     loading: menuLoading,
     error: menuError,
-  } = useMenu(restaurantId)
+  } = useMenu(restaurantId, filters)
   const {
     items: categories,
     loading: categoriesLoading,
@@ -46,6 +58,7 @@ function RestaurantContent({ restaurant }: { restaurant: RestaurantPublic }) {
   } = useMenuCategories(restaurantId)
 
   const [userChoiceEmpty, setUserChoiceEmpty] = useState(false)
+  const [openFilter, setOpenFilter] = useState<'kbju' | 'allergens' | null>(null)
 
   // Group menu items by category in the same order categories come from API.
   const itemsByCategory = useMemo(() => {
@@ -67,6 +80,30 @@ function RestaurantContent({ restaurant }: { restaurant: RestaurantPublic }) {
       <MenuCategoriesNav
         categories={categories}
         hasUserChoice={!userChoiceEmpty}
+        kbjuActive={kbjuActive}
+        allergensActive={allergensActive}
+        onOpenKbju={() =>
+          setOpenFilter((f) => (f === 'kbju' ? null : 'kbju'))
+        }
+        onOpenAllergens={() =>
+          setOpenFilter((f) => (f === 'allergens' ? null : 'allergens'))
+        }
+        kbjuSlot={
+          <KbjuFilter
+            open={openFilter === 'kbju'}
+            initial={filters}
+            onClose={() => setOpenFilter(null)}
+            onApply={setKbju}
+          />
+        }
+        allergensSlot={
+          <AllergensFilter
+            open={openFilter === 'allergens'}
+            initialIds={excludeAllergenIds}
+            onClose={() => setOpenFilter(null)}
+            onApply={setExcludeAllergenIds}
+          />
+        }
       />
 
       {/* Anchor for the "Все" tab — whole menu area starts here. */}

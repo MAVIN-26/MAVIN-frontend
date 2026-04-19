@@ -20,6 +20,9 @@ export interface MenuItemPublic {
 export interface MenuQuery {
   max_calories?: number
   max_price?: number
+  max_proteins?: number
+  max_fats?: number
+  max_carbs?: number
   // Comma-separated list of allergen IDs to exclude (per swagger example "1,3")
   exclude_allergen_ids?: string
 }
