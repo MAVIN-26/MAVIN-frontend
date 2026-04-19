@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useRestaurant } from '../hooks/useRestaurant'
 import { useFavoriteToggle } from '../hooks/useFavoriteToggle'
+import UserChoiceSection from '../components/UserChoiceSection'
 import type { RestaurantPublic } from '../types/restaurant'
 
 export default function RestaurantPage() {
@@ -16,8 +17,13 @@ export default function RestaurantPage() {
           {error}
         </div>
       )}
-      {!loading && !error && data && <RestaurantHeader restaurant={data} />}
-      {/* Следующие шаги: 2.2.3 user-choice, 2.2.4 табы+сетка, 2.2.5 фильтры, 2.2.6 модалка */}
+      {!loading && !error && data && (
+        <>
+          <RestaurantHeader restaurant={data} />
+          <UserChoiceSection restaurantId={data.id} />
+        </>
+      )}
+      {/* Следующие шаги: 2.2.4 табы+сетка, 2.2.5 фильтры, 2.2.6 модалка */}
     </div>
   )
 }
