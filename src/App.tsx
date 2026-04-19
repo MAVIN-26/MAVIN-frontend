@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import MainLayout from './layouts/MainLayout'
 import AdminLayout from './layouts/AdminLayout'
+import OwnerLayout from './layouts/OwnerLayout'
 import ProtectedRoute from './components/ProtectedRoute'
 import RoleRoute from './components/RoleRoute'
 import { useAuthStore } from './store/authStore'
@@ -13,7 +14,9 @@ import FavoritesPage from './pages/FavoritesPage'
 import PromoPage from './pages/PromoPage'
 import SubscriptionPage from './pages/SubscriptionPage'
 import ProfilePage from './pages/ProfilePage'
-import OwnerDashboard from './pages/owner/OwnerDashboard'
+import OwnerOrdersPage from './pages/owner/OwnerOrdersPage'
+import OwnerMenuPage from './pages/owner/OwnerMenuPage'
+import OwnerRestaurantProfilePage from './pages/owner/OwnerRestaurantProfilePage'
 import AdminDashboardPage from './pages/admin/AdminDashboardPage'
 import AdminRestaurantsPage from './pages/admin/AdminRestaurantsPage'
 import AdminUsersPage from './pages/admin/AdminUsersPage'
@@ -48,15 +51,20 @@ export default function App() {
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
 
-          {/* Protected: restaurant_admin only */}
-          <Route element={<ProtectedRoute />}>
-            <Route element={<RoleRoute roles={['restaurant_admin']} />}>
-              <Route path="/owner/*" element={<OwnerDashboard />} />
-            </Route>
-          </Route>
-
           {/* 404 */}
           <Route path="*" element={<NotFoundPage />} />
+        </Route>
+
+        {/* Restaurant-admin layout — top tabs + minimal header */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<RoleRoute roles={['restaurant_admin']} />}>
+            <Route path="/owner" element={<OwnerLayout />}>
+              <Route index element={<Navigate to="/owner/menu" replace />} />
+              <Route path="orders" element={<OwnerOrdersPage />} />
+              <Route path="menu" element={<OwnerMenuPage />} />
+              <Route path="profile" element={<OwnerRestaurantProfilePage />} />
+            </Route>
+          </Route>
         </Route>
 
         {/* Site-admin layout — separate chrome (sidebar + minimal header) */}
