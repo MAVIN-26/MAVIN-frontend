@@ -1,3 +1,4 @@
+import { useAuthStore } from '../store/authStore'
 import type { MenuItemPublic } from '../types/menuItem'
 
 interface Props {
@@ -7,6 +8,8 @@ interface Props {
 }
 
 export default function MenuItemCard({ item, onClick, onAdd }: Props) {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
+  const canAdd = isAuthenticated && !!onAdd
   const { name, photo_url, price, weight_grams } = item
   const priceLabel = formatPrice(price)
 
@@ -29,11 +32,12 @@ export default function MenuItemCard({ item, onClick, onAdd }: Props) {
           type="button"
           onClick={(e) => {
             e.stopPropagation()
-            onAdd?.(item)
+            if (canAdd) onAdd?.(item)
           }}
-          disabled={!onAdd}
+          disabled={!canAdd}
           aria-label="Добавить в корзину"
-          className="absolute top-2 right-2 w-7 h-7 rounded-full bg-white text-[#0C0310] shadow-sm flex items-center justify-center hover:bg-[#FF7700] hover:text-white disabled:opacity-60 disabled:hover:bg-white disabled:hover:text-[#0C0310]"
+          title={!isAuthenticated ? 'Войдите, чтобы добавить' : undefined}
+          className="absolute top-2 right-2 w-7 h-7 rounded-full bg-white text-[#0C0310] shadow-sm flex items-center justify-center hover:bg-[#FF7700] hover:text-white disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-[#0C0310]"
         >
           <PlusIcon />
         </button>

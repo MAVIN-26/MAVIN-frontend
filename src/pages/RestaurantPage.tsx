@@ -14,6 +14,8 @@ import MenuCategoriesNav, {
 import MenuCategorySection from '../components/MenuCategorySection'
 import KbjuFilter from '../components/KbjuFilter'
 import AllergensFilter from '../components/AllergensFilter'
+import DishModal from '../components/DishModal'
+import { addToCart } from '../api/cart'
 import type { RestaurantPublic } from '../types/restaurant'
 import type { MenuItemPublic } from '../types/menuItem'
 
@@ -59,6 +61,18 @@ function RestaurantContent({ restaurant }: { restaurant: RestaurantPublic }) {
 
   const [userChoiceEmpty, setUserChoiceEmpty] = useState(false)
   const [openFilter, setOpenFilter] = useState<'kbju' | 'allergens' | null>(null)
+  const [selectedItem, setSelectedItem] = useState<MenuItemPublic | null>(null)
+
+  // Card "+" button: fire-and-forget add-one. 409 on card press is swallowed
+  // silently (user gets a clearer conflict UI in the modal path); if it ever
+  // matters we can surface a toast here.
+  const handleCardAdd = async (item: MenuItemPublic) => {
+    try {
+      await addToCart(item.id, 1)
+    } catch {
+      // intentionally ignored for card quick-add; modal has rich error UI
+    }
+  }
 
   // Group menu items by category in the same order categories come from API.
   const itemsByCategory = useMemo(() => {
@@ -113,6 +127,8 @@ function RestaurantContent({ restaurant }: { restaurant: RestaurantPublic }) {
         restaurantId={restaurantId}
         id={USER_CHOICE_ID}
         onEmptyChange={setUserChoiceEmpty}
+        onItemClick={setSelectedItem}
+        onItemAdd={handleCardAdd}
       />
 
       {menuLoading && <div className="text-sm text-[#8C8C8C]">Загрузка меню…</div>}
@@ -135,6 +151,8 @@ function RestaurantContent({ restaurant }: { restaurant: RestaurantPublic }) {
               id={categoryId(cat.id)}
               title={cat.name}
               items={itemsByCategory.get(cat.id) ?? []}
+              onItemClick={setSelectedItem}
+              onItemAdd={handleCardAdd}
             />
           ))}
           {categories.length === 0 && menu.length === 0 && (
@@ -142,6 +160,8 @@ function RestaurantContent({ restaurant }: { restaurant: RestaurantPublic }) {
           )}
         </>
       )}
+
+      <DishModal item={selectedItem} onClose={() => setSelectedItem(null)} />
     </>
   )
 }
