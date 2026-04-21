@@ -22,7 +22,12 @@ export default function HomePage() {
 
   return (
     <section>
-      <h1 className="text-2xl font-medium text-[#0C0310] mb-6">Рестораны</h1>
+      <h1
+        className="text-2xl text-[#0C0310] mb-6"
+        style={{ fontFamily: "'Hachi Maru Pop', cursive" }}
+      >
+        Рестораны
+      </h1>
 
       <CategoryTabs />
 

@@ -16,9 +16,9 @@ export default function CategoryTabs() {
   }
 
   const chipBase =
-    'shrink-0 h-10 px-4 rounded-full text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF7700]/60'
-  const chipActive = 'bg-[#FF7700] text-white'
-  const chipIdle = 'bg-white text-[#3C3C3C] hover:text-[#0C0310]'
+    'shrink-0 h-[43px] px-4 rounded-[10px] text-sm text-black transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF7700]/60'
+  const chipActive = 'bg-[#FF7700]'
+  const chipIdle = 'bg-[#EBEBEB] hover:bg-[#E0E0E0]'
 
   if (error) {
     return (
@@ -34,6 +34,7 @@ export default function CategoryTabs() {
         type="button"
         onClick={() => setCategory(null)}
         className={`${chipBase} ${current === null ? chipActive : chipIdle}`}
+        style={{ fontFamily: "'Balsamiq Sans', sans-serif" }}
       >
         Все
       </button>
@@ -42,7 +43,7 @@ export default function CategoryTabs() {
         ? Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="shrink-0 h-10 w-24 rounded-full bg-[#EBEBEB] animate-pulse"
+              className="shrink-0 h-[43px] w-20 rounded-[10px] bg-[#EBEBEB] animate-pulse"
             />
           ))
         : items.map((c) => (
@@ -51,6 +52,7 @@ export default function CategoryTabs() {
               type="button"
               onClick={() => setCategory(c.id)}
               className={`${chipBase} ${current === c.id ? chipActive : chipIdle}`}
+              style={{ fontFamily: "'Balsamiq Sans', sans-serif" }}
             >
               {c.name}
             </button>
