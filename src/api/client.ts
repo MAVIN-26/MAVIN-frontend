@@ -14,7 +14,7 @@ client.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 
 // Endpoints where 401 is a legitimate domain error (not an expired session),
 // so we must not treat it as "logged out".
-const AUTH_401_EXEMPT = ['/profile/password']
+const AUTH_401_EXEMPT = ['/profile/password', '/auth/login', '/auth/register']
 
 client.interceptors.response.use(
   (response: AxiosResponse) => response,
