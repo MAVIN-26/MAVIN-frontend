@@ -6,40 +6,92 @@ interface Props {
   onClose: () => void
 }
 
-// Menu layout matches design/client/png/Profile.png:
-// header (name + "В профиле") → 4 nav items → Выйти.
-// "Аллергены" opens a modal on the profile page via ?modal=allergens.
-const menuItems: { label: string; to: string }[] = [
-  { label: 'Заказы', to: '/orders' },
-  { label: 'Сохранённые рестораны', to: '/favorites' },
-  { label: 'Промокоды', to: '/promo' },
-  { label: 'Аллергены', to: '/profile?modal=allergens' },
+const balsamiq = { fontFamily: "'Balsamiq Sans', cursive" } as const
+
+function IconOrders() {
+  return (
+    <svg width="18" height="14" viewBox="0 0 21 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path d="M1.59534 12.8001C2.45586 12.8112 3.15 13.5233 3.15 14.4C3.15 15.2835 2.44489 16 1.575 16C0.711893 16 0.011016 15.2947 0.000123047 14.4207L0 14.4L0.000123047 14.3793C0.0110211 13.5053 0.711896 12.8 1.575 12.8L1.59534 12.8001ZM19.9501 13.3349C20.53 13.335 21 13.8126 21 14.4017C21 14.9908 20.5298 15.4683 19.9499 15.4683L6.29994 15.4674C5.72005 15.4674 5.24995 14.9898 5.24998 14.4007C5.25003 13.8116 5.72017 13.334 6.30007 13.3341L19.9501 13.3349ZM1.59534 6.40013C2.45586 6.41119 3.15 7.12334 3.15 8C3.15 8.88355 2.44489 9.59999 1.575 9.6C0.711893 9.6 0.011016 8.89469 0.000123047 8.02066L0 8L0.000123047 7.97931C0.0110211 7.10528 0.711896 6.4 1.575 6.4L1.59534 6.40013ZM19.9501 6.93494C20.53 6.93497 21 7.41255 21 8.00166C21 8.59076 20.5298 9.06828 19.9499 9.06825L6.29994 9.06741C5.72004 9.06737 5.24995 8.58976 5.24998 8.00066C5.25003 7.41156 5.72017 6.93403 6.30007 6.93406L19.9501 6.93494ZM1.59534 0.000125C2.45581 0.0111903 3.15 0.723246 3.15 1.6C3.15 2.48364 2.44484 3.19999 1.575 3.2C0.711946 3.2 0.0110155 2.49478 0.000123047 1.62066L0 1.6L0.000123047 1.57931C0.0110209 0.705189 0.71195 0 1.575 0L1.59534 0.000125ZM19.9501 0.534813C20.53 0.534847 21 1.01243 21 1.60153C21 2.19063 20.5298 2.66816 19.9499 2.66813L6.29994 2.66738C5.72005 2.66734 5.24996 2.18975 5.24998 1.60066C5.25002 1.01155 5.72017 0.533999 6.30007 0.534031L19.9501 0.534813Z" fill="currentColor"/>
+    </svg>
+  )
+}
+
+function IconFavorites() {
+  return (
+    <svg width="14" height="18" viewBox="0 0 17 23" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path fillRule="evenodd" clipRule="evenodd" d="M0 1.22634L1.21429 0H15.7857L17 1.22634V23L8.5 17.913L0 23V1.22634ZM2.42857 2.45269V18.6957L8.5 15.062L14.5714 18.6957V2.45269H2.42857Z" fill="currentColor"/>
+    </svg>
+  )
+}
+
+function IconPromo() {
+  return (
+    <svg width="20" height="15" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path d="M23.9895 0V18H0V10.9948H0.99999C1.52903 10.9948 2.03641 10.7846 2.4105 10.4105C2.78459 10.0364 2.99475 9.52904 2.99475 9C2.99475 8.47096 2.78459 7.96358 2.4105 7.58949C2.03641 7.21539 1.52903 7.00524 0.99999 7.00524H0V0H23.9895ZM4.99476 9C4.99476 10.0595 4.57386 11.0755 3.8247 11.8247C3.31615 12.3333 2.6846 12.6905 1.99998 12.8675V16H21.9895V1.99998H1.99998V5.13247C2.6846 5.30951 3.31615 5.66672 3.8247 6.17526C4.57386 6.92442 4.99476 7.94052 4.99476 9Z" fill="currentColor"/>
+      <path d="M9.9961 4V5.99998H7.99609V4H9.9961Z" fill="currentColor"/>
+      <path d="M9.9961 8V9.99998H7.99609V8H9.9961Z" fill="currentColor"/>
+      <path d="M9.9961 12V14H7.99609V12H9.9961Z" fill="currentColor"/>
+    </svg>
+  )
+}
+
+function IconAllergens() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path d="M24.2667 11.2581C23.4608 11.2581 22.7836 11.7913 22.5904 12.5496H20.7873C20.687 10.7079 19.9562 9.07425 18.81 7.79426L20.0875 6.52102C20.3514 6.67718 20.6522 6.76437 20.9669 6.76437C21.4298 6.76437 21.8651 6.58516 22.1924 6.25782C22.5199 5.93039 22.7002 5.4957 22.7002 5.03273C22.7002 4.56965 22.5199 4.13476 22.1925 3.80743C21.8651 3.47989 21.4298 3.29982 20.9669 3.29982C20.5038 3.29982 20.0685 3.48009 19.7413 3.80743C19.4138 4.13486 19.2335 4.57021 19.2335 5.03328C19.2335 5.34793 19.3186 5.6488 19.4748 5.91266L18.2037 7.19002C16.9236 6.04383 15.2879 5.31314 13.4462 5.2127V3.40966C14.2046 3.21648 14.7398 2.53916 14.7398 1.73332C14.7397 0.777613 13.9589 0 13.0032 0C12.0475 0 11.2747 0.777613 11.2747 1.73332C11.2747 2.53916 11.8212 3.21643 12.5796 3.40966V5.2127C10.7379 5.31309 9.08941 6.04383 7.80936 7.19002L6.5287 5.91266C6.68481 5.6488 6.76834 5.34793 6.76834 5.03328C6.76834 4.57021 6.5872 4.13496 6.25987 3.80768C5.93248 3.48024 5.49678 3.29997 5.0338 3.29997C4.57078 3.29997 4.13533 3.48024 3.80794 3.80768C3.48055 4.13502 3.30013 4.57026 3.30013 5.03328C3.30013 5.49626 3.4804 5.93145 3.80774 6.25879C4.13518 6.58623 4.57042 6.7665 5.03335 6.7665C5.34799 6.7665 5.64887 6.68144 5.91273 6.52539L7.19018 7.79431C6.0439 9.0743 5.31315 10.708 5.21271 12.5497H3.40966C3.21644 11.7914 2.53922 11.2582 1.73332 11.2582C0.777615 11.2581 0 12.04 0 12.9958C0 13.9515 0.777615 14.7227 1.73332 14.7227C2.53922 14.7227 3.21639 14.1746 3.40966 13.4163H5.21266C5.3131 15.258 6.04384 16.9086 7.19003 18.1887L5.91268 19.4703C5.64882 19.3142 5.34794 19.2313 5.0333 19.2313C4.57032 19.2313 4.13502 19.4127 3.80769 19.7401C3.4803 20.0674 3.29998 20.5032 3.29998 20.9663C3.29998 21.4292 3.48025 21.8649 3.80769 22.1922C4.14559 22.53 4.58947 22.6992 5.0333 22.6992C5.47712 22.6992 5.92105 22.5302 6.25895 22.1923C6.58634 21.865 6.76667 21.4297 6.76667 20.9668C6.76667 20.6521 6.68156 20.3513 6.52551 20.0874L7.80921 18.8101C9.08925 19.9563 10.7378 20.687 12.5795 20.7874V22.5904C11.8212 22.7836 11.2731 23.4609 11.2731 24.2667C11.2731 25.2224 12.0475 26 13.0032 26C13.959 26 14.7414 25.2224 14.7414 24.2667C14.7414 23.4608 14.2045 22.7836 13.4462 22.5904V20.7873C15.2879 20.6869 16.9236 19.9562 18.2036 18.8099L19.4778 20.0873C19.3218 20.3512 19.2351 20.6521 19.2351 20.9667C19.2351 21.4297 19.4146 21.865 19.742 22.1923C20.0799 22.5302 20.5233 22.6992 20.9672 22.6992C21.4111 22.6992 21.8548 22.5302 22.1927 22.1923C22.5201 21.865 22.7003 21.4296 22.7003 20.9667C22.7003 20.5036 22.5199 20.0684 22.1925 19.7411C21.8651 19.4137 21.4298 19.2334 20.9669 19.2334C20.6523 19.2334 20.3514 19.3185 20.0875 19.4745L18.8101 18.1887C19.9563 16.9086 20.687 15.258 20.7873 13.4163H22.5904C22.7836 14.1746 23.4608 14.7248 24.2667 14.7248C25.2224 14.7248 26 13.9472 26 12.9915C26.0001 12.0357 25.2225 11.2581 24.2667 11.2581ZM13 19.9333C9.177 19.9333 6.0667 16.8231 6.0667 13C6.0667 9.17693 9.177 6.06668 13 6.06668C16.823 6.06668 19.9334 9.17693 19.9334 13C19.9334 16.8231 16.8231 19.9333 13 19.9333Z" fill="currentColor"/>
+    </svg>
+  )
+}
+
+function IconLogout() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path d="M3 2h7a1 1 0 0 1 0 2H4v14h6a1 1 0 0 1 0 2H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" fill="currentColor"/>
+      <path d="M14.2765 6.32097c.5161-.47919 1.2931-.41441 1.7354.14472l3.6919 4.66671c.395.4993.395 1.236 0 1.7353l-3.6923 4.6667c-.4424.5591-1.2194.6239-1.7355.1447-.516-.4792-.5758-1.321-.1334-1.8801L16.0933 13.3333H7.23076c-.67973 0-1.23076-.5969-1.23076-1.3333 0-.7364.55103-1.3333 1.23076-1.3333h8.86274L14.1429 8.201c-.44233-.55913-.38252-1.400841.1336-1.88003Z" fill="currentColor"/>
+    </svg>
+  )
+}
+
+interface MenuItem {
+  label: string
+  to: string
+  icon: () => JSX.Element
+}
+
+const menuItems: MenuItem[] = [
+  { label: 'Заказы', to: '/orders', icon: IconOrders },
+  { label: 'Сохраненные рестораны', to: '/favorites', icon: IconFavorites },
+  { label: 'Промокоды', to: '/promo', icon: IconPromo },
+  { label: 'Аллергены', to: '/profile?modal=allergens', icon: IconAllergens },
 ]
 
 export default function UserDropdown({ user, onClose }: Props) {
   const logout = useAuthStore((s) => s.logout)
 
   return (
-    <div className="absolute right-0 top-12 w-64 bg-white border border-[#E5E5E5] rounded-xl shadow-lg py-2 z-50">
-      <Link
-        to="/profile"
-        onClick={onClose}
-        className="block px-4 py-3 border-b border-[#F0F0F0] hover:bg-[#FAFAFA]"
-      >
-        <div className="text-sm font-semibold text-[#0C0310] truncate">
+    <div
+      className="absolute right-0 top-[60px] w-[320px] bg-white rounded-[20px] shadow-[0_10px_30px_rgba(0,0,0,0.12)] pt-4 pb-5 px-5 z-50"
+      style={balsamiq}
+    >
+      <Link to="/profile" onClick={onClose} className="block text-center">
+        <div className="text-lg font-bold text-[#0C0310] truncate">
           {user.first_name} {user.last_name}
         </div>
-        <div className="text-xs text-[#FF7700] mt-0.5">В профиле</div>
+        <div className="text-sm text-[#9A9A9A] mt-0.5">В профиль</div>
       </Link>
-      <ul className="py-1">
-        {menuItems.map((item) => (
-          <li key={item.label}>
+
+      <ul className="mt-4 space-y-2.5">
+        {menuItems.map(({ label, to, icon: Icon }) => (
+          <li key={label}>
             <Link
-              to={item.to}
+              to={to}
               onClick={onClose}
-              className="block px-4 py-2 text-sm text-[#0C0310] hover:bg-[#FAFAFA] transition-colors"
+              className="flex items-center gap-3 text-sm text-[#0C0310] hover:opacity-70 transition-opacity"
             >
-              {item.label}
+              <span className="w-5 flex justify-center text-black">
+                <Icon />
+              </span>
+              <span>{label}</span>
             </Link>
           </li>
         ))}
@@ -49,12 +101,23 @@ export default function UserDropdown({ user, onClose }: Props) {
               await logout()
               onClose()
             }}
-            className="w-full text-left px-4 py-2 text-sm text-[#D94B4B] hover:bg-[#FAFAFA] transition-colors"
+            className="flex items-center gap-3 text-sm text-[#0C0310] hover:opacity-70 transition-opacity"
           >
-            Выйти
+            <span className="w-5 flex justify-center text-black">
+              <IconLogout />
+            </span>
+            <span>Выйти</span>
           </button>
         </li>
       </ul>
+
+      <button
+        type="button"
+        className="absolute bottom-3 right-3 w-[72px] h-[72px] rounded-full bg-[#E6752E] text-white font-bold text-[11px] leading-tight flex items-center justify-center text-center shadow-md hover:opacity-95 transition-opacity"
+        onClick={onClose}
+      >
+        Оформить<br />Студент+
+      </button>
     </div>
   )
 }

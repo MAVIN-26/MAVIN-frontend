@@ -32,7 +32,10 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 max-w-[720px]">
+    <div
+      className="flex flex-col gap-6 max-w-[720px]"
+      style={{ fontFamily: "'Balsamiq Sans', cursive" }}
+    >
       <h1 className="text-2xl font-semibold text-[#0C0310]">Профиль</h1>
 
       {/* «Студент+» placeholder — real subscription flow is in another phase. */}
