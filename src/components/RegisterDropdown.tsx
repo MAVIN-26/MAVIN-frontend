@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useAuthStore } from '../store/authStore'
+import { formatPhoneInput, normalizePhone } from '../utils/phone'
 
 const schema = z
   .object({
@@ -12,7 +13,9 @@ const schema = z
     phone: z
       .string()
       .min(1, 'Поле обязательно')
-      .regex(/^\+7\d{10}$/, 'Некорректный формат телефона (+7XXXXXXXXXX)'),
+      .refine((v) => /^\+7\d{10}$/.test(normalizePhone(v)), {
+        message: 'Некорректный формат телефона',
+      }),
     password: z.string().min(6, 'Пароль должен быть не менее 6 символов'),
     confirm_password: z.string().min(1, 'Поле обязательно'),
   })
@@ -34,8 +37,9 @@ export default function RegisterDropdown({ onClose }: Props) {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({ resolver: zodResolver(schema) })
+  } = useForm<FormData>({ resolver: zodResolver(schema), defaultValues: { phone: '' } })
 
   const onSubmit = async (data: FormData) => {
     setApiError('')
@@ -44,7 +48,7 @@ export default function RegisterDropdown({ onClose }: Props) {
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
-        phone: data.phone,
+        phone: normalizePhone(data.phone),
         password: data.password,
       })
       onClose()
@@ -90,7 +94,26 @@ export default function RegisterDropdown({ onClose }: Props) {
         {field('first_name', 'Имя')}
         {field('last_name', 'Фамилия')}
         {field('email', 'Эл. почта', 'email')}
-        {field('phone', 'Телефон', 'tel')}
+        <div>
+          <Controller
+            name="phone"
+            control={control}
+            render={({ field: f }) => (
+              <input
+                type="tel"
+                inputMode="tel"
+                placeholder="+7 (___) ___-__-__"
+                className={inputClass}
+                value={f.value}
+                onChange={(e) => f.onChange(formatPhoneInput(e.target.value))}
+                onBlur={f.onBlur}
+              />
+            )}
+          />
+          {errors.phone && (
+            <p className="text-xs text-red-500 mt-1 ml-4">{errors.phone.message}</p>
+          )}
+        </div>
         {field('password', 'Пароль', 'password')}
         {field('confirm_password', 'Подтверждение пароля', 'password')}
 
