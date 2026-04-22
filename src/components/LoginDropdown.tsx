@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -18,6 +19,7 @@ interface Props {
 
 export default function LoginDropdown({ onClose, onSwitchToRegister }: Props) {
   const login = useAuthStore((s) => s.login)
+  const navigate = useNavigate()
   const [apiError, setApiError] = useState('')
 
   const {
@@ -29,8 +31,13 @@ export default function LoginDropdown({ onClose, onSwitchToRegister }: Props) {
   const onSubmit = async (data: FormData) => {
     setApiError('')
     try {
-      await login(data)
+      const user = await login(data)
       onClose()
+      if (user.role === 'site_admin') {
+        navigate('/admin')
+      } else if (user.role === 'restaurant_admin') {
+        navigate('/owner')
+      }
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } }).response?.status
       if (status === 401) {

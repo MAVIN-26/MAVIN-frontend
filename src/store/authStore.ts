@@ -6,8 +6,8 @@ interface AuthState {
   token: string | null
   user: UserProfile | null
   isAuthenticated: boolean
-  login: (payload: LoginPayload) => Promise<void>
-  register: (payload: RegisterPayload) => Promise<void>
+  login: (payload: LoginPayload) => Promise<UserProfile>
+  register: (payload: RegisterPayload) => Promise<UserProfile>
   logout: () => Promise<void>
   fetchMe: () => Promise<void>
 }
@@ -21,12 +21,14 @@ const storeCreator: StateCreator<AuthState> = (set) => ({
     const data = await authApi.login(payload)
     localStorage.setItem('token', data.token)
     set({ token: data.token, user: data.user, isAuthenticated: true })
+    return data.user
   },
 
   register: async (payload) => {
     const data = await authApi.register(payload)
     localStorage.setItem('token', data.token)
     set({ token: data.token, user: data.user, isAuthenticated: true })
+    return data.user
   },
 
   logout: async () => {
