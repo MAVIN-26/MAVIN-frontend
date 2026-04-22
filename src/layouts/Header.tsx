@@ -122,7 +122,7 @@ export default function Header() {
                 fill="#000"
               />
             </svg>
-            <span>Геопозиция</span>
+            <span style={{ fontFamily: "'Balsamiq Sans', cursive" }}>Геопозиция</span>
           </button>
 
           {/* Notifications — icon only, no bg */}
