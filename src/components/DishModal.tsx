@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useAuthStore } from '../store/authStore'
-import { useAddToCart } from '../hooks/useAddToCart'
+import { useCartStore } from '../store/cartStore'
 import type { MenuItemPublic } from '../types/menuItem'
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 
 export default function DishModal({ item, onClose }: Props) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
-  const { status, add, clearAndRetry, reset } = useAddToCart()
+  const add = useCartStore((s) => s.add)
 
   // Close on Escape; lock body scroll while open.
   useEffect(() => {
@@ -26,11 +26,6 @@ export default function DishModal({ item, onClose }: Props) {
       document.body.style.overflow = prev
     }
   }, [item, onClose])
-
-  // Reset local status when the modal switches dishes or closes.
-  useEffect(() => {
-    reset()
-  }, [item, reset])
 
   if (!item) return null
 
@@ -103,18 +98,19 @@ export default function DishModal({ item, onClose }: Props) {
             </div>
             <button
               type="button"
-              disabled={!isAuthenticated || status.kind === 'pending'}
-              onClick={() => add(item.id, 1)}
+              disabled={!isAuthenticated}
+              onClick={() => {
+                add(item.id, 1)
+                onClose()
+              }}
               title={
                 !isAuthenticated ? 'Войдите, чтобы добавить' : undefined
               }
               className="px-5 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E66A00] disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {status.kind === 'pending' ? 'Добавляем…' : 'Добавить'}
+              Добавить
             </button>
           </div>
-
-          <StatusLine status={status} onClearAndRetry={clearAndRetry} />
 
           {description && (
             <div>
@@ -142,43 +138,6 @@ export default function DishModal({ item, onClose }: Props) {
       </div>
     </div>
   )
-}
-
-function StatusLine({
-  status,
-  onClearAndRetry,
-}: {
-  status: ReturnType<typeof useAddToCart>['status']
-  onClearAndRetry: () => void
-}) {
-  if (status.kind === 'ok') {
-    return <div className="text-sm text-[#2F8F2F]">Добавлено в корзину</div>
-  }
-  if (status.kind === 'error') {
-    return (
-      <div className="text-sm text-red-600" role="alert">
-        {status.message}
-      </div>
-    )
-  }
-  if (status.kind === 'conflict') {
-    return (
-      <div className="flex items-start gap-2 text-sm text-[#3C3C3C] bg-[#FFF6EC] rounded-lg p-2">
-        <span className="flex-1">
-          В корзине блюдо из другого ресторана. Очистить корзину и добавить
-          это?
-        </span>
-        <button
-          type="button"
-          onClick={onClearAndRetry}
-          className="shrink-0 px-3 py-1 rounded-full bg-[#FF7700] text-white text-xs hover:bg-[#E66A00]"
-        >
-          Очистить и добавить
-        </button>
-      </div>
-    )
-  }
-  return null
 }
 
 function Macro({

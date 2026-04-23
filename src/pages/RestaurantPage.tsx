@@ -15,7 +15,8 @@ import MenuCategorySection from '../components/MenuCategorySection'
 import KbjuFilter from '../components/KbjuFilter'
 import AllergensFilter from '../components/AllergensFilter'
 import DishModal from '../components/DishModal'
-import { addToCart } from '../api/cart'
+import CartSidebar from '../components/CartSidebar'
+import { useCartStore } from '../store/cartStore'
 import type { RestaurantPublic } from '../types/restaurant'
 import type { MenuItemPublic } from '../types/menuItem'
 
@@ -63,15 +64,9 @@ function RestaurantContent({ restaurant }: { restaurant: RestaurantPublic }) {
   const [openFilter, setOpenFilter] = useState<'kbju' | 'allergens' | null>(null)
   const [selectedItem, setSelectedItem] = useState<MenuItemPublic | null>(null)
 
-  // Card "+" button: fire-and-forget add-one. 409 on card press is swallowed
-  // silently (user gets a clearer conflict UI in the modal path); if it ever
-  // matters we can surface a toast here.
-  const handleCardAdd = async (item: MenuItemPublic) => {
-    try {
-      await addToCart(item.id, 1)
-    } catch {
-      // intentionally ignored for card quick-add; modal has rich error UI
-    }
+  const addToCart = useCartStore((s) => s.add)
+  const handleCardAdd = (item: MenuItemPublic) => {
+    addToCart(item.id, 1)
   }
 
   // Group menu items by category in the same order categories come from API.
@@ -88,7 +83,8 @@ function RestaurantContent({ restaurant }: { restaurant: RestaurantPublic }) {
   }, [menu, categories])
 
   return (
-    <>
+    <div className="flex gap-6 items-start">
+      <div className="flex-1 min-w-0 flex flex-col gap-6">
       <RestaurantHeader restaurant={restaurant} />
 
       <MenuCategoriesNav
@@ -162,7 +158,9 @@ function RestaurantContent({ restaurant }: { restaurant: RestaurantPublic }) {
       )}
 
       <DishModal item={selectedItem} onClose={() => setSelectedItem(null)} />
-    </>
+      </div>
+      <CartSidebar restaurantId={restaurantId} />
+    </div>
   )
 }
 
