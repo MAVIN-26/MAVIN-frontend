@@ -6,6 +6,7 @@ import OwnerLayout from './layouts/OwnerLayout'
 import ProtectedRoute from './components/ProtectedRoute'
 import RoleRoute from './components/RoleRoute'
 import { useAuthStore } from './store/authStore'
+import { useCartStore } from './store/cartStore'
 
 import HomePage from './pages/HomePage'
 import RestaurantPage from './pages/RestaurantPage'
@@ -25,13 +26,25 @@ import AdminReferencesPage from './pages/admin/AdminReferencesPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 export default function App() {
-  const { token, fetchMe } = useAuthStore()
+  const { token, user, fetchMe } = useAuthStore()
+  const fetchCart = useCartStore((s) => s.fetch)
+  const resetCart = useCartStore((s) => s.reset)
 
   useEffect(() => {
     if (token) {
       fetchMe()
     }
   }, [])
+
+  // Load cart once the user is known and only for customers (owner/admin
+  // don't have a cart). Reset on logout.
+  useEffect(() => {
+    if (user && user.role === 'customer') {
+      fetchCart()
+    } else {
+      resetCart()
+    }
+  }, [user, fetchCart, resetCart])
 
   return (
     <BrowserRouter>
