@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import axios from 'axios'
-import { addToCart, clearCart } from '../api/cart'
+import { addCartItem, clearCart } from '../api/cart'
 
 type Status =
   | { kind: 'idle' }
@@ -21,7 +21,7 @@ export function useAddToCart() {
   const add = useCallback(async (menuItemId: number, quantity = 1) => {
     setStatus({ kind: 'pending' })
     try {
-      await addToCart(menuItemId, quantity)
+      await addCartItem(menuItemId, quantity)
       setStatus({ kind: 'ok' })
     } catch (e: unknown) {
       if (axios.isAxiosError(e) && e.response?.status === 409) {
@@ -40,7 +40,7 @@ export function useAddToCart() {
     setStatus({ kind: 'pending' })
     try {
       await clearCart()
-      await addToCart(itemId, 1)
+      await addCartItem(itemId, 1)
       setStatus({ kind: 'ok' })
     } catch (e: unknown) {
       const message =

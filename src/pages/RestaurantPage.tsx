@@ -15,7 +15,7 @@ import MenuCategorySection from '../components/MenuCategorySection'
 import KbjuFilter from '../components/KbjuFilter'
 import AllergensFilter from '../components/AllergensFilter'
 import DishModal from '../components/DishModal'
-import { addToCart } from '../api/cart'
+import { addCartItem } from '../api/cart'
 import type { RestaurantPublic } from '../types/restaurant'
 import type { MenuItemPublic } from '../types/menuItem'
 
@@ -68,7 +68,7 @@ function RestaurantContent({ restaurant }: { restaurant: RestaurantPublic }) {
   // matters we can surface a toast here.
   const handleCardAdd = async (item: MenuItemPublic) => {
     try {
-      await addToCart(item.id, 1)
+      await addCartItem(item.id, 1)
     } catch {
       // intentionally ignored for card quick-add; modal has rich error UI
     }
