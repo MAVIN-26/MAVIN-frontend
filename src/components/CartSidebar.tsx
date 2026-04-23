@@ -1,6 +1,14 @@
+import { useNavigate } from 'react-router-dom'
 import { useCartStore } from '../store/cartStore'
 import { useAuthStore } from '../store/authStore'
 import type { CartItem } from '../types/cart'
+
+const PICKUP_OPTIONS = [
+  { value: 30, label: 'Через 30 мин' },
+  { value: 60, label: 'Через 1 час' },
+  { value: 90, label: 'Через 1,5 часа' },
+  { value: 120, label: 'Через 2 часа' },
+]
 
 const formatPrice = (rub: number) =>
   rub.toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + ' ₽'
@@ -14,12 +22,15 @@ export default function CartSidebar({
 }: {
   restaurantId: number
 }) {
+  const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
   const cart = useCartStore((s) => s.cart)
   const loading = useCartStore((s) => s.loading)
   const updateQuantity = useCartStore((s) => s.updateQuantity)
   const remove = useCartStore((s) => s.remove)
   const clear = useCartStore((s) => s.clear)
+  const pickupOffsetMinutes = useCartStore((s) => s.pickupOffsetMinutes)
+  const setPickupOffset = useCartStore((s) => s.setPickupOffset)
 
   if (!user || user.role !== 'customer') return null
 
@@ -110,8 +121,24 @@ export default function CartSidebar({
             </span>
           </div>
 
+          <label className="flex flex-col gap-1 text-xs text-[#8C8C8C]">
+            Время самовывоза
+            <select
+              value={pickupOffsetMinutes}
+              onChange={(e) => setPickupOffset(Number(e.target.value))}
+              className="h-10 rounded-xl border border-[#E5E5E5] bg-white px-3 text-sm text-[#0C0310] focus:outline-none focus:border-[#FF7700]"
+            >
+              {PICKUP_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </label>
+
           <button
             type="button"
+            onClick={() => navigate('/checkout')}
             className="w-full h-11 rounded-xl bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56B00]"
           >
             Далее

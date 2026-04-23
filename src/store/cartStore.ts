@@ -21,6 +21,9 @@ interface CartState {
   // Set when POST /cart/items returns 409 (item belongs to another restaurant).
   // UI shows a confirmation modal; resolveConflict() clears cart and re-adds.
   conflict: PendingAdd | null
+  // How many minutes from now the user wants to pick up the order. Default
+  // 30 min; read by the checkout page when building pickup_time for POST /orders.
+  pickupOffsetMinutes: number
 
   fetch: () => Promise<void>
   add: (menu_item_id: number, quantity?: number) => Promise<void>
@@ -29,6 +32,7 @@ interface CartState {
   clear: () => Promise<void>
   resolveConflict: () => Promise<void>
   dismissConflict: () => void
+  setPickupOffset: (minutes: number) => void
   reset: () => void
 }
 
@@ -45,6 +49,7 @@ const storeCreator: StateCreator<CartState> = (set, get) => ({
   loading: false,
   error: null,
   conflict: null,
+  pickupOffsetMinutes: 30,
 
   fetch: async () => {
     set({ loading: true, error: null })
@@ -120,7 +125,16 @@ const storeCreator: StateCreator<CartState> = (set, get) => ({
 
   dismissConflict: () => set({ conflict: null }),
 
-  reset: () => set({ cart: null, loading: false, error: null, conflict: null }),
+  setPickupOffset: (minutes) => set({ pickupOffsetMinutes: minutes }),
+
+  reset: () =>
+    set({
+      cart: null,
+      loading: false,
+      error: null,
+      conflict: null,
+      pickupOffsetMinutes: 30,
+    }),
 })
 
 export const useCartStore = create<CartState>(storeCreator)
