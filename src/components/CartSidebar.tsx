@@ -17,6 +17,9 @@ export default function CartSidebar({
   const user = useAuthStore((s) => s.user)
   const cart = useCartStore((s) => s.cart)
   const loading = useCartStore((s) => s.loading)
+  const updateQuantity = useCartStore((s) => s.updateQuantity)
+  const remove = useCartStore((s) => s.remove)
+  const clear = useCartStore((s) => s.clear)
 
   if (!user || user.role !== 'customer') return null
 
@@ -35,6 +38,7 @@ export default function CartSidebar({
         {!isEmpty && (
           <button
             type="button"
+            onClick={() => clear()}
             className="text-xs text-[#8C8C8C] hover:text-[#0C0310]"
           >
             Очистить
@@ -66,8 +70,34 @@ export default function CartSidebar({
                     {formatPrice(it.price)}
                   </div>
                 </div>
-                <div className="text-sm text-[#0C0310] tabular-nums">
-                  × {it.quantity}
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    aria-label={
+                      it.quantity === 1 ? 'Убрать блюдо' : 'Уменьшить количество'
+                    }
+                    onClick={() =>
+                      it.quantity === 1
+                        ? remove(it.menu_item_id)
+                        : updateQuantity(it.menu_item_id, it.quantity - 1)
+                    }
+                    className="w-7 h-7 rounded-lg bg-white border border-[#E5E5E5] text-[#0C0310] hover:bg-[#F0F0F0]"
+                  >
+                    −
+                  </button>
+                  <span className="text-sm text-[#0C0310] tabular-nums w-4 text-center">
+                    {it.quantity}
+                  </span>
+                  <button
+                    type="button"
+                    aria-label="Увеличить количество"
+                    onClick={() =>
+                      updateQuantity(it.menu_item_id, it.quantity + 1)
+                    }
+                    className="w-7 h-7 rounded-lg bg-white border border-[#E5E5E5] text-[#0C0310] hover:bg-[#F0F0F0]"
+                  >
+                    +
+                  </button>
                 </div>
               </li>
             ))}
