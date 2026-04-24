@@ -20,6 +20,7 @@ import PromoPage from './pages/PromoPage'
 import SubscriptionPage from './pages/SubscriptionPage'
 import ProfilePage from './pages/ProfilePage'
 import OwnerOrdersPage from './pages/owner/OwnerOrdersPage'
+import OwnerOrdersHistoryPage from './pages/owner/OwnerOrdersHistoryPage'
 import OwnerMenuPage from './pages/owner/OwnerMenuPage'
 import OwnerRestaurantProfilePage from './pages/owner/OwnerRestaurantProfilePage'
 import AdminDashboardPage from './pages/admin/AdminDashboardPage'
@@ -108,6 +109,7 @@ export default function App() {
             <Route path="/owner" element={<OwnerLayout />}>
               <Route index element={<Navigate to="/owner/menu" replace />} />
               <Route path="orders" element={<OwnerOrdersPage />} />
+              <Route path="orders/history" element={<OwnerOrdersHistoryPage />} />
               <Route path="menu" element={<OwnerMenuPage />} />
               <Route path="profile" element={<OwnerRestaurantProfilePage />} />
             </Route>
