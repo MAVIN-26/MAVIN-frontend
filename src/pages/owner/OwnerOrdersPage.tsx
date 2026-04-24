@@ -2,6 +2,11 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getOwnerOrders } from '../../api/ownerOrders'
 import OwnerOrderCard from '../../components/owner/OwnerOrderCard'
+import {
+  ownerOrderEventsClient,
+  playNewOrderBeep,
+} from '../../services/ownerWebsocket'
+import { toast } from '../../store/toastStore'
 import type {
   OwnerActiveStatus,
   OwnerOrderListItem,
@@ -73,6 +78,19 @@ export default function OwnerOrdersPage() {
 
   useEffect(() => {
     COLUMNS.forEach((c) => loadColumn(c.status))
+  }, [loadColumn])
+
+  // WS: новые заказы и смены статуса с других устройств админки.
+  useEffect(() => {
+    return ownerOrderEventsClient.subscribe((event) => {
+      if (event.event === 'new_order') {
+        loadColumn('created')
+        playNewOrderBeep()
+        toast.success(`Новый заказ #${event.data.order_id}`)
+      } else if (event.event === 'order_status_changed') {
+        COLUMNS.forEach((c) => loadColumn(c.status))
+      }
+    })
   }, [loadColumn])
 
   const handleTransitioned = useCallback(
