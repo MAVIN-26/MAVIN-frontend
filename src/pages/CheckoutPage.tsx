@@ -7,7 +7,10 @@ import { useRestaurant } from '../hooks/useRestaurant'
 import PaymentMethodModal, {
   type PaymentMethod,
 } from '../components/PaymentMethodModal'
+import Modal from '../components/Modal'
 import { validatePromo } from '../api/promo'
+import { createOrder } from '../api/orders'
+import { toast } from '../store/toastStore'
 import type { CartItem } from '../types/cart'
 import type { PromoCode } from '../types/promo'
 
@@ -27,6 +30,8 @@ export default function CheckoutPage() {
   const clear = useCartStore((s) => s.clear)
   const updateQuantity = useCartStore((s) => s.updateQuantity)
   const remove = useCartStore((s) => s.remove)
+  const pickupOffsetMinutes = useCartStore((s) => s.pickupOffsetMinutes)
+  const fetchCart = useCartStore((s) => s.fetch)
 
   const restaurantId = cart?.restaurant_id ?? null
   const { data: restaurant } = useRestaurant(restaurantId)
@@ -37,6 +42,51 @@ export default function CheckoutPage() {
   const [comment, setComment] = useState('')
   const [cutlery, setCutlery] = useState(false)
   const [promo, setPromo] = useState<PromoCode | null>(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [unavailableOpen, setUnavailableOpen] = useState(false)
+
+  const handlePay = async () => {
+    if (submitting) return
+    const finalComment = [cutlery ? 'Положите приборы.' : '', comment.trim()]
+      .filter(Boolean)
+      .join(' ')
+      .trim()
+    const pickupTime = new Date(
+      Date.now() + pickupOffsetMinutes * 60_000,
+    ).toISOString()
+
+    setSubmitting(true)
+    try {
+      const order = await createOrder({
+        pickup_time: pickupTime,
+        comment: finalComment || undefined,
+        payment_method: paymentMethod,
+        promo_code: promo?.code,
+      })
+      // Backend очищает корзину после оформления — синхронизируем локальный стор.
+      await fetchCart()
+      toast.success('Заказ оформлен')
+      navigate(`/orders?order=${order.id}`)
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        if (e.response?.status === 409) {
+          // Блюдо закончилось — показать модалку, освежить корзину.
+          setUnavailableOpen(true)
+          fetchCart()
+        } else if (e.response?.status === 404) {
+          // Промокод не найден/истёк — снять и предупредить.
+          setPromo(null)
+          toast.error('Промокод не найден или истёк')
+        } else {
+          toast.error('Не удалось оформить заказ')
+        }
+      } else {
+        toast.error('Не удалось оформить заказ')
+      }
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   // Customers only — owners/admins shouldn't reach checkout
   if (user && user.role !== 'customer') return <Navigate to="/" replace />
@@ -87,10 +137,8 @@ export default function CheckoutPage() {
             promo={promo}
             onApplyPromo={setPromo}
             onClearPromo={() => setPromo(null)}
-            onPay={() => {
-              // TODO FE-3.2.5
-              navigate('/orders')
-            }}
+            onPay={handlePay}
+            submitting={submitting}
           />
         </div>
       </div>
@@ -101,6 +149,27 @@ export default function CheckoutPage() {
         onClose={() => setPaymentOpen(false)}
         onSelect={setPaymentMethod}
       />
+
+      <Modal
+        open={unavailableOpen}
+        title="Блюдо закончилось"
+        onClose={() => setUnavailableOpen(false)}
+        maxWidth="sm"
+      >
+        <p className="text-sm text-[#3C3C3C]">
+          К сожалению, одно из блюд из вашей корзины больше недоступно.
+          Корзина обновлена — пожалуйста, проверьте состав заказа.
+        </p>
+        <div className="flex justify-end pt-5">
+          <button
+            type="button"
+            onClick={() => setUnavailableOpen(false)}
+            className="px-5 py-2 rounded-full bg-[#FF7700] hover:bg-[#E66A00] text-white text-sm font-medium"
+          >
+            Понятно
+          </button>
+        </div>
+      </Modal>
     </div>
   )
 }
@@ -283,6 +352,7 @@ function PaymentAndTotalCard({
   onApplyPromo,
   onClearPromo,
   onPay,
+  submitting,
 }: {
   subtotal: number
   isPremium: boolean
@@ -292,6 +362,7 @@ function PaymentAndTotalCard({
   onApplyPromo: (p: PromoCode) => void
   onClearPromo: () => void
   onPay: () => void
+  submitting: boolean
 }) {
   const pm = PAYMENT_LABEL[paymentMethod]
 
@@ -358,9 +429,10 @@ function PaymentAndTotalCard({
         <button
           type="button"
           onClick={onPay}
-          className="flex-1 h-11 rounded-xl bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56B00]"
+          disabled={submitting}
+          className="flex-1 h-11 rounded-xl bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56B00] disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Оплатить
+          {submitting ? 'Оформляем…' : 'Оплатить'}
         </button>
         <span className="text-base font-semibold text-[#0C0310] tabular-nums">
           {formatPrice(total)}
