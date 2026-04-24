@@ -8,6 +8,7 @@ import RoleRoute from './components/RoleRoute'
 import { useAuthStore } from './store/authStore'
 import { useCartStore } from './store/cartStore'
 import { useNotificationStore } from './store/notificationStore'
+import { toast } from './store/toastStore'
 import { orderEventsClient } from './services/websocket'
 
 import HomePage from './pages/HomePage'
@@ -64,7 +65,7 @@ export default function App() {
     }
   }, [token, user, resetNotifications])
 
-  // Funnel WS events into the notifications store.
+  // Funnel WS events into the notifications store + transient toast.
   useEffect(() => {
     return orderEventsClient.subscribe((event) => {
       if (event.event === 'order_status_changed') {
@@ -73,6 +74,7 @@ export default function App() {
           new_status: event.data.new_status,
           message: event.data.message,
         })
+        toast.success(event.data.message)
       }
     })
   }, [addNotification])
