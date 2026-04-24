@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import RoleRoute from './components/RoleRoute'
 import { useAuthStore } from './store/authStore'
 import { useCartStore } from './store/cartStore'
+import { useNotificationStore } from './store/notificationStore'
 import { orderEventsClient } from './services/websocket'
 
 import HomePage from './pages/HomePage'
@@ -31,6 +32,8 @@ export default function App() {
   const { token, user, fetchMe } = useAuthStore()
   const fetchCart = useCartStore((s) => s.fetch)
   const resetCart = useCartStore((s) => s.reset)
+  const addNotification = useNotificationStore((s) => s.add)
+  const resetNotifications = useNotificationStore((s) => s.reset)
 
   useEffect(() => {
     if (token) {
@@ -54,11 +57,25 @@ export default function App() {
       orderEventsClient.connect(token)
     } else {
       orderEventsClient.disconnect()
+      resetNotifications()
     }
     return () => {
       orderEventsClient.disconnect()
     }
-  }, [token, user])
+  }, [token, user, resetNotifications])
+
+  // Funnel WS events into the notifications store.
+  useEffect(() => {
+    return orderEventsClient.subscribe((event) => {
+      if (event.event === 'order_status_changed') {
+        addNotification({
+          order_id: event.data.order_id,
+          new_status: event.data.new_status,
+          message: event.data.message,
+        })
+      }
+    })
+  }, [addNotification])
 
   return (
     <BrowserRouter>
