@@ -1,10 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getOwnerOrders } from '../../api/ownerOrders'
+import OwnerOrderCard from '../../components/owner/OwnerOrderCard'
 import type {
   OwnerActiveStatus,
   OwnerOrderListItem,
 } from '../../types/order'
+
+const NEXT_STATUS: Record<OwnerActiveStatus, OwnerActiveStatus | null> = {
+  created: 'cooking',
+  cooking: 'ready_for_pickup',
+  ready_for_pickup: null,
+}
 
 interface ColumnConfig {
   status: OwnerActiveStatus
@@ -21,14 +28,6 @@ const COLUMNS: ColumnConfig[] = [
     hint: 'Передано клиенту',
   },
 ]
-
-const formatTime = (iso: string) => {
-  const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return ''
-  const hh = String(d.getHours()).padStart(2, '0')
-  const mi = String(d.getMinutes()).padStart(2, '0')
-  return `${hh}:${mi}`
-}
 
 interface ColumnState {
   loading: boolean
@@ -76,6 +75,16 @@ export default function OwnerOrdersPage() {
     COLUMNS.forEach((c) => loadColumn(c.status))
   }, [loadColumn])
 
+  const handleTransitioned = useCallback(
+    (_orderId: number, fromStatus: OwnerActiveStatus) => {
+      // Refresh source and destination columns; backend is the source of truth.
+      loadColumn(fromStatus)
+      const next = NEXT_STATUS[fromStatus]
+      if (next) loadColumn(next)
+    },
+    [loadColumn],
+  )
+
   return (
     <div className="flex flex-col gap-6">
       <header className="flex items-center justify-between">
@@ -94,6 +103,7 @@ export default function OwnerOrdersPage() {
             key={col.status}
             config={col}
             state={columns[col.status]}
+            onTransitioned={handleTransitioned}
           />
         ))}
       </div>
@@ -104,9 +114,11 @@ export default function OwnerOrdersPage() {
 function KanbanColumn({
   config,
   state,
+  onTransitioned,
 }: {
   config: ColumnConfig
   state: ColumnState
+  onTransitioned: (orderId: number, fromStatus: OwnerActiveStatus) => void
 }) {
   return (
     <section className="rounded-2xl bg-white border border-[#E5E5E5] p-4 flex flex-col gap-3 min-h-[200px]">
@@ -134,36 +146,10 @@ function KanbanColumn({
       <ul className="flex flex-col gap-3">
         {state.items.map((o) => (
           <li key={o.id}>
-            <OwnerOrderCardLite order={o} />
+            <OwnerOrderCard order={o} onTransitioned={onTransitioned} />
           </li>
         ))}
       </ul>
     </section>
-  )
-}
-
-function OwnerOrderCardLite({ order }: { order: OwnerOrderListItem }) {
-  return (
-    <article
-      className={
-        'rounded-xl bg-[#FAFAFA] p-3 flex flex-col gap-1 border ' +
-        (order.is_premium_client ? 'border-[#FF7700]' : 'border-transparent')
-      }
-    >
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-semibold text-[#0C0310]">
-          #{order.id}
-        </span>
-        {order.is_premium_client && (
-          <span className="text-[10px] font-semibold text-[#FF7700] uppercase tracking-wide">
-            Студент+
-          </span>
-        )}
-      </div>
-      <div className="text-xs text-[#0C0310]">{order.customer_name}</div>
-      <div className="text-xs text-[#8C8C8C]">
-        Самовывоз: {formatTime(order.pickup_time)}
-      </div>
-    </article>
   )
 }
