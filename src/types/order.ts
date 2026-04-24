@@ -55,3 +55,28 @@ export interface Review {
   rating: number
   created_at: string
 }
+
+// Strictly matches swagger OwnerOrderListItem / OwnerOrderDetail.
+export interface OwnerOrderListItem {
+  id: number
+  status: OrderStatus
+  customer_name: string
+  pickup_time: string
+  is_premium_client: boolean
+}
+
+export interface OwnerOrderDetail extends OwnerOrderListItem {
+  customer_phone: string
+  items: import('./cart').CartItem[]
+  comment?: string
+}
+
+export interface PaginatedResponseOwnerOrderListItem {
+  items: OwnerOrderListItem[]
+  total: number
+  page: number
+  limit: number
+  pages: number
+}
+
+export type OwnerActiveStatus = 'created' | 'cooking' | 'ready_for_pickup'

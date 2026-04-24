@@ -4,6 +4,7 @@ import MavinLogo from '../components/MavinLogo'
 import Footer from './Footer'
 import ToastContainer from '../components/ToastContainer'
 import { useAuthStore } from '../store/authStore'
+import { ownerOrderEventsClient } from '../services/ownerWebsocket'
 
 // Top tabs per design/restaurant_admin/png/Main screen.png.
 const navItems: { to: string; label: string; end?: boolean }[] = [
@@ -13,6 +14,20 @@ const navItems: { to: string; label: string; end?: boolean }[] = [
 ]
 
 export default function OwnerLayout() {
+  const token = useAuthStore((s) => s.token)
+  const role = useAuthStore((s) => s.user?.role)
+
+  useEffect(() => {
+    if (token && role === 'restaurant_admin') {
+      ownerOrderEventsClient.connect(token)
+    } else {
+      ownerOrderEventsClient.disconnect()
+    }
+    return () => {
+      ownerOrderEventsClient.disconnect()
+    }
+  }, [token, role])
+
   return (
     <div className="min-h-screen flex flex-col bg-[#ECF7FB]">
       <OwnerHeader />
