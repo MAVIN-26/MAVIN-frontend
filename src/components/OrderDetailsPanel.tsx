@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import OrderStatusBadge from './OrderStatusBadge'
 import StarRating from './StarRating'
-import { reviewOrder } from '../api/orders'
+import ConfirmDialog from './ConfirmDialog'
+import { cancelOrder, reviewOrder } from '../api/orders'
 import { toast } from '../store/toastStore'
 import type { OrderDetail } from '../types/order'
 
@@ -25,12 +26,40 @@ interface Props {
   order: OrderDetail
   // restaurant_id не приходит в OrderDetail — для ссылки нужен внешний.
   restaurantId?: number | null
+  onCancelled?: (id: number) => void
 }
 
-export default function OrderDetailsPanel({ order, restaurantId }: Props) {
+export default function OrderDetailsPanel({
+  order,
+  restaurantId,
+  onCancelled,
+}: Props) {
   const subtotal = order.items.reduce((s, it) => s + it.subtotal, 0)
   const total = order.total
   const discount = order.total_discount
+
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [cancelling, setCancelling] = useState(false)
+
+  const handleCancel = async () => {
+    if (cancelling) return
+    setCancelling(true)
+    try {
+      await cancelOrder(order.id)
+      toast.success('Заказ отменён')
+      setConfirmOpen(false)
+      onCancelled?.(order.id)
+    } catch (e) {
+      if (axios.isAxiosError(e) && e.response?.status === 422) {
+        toast.error('Заказ уже готовится, отмена невозможна')
+      } else {
+        toast.error('Не удалось отменить заказ')
+      }
+      setConfirmOpen(false)
+    } finally {
+      setCancelling(false)
+    }
+  }
 
   return (
     <article className="rounded-2xl bg-[#FAFAFA] p-6 flex flex-col gap-5">
@@ -106,7 +135,31 @@ export default function OrderDetailsPanel({ order, restaurantId }: Props) {
         </section>
       )}
 
+      {order.status === 'created' && (
+        <div className="border-t border-[#E5E5E5] pt-4">
+          <button
+            type="button"
+            onClick={() => setConfirmOpen(true)}
+            className="px-5 py-2 rounded-full bg-white border border-[#E5E5E5] text-sm text-[#0C0310] hover:bg-[#F0F0F0]"
+          >
+            Отменить
+          </button>
+        </div>
+      )}
+
       {order.status === 'completed' && <RatingBlock orderId={order.id} />}
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Отменить заказ?"
+        message="Заказ будет отменён, и его нельзя будет восстановить."
+        confirmLabel="Отменить заказ"
+        cancelLabel="Назад"
+        tone="danger"
+        busy={cancelling}
+        onConfirm={handleCancel}
+        onClose={() => (cancelling ? null : setConfirmOpen(false))}
+      />
     </article>
   )
 }

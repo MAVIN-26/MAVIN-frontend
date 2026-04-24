@@ -30,6 +30,7 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState<OrderListItem[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [reloadKey, setReloadKey] = useState(0)
 
   const detail = useOrder(selectedId)
 
@@ -52,7 +53,7 @@ export default function OrdersPage() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [reloadKey])
 
   const handleSelect = (id: number) => {
     setParams((prev) => {
@@ -110,7 +111,15 @@ export default function OrdersPage() {
               {detail.error}
             </div>
           )}
-          {detail.data && <OrderDetailsPanel order={detail.data} />}
+          {detail.data && (
+            <OrderDetailsPanel
+              order={detail.data}
+              onCancelled={() => {
+                detail.refresh()
+                setReloadKey((k) => k + 1)
+              }}
+            />
+          )}
         </section>
       </div>
     </div>
