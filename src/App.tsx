@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import RoleRoute from './components/RoleRoute'
 import { useAuthStore } from './store/authStore'
 import { useCartStore } from './store/cartStore'
+import { orderEventsClient } from './services/websocket'
 
 import HomePage from './pages/HomePage'
 import RestaurantPage from './pages/RestaurantPage'
@@ -46,6 +47,18 @@ export default function App() {
       resetCart()
     }
   }, [user, fetchCart, resetCart])
+
+  // Open WS /ws/orders for customers; close for guests/owner/admin and on logout.
+  useEffect(() => {
+    if (token && user && user.role === 'customer') {
+      orderEventsClient.connect(token)
+    } else {
+      orderEventsClient.disconnect()
+    }
+    return () => {
+      orderEventsClient.disconnect()
+    }
+  }, [token, user])
 
   return (
     <BrowserRouter>
