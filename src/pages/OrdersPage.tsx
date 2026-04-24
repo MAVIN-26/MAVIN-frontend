@@ -1,15 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getOrders } from '../api/orders'
-import type { OrderListItem, OrderStatus } from '../types/order'
-
-const STATUS_LABEL: Record<OrderStatus, string> = {
-  created: 'Создан',
-  cooking: 'Готовится',
-  ready_for_pickup: 'Можно забирать',
-  completed: 'Завершён',
-  cancelled: 'Отменён',
-}
+import { useOrder } from '../hooks/useOrder'
+import OrderDetailsPanel from '../components/OrderDetailsPanel'
+import OrderStatusBadge from '../components/OrderStatusBadge'
+import type { OrderListItem } from '../types/order'
 
 const formatPrice = (rub: number) =>
   rub.toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + ' ₽'
@@ -35,6 +30,8 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState<OrderListItem[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const detail = useOrder(selectedId)
 
   useEffect(() => {
     let cancelled = false
@@ -92,16 +89,28 @@ export default function OrdersPage() {
           ))}
         </aside>
 
-        <section className="rounded-2xl bg-[#FAFAFA] p-6 min-h-[200px]">
-          {selectedId == null ? (
-            <p className="text-sm text-[#8C8C8C]">
-              Выберите заказ слева, чтобы увидеть детали.
-            </p>
-          ) : (
-            <p className="text-sm text-[#8C8C8C]">
-              Заказ #{selectedId} — детали (FE-3.3.2)
-            </p>
+        <section className="min-h-[200px]">
+          {selectedId == null && (
+            <div className="rounded-2xl bg-[#FAFAFA] p-6">
+              <p className="text-sm text-[#8C8C8C]">
+                Выберите заказ слева, чтобы увидеть детали.
+              </p>
+            </div>
           )}
+          {selectedId != null && detail.loading && (
+            <div className="rounded-2xl bg-[#FAFAFA] p-6 text-sm text-[#8C8C8C]">
+              Загрузка…
+            </div>
+          )}
+          {selectedId != null && detail.error && !detail.loading && (
+            <div
+              className="rounded-2xl bg-[#FAFAFA] p-6 text-sm text-red-600"
+              role="alert"
+            >
+              {detail.error}
+            </div>
+          )}
+          {detail.data && <OrderDetailsPanel order={detail.data} />}
         </section>
       </div>
     </div>
@@ -136,9 +145,7 @@ function OrderListCard({
           <span className="text-xs text-[#8C8C8C]">
             {formatDateTime(order.created_at)}
           </span>
-          <span className="text-xs text-[#8C8C8C]">
-            {STATUS_LABEL[order.status]}
-          </span>
+          <OrderStatusBadge status={order.status} />
         </div>
         <span className="text-sm font-semibold text-[#0C0310] tabular-nums shrink-0">
           {formatPrice(order.total)}
