@@ -31,6 +31,8 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] =
     useState<PaymentMethod>('card_online')
   const [paymentOpen, setPaymentOpen] = useState(false)
+  const [comment, setComment] = useState('')
+  const [cutlery, setCutlery] = useState(false)
 
   // Customers only — owners/admins shouldn't reach checkout
   if (user && user.role !== 'customer') return <Navigate to="/" replace />
@@ -61,13 +63,15 @@ export default function CheckoutPage() {
           />
           <YourOrderCard
             items={cart.items}
+            cutlery={cutlery}
+            onToggleCutlery={() => setCutlery((v) => !v)}
             onClear={() => clear()}
             onInc={(id, q) => updateQuantity(id, q + 1)}
             onDec={(id, q) =>
               q === 1 ? remove(id) : updateQuantity(id, q - 1)
             }
           />
-          <CommentCard />
+          <CommentCard value={comment} onChange={setComment} />
         </div>
 
         <div className="flex flex-col gap-6">
@@ -156,11 +160,15 @@ function PickupConditionsCard({
 
 function YourOrderCard({
   items,
+  cutlery,
+  onToggleCutlery,
   onClear,
   onInc,
   onDec,
 }: {
   items: CartItem[]
+  cutlery: boolean
+  onToggleCutlery: () => void
   onClear: () => void
   onInc: (id: number, q: number) => void
   onDec: (id: number, q: number) => void
@@ -180,8 +188,14 @@ function YourOrderCard({
 
       <button
         type="button"
-        className="self-start rounded-xl bg-white border border-[#E5E5E5] px-4 py-2 text-sm text-[#0C0310] hover:bg-[#F0F0F0]"
-        // TODO FE-3.2.3 — toggle "положить приборы" в комментарий
+        onClick={onToggleCutlery}
+        aria-pressed={cutlery}
+        className={
+          'self-start rounded-xl border px-4 py-2 text-sm transition ' +
+          (cutlery
+            ? 'bg-[#FF7700] border-[#FF7700] text-white hover:bg-[#E56B00]'
+            : 'bg-white border-[#E5E5E5] text-[#0C0310] hover:bg-[#F0F0F0]')
+        }
       >
         Положить приборы
       </button>
@@ -229,18 +243,25 @@ function YourOrderCard({
   )
 }
 
-function CommentCard() {
-  // TODO FE-3.2.3
+function CommentCard({
+  value,
+  onChange,
+}: {
+  value: string
+  onChange: (v: string) => void
+}) {
   return (
     <section className="rounded-2xl bg-[#FAFAFA] p-5 flex flex-col gap-3">
       <h2 className="text-base font-semibold text-[#0C0310] text-center">
         Комментарий к заказу
       </h2>
       <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
         placeholder="Без лука, положите приборы…"
         rows={3}
-        disabled
-        className="w-full rounded-xl border border-[#E5E5E5] bg-white px-3 py-2 text-sm text-[#0C0310] focus:outline-none focus:border-[#FF7700] disabled:bg-[#F5F5F5]"
+        maxLength={500}
+        className="w-full rounded-xl border border-[#E5E5E5] bg-white px-3 py-2 text-sm text-[#0C0310] focus:outline-none focus:border-[#FF7700]"
       />
     </section>
   )
