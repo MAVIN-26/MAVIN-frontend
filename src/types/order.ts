@@ -36,3 +36,22 @@ export interface CreateOrderPayload {
   payment_method: PaymentMethod
   promo_code?: string
 }
+
+export interface PaginatedResponseOrderListItem {
+  items: OrderListItem[]
+  total: number
+  page: number
+  limit: number
+  pages: number
+}
+
+export interface OrdersQuery {
+  page?: number
+  limit?: number
+}
+
+export interface Review {
+  id: number
+  rating: number
+  created_at: string
+}
