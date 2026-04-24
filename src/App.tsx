@@ -11,6 +11,7 @@ import { useCartStore } from './store/cartStore'
 import HomePage from './pages/HomePage'
 import RestaurantPage from './pages/RestaurantPage'
 import OrdersPage from './pages/OrdersPage'
+import CheckoutPage from './pages/CheckoutPage'
 import FavoritesPage from './pages/FavoritesPage'
 import PromoPage from './pages/PromoPage'
 import SubscriptionPage from './pages/SubscriptionPage'
@@ -58,6 +59,7 @@ export default function App() {
           {/* Protected: any authenticated user */}
           <Route element={<ProtectedRoute />}>
             <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/favorites" element={<FavoritesPage />} />
             <Route path="/promo" element={<PromoPage />} />
             <Route path="/subscription" element={<SubscriptionPage />} />
