@@ -7,6 +7,9 @@ import ProtectedRoute from './components/ProtectedRoute'
 import RoleRoute from './components/RoleRoute'
 import { useAuthStore } from './store/authStore'
 import { useCartStore } from './store/cartStore'
+import { useNotificationStore } from './store/notificationStore'
+import { toast } from './store/toastStore'
+import { orderEventsClient } from './services/websocket'
 
 import HomePage from './pages/HomePage'
 import RestaurantPage from './pages/RestaurantPage'
@@ -30,6 +33,8 @@ export default function App() {
   const { token, user, fetchMe } = useAuthStore()
   const fetchCart = useCartStore((s) => s.fetch)
   const resetCart = useCartStore((s) => s.reset)
+  const addNotification = useNotificationStore((s) => s.add)
+  const resetNotifications = useNotificationStore((s) => s.reset)
 
   useEffect(() => {
     if (token) {
@@ -46,6 +51,33 @@ export default function App() {
       resetCart()
     }
   }, [user, fetchCart, resetCart])
+
+  // Open WS /ws/orders for customers; close for guests/owner/admin and on logout.
+  useEffect(() => {
+    if (token && user && user.role === 'customer') {
+      orderEventsClient.connect(token)
+    } else {
+      orderEventsClient.disconnect()
+      resetNotifications()
+    }
+    return () => {
+      orderEventsClient.disconnect()
+    }
+  }, [token, user, resetNotifications])
+
+  // Funnel WS events into the notifications store + transient toast.
+  useEffect(() => {
+    return orderEventsClient.subscribe((event) => {
+      if (event.event === 'order_status_changed') {
+        addNotification({
+          order_id: event.data.order_id,
+          new_status: event.data.new_status,
+          message: event.data.message,
+        })
+        toast.success(event.data.message)
+      }
+    })
+  }, [addNotification])
 
   return (
     <BrowserRouter>
