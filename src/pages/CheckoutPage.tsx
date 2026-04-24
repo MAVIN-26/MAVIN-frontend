@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import axios from 'axios'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useCartStore } from '../store/cartStore'
 import { useAuthStore } from '../store/authStore'
@@ -6,7 +7,9 @@ import { useRestaurant } from '../hooks/useRestaurant'
 import PaymentMethodModal, {
   type PaymentMethod,
 } from '../components/PaymentMethodModal'
+import { validatePromo } from '../api/promo'
 import type { CartItem } from '../types/cart'
+import type { PromoCode } from '../types/promo'
 
 const PAYMENT_LABEL: Record<PaymentMethod, { icon: string; label: string }> = {
   card_online: { icon: '💳', label: 'Карта ****77' },
@@ -33,6 +36,7 @@ export default function CheckoutPage() {
   const [paymentOpen, setPaymentOpen] = useState(false)
   const [comment, setComment] = useState('')
   const [cutlery, setCutlery] = useState(false)
+  const [promo, setPromo] = useState<PromoCode | null>(null)
 
   // Customers only — owners/admins shouldn't reach checkout
   if (user && user.role !== 'customer') return <Navigate to="/" replace />
@@ -80,6 +84,9 @@ export default function CheckoutPage() {
             isPremium={!!user?.is_premium}
             paymentMethod={paymentMethod}
             onChangePayment={() => setPaymentOpen(true)}
+            promo={promo}
+            onApplyPromo={setPromo}
+            onClearPromo={() => setPromo(null)}
             onPay={() => {
               // TODO FE-3.2.5
               navigate('/orders')
@@ -272,19 +279,32 @@ function PaymentAndTotalCard({
   isPremium,
   paymentMethod,
   onChangePayment,
+  promo,
+  onApplyPromo,
+  onClearPromo,
   onPay,
 }: {
   subtotal: number
   isPremium: boolean
   paymentMethod: PaymentMethod
   onChangePayment: () => void
+  promo: PromoCode | null
+  onApplyPromo: (p: PromoCode) => void
+  onClearPromo: () => void
   onPay: () => void
 }) {
   const pm = PAYMENT_LABEL[paymentMethod]
-  // Subscription discount: backend применит max(promo, subscription).
-  // На этом подшаге показываем только подписочную, без промокода.
-  const subscriptionDiscount = isPremium ? Math.round(subtotal * 0.05) : 0
-  const total = subtotal - subscriptionDiscount
+
+  // Backend применит наибольшую скидку (promo vs subscription 5%); UI должен
+  // отражать ту же логику, чтобы итог совпадал с сервером.
+  const subscriptionPct = isPremium ? 5 : 0
+  const promoPct = promo?.discount_percent ?? 0
+  const effectivePct = Math.max(subscriptionPct, promoPct)
+  const totalDiscount = Math.round((subtotal * effectivePct) / 100)
+  const total = subtotal - totalDiscount
+
+  const showPromoLine = promoPct > 0 && promoPct >= subscriptionPct
+  const showSubLine = subscriptionPct > 0 && !showPromoLine
 
   return (
     <section className="rounded-2xl bg-[#FAFAFA] p-5 flex flex-col gap-5">
@@ -312,20 +332,26 @@ function PaymentAndTotalCard({
           <span>Товары в заказе</span>
           <span>{formatPrice(subtotal)}</span>
         </div>
-        {isPremium && (
+        {showSubLine && (
           <div className="flex justify-between text-sm text-[#0C0310]">
-            <span>Скидка по подписке Студент+</span>
-            <span>−{formatPrice(subscriptionDiscount)}</span>
+            <span>Скидка по подписке Студент+ ({subscriptionPct}%)</span>
+            <span>−{formatPrice(totalDiscount)}</span>
+          </div>
+        )}
+        {showPromoLine && (
+          <div className="flex justify-between text-sm text-[#0C0310]">
+            <span>
+              Промокод {promo?.code} ({promoPct}%)
+            </span>
+            <span>−{formatPrice(totalDiscount)}</span>
           </div>
         )}
       </div>
 
-      <input
-        type="text"
-        placeholder="У меня есть промокод"
-        disabled
-        className="w-full h-11 rounded-xl border border-[#E5E5E5] bg-white px-4 text-sm text-[#0C0310] focus:outline-none focus:border-[#FF7700] disabled:bg-[#F5F5F5]"
-        // TODO FE-3.2.4
+      <PromoField
+        promo={promo}
+        onApply={onApplyPromo}
+        onClear={onClearPromo}
       />
 
       <div className="flex items-center justify-between gap-4">
@@ -341,5 +367,93 @@ function PaymentAndTotalCard({
         </span>
       </div>
     </section>
+  )
+}
+
+function PromoField({
+  promo,
+  onApply,
+  onClear,
+}: {
+  promo: PromoCode | null
+  onApply: (p: PromoCode) => void
+  onClear: () => void
+}) {
+  const [code, setCode] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleApply = async () => {
+    const trimmed = code.trim()
+    if (!trimmed || loading) return
+    setLoading(true)
+    setError(null)
+    try {
+      const result = await validatePromo(trimmed)
+      onApply(result)
+      setCode('')
+    } catch (e) {
+      if (axios.isAxiosError(e) && e.response?.status === 404) {
+        setError('Промокод не найден или истёк')
+      } else {
+        setError('Не удалось проверить промокод')
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (promo) {
+    return (
+      <div className="flex items-center justify-between gap-3 rounded-xl border border-[#FF7700] bg-white px-4 py-2.5">
+        <div className="text-sm text-[#0C0310]">
+          Промокод <span className="font-semibold">{promo.code}</span> применён
+          (−{promo.discount_percent}%)
+        </div>
+        <button
+          type="button"
+          onClick={onClear}
+          className="text-xs text-[#8C8C8C] hover:text-[#0C0310]"
+        >
+          Убрать
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={code}
+          onChange={(e) => {
+            setCode(e.target.value)
+            if (error) setError(null)
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault()
+              handleApply()
+            }
+          }}
+          placeholder="У меня есть промокод"
+          className="flex-1 h-11 rounded-xl border border-[#E5E5E5] bg-white px-4 text-sm text-[#0C0310] focus:outline-none focus:border-[#FF7700]"
+        />
+        <button
+          type="button"
+          onClick={handleApply}
+          disabled={loading || code.trim().length === 0}
+          className="h-11 px-4 rounded-xl bg-white border border-[#E5E5E5] text-sm text-[#0C0310] hover:bg-[#F0F0F0] disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? '…' : 'Применить'}
+        </button>
+      </div>
+      {error && (
+        <span className="text-xs text-red-600" role="alert">
+          {error}
+        </span>
+      )}
+    </div>
   )
 }
