@@ -6,3 +6,11 @@ export interface PromoCode {
   is_active: boolean
   expires_at: string
 }
+
+export interface PaginatedResponsePromoCode {
+  items: PromoCode[]
+  total: number
+  page: number
+  limit: number
+  pages: number
+}
