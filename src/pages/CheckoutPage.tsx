@@ -1,8 +1,17 @@
+import { useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useCartStore } from '../store/cartStore'
 import { useAuthStore } from '../store/authStore'
 import { useRestaurant } from '../hooks/useRestaurant'
+import PaymentMethodModal, {
+  type PaymentMethod,
+} from '../components/PaymentMethodModal'
 import type { CartItem } from '../types/cart'
+
+const PAYMENT_LABEL: Record<PaymentMethod, { icon: string; label: string }> = {
+  card_online: { icon: '💳', label: 'Карта ****77' },
+  cash_on_receipt: { icon: '💵', label: 'Наличные при получении' },
+}
 
 const formatPrice = (rub: number) =>
   rub.toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + ' ₽'
@@ -18,6 +27,10 @@ export default function CheckoutPage() {
 
   const restaurantId = cart?.restaurant_id ?? null
   const { data: restaurant } = useRestaurant(restaurantId)
+
+  const [paymentMethod, setPaymentMethod] =
+    useState<PaymentMethod>('card_online')
+  const [paymentOpen, setPaymentOpen] = useState(false)
 
   // Customers only — owners/admins shouldn't reach checkout
   if (user && user.role !== 'customer') return <Navigate to="/" replace />
@@ -61,6 +74,8 @@ export default function CheckoutPage() {
           <PaymentAndTotalCard
             subtotal={cart.subtotal}
             isPremium={!!user?.is_premium}
+            paymentMethod={paymentMethod}
+            onChangePayment={() => setPaymentOpen(true)}
             onPay={() => {
               // TODO FE-3.2.5
               navigate('/orders')
@@ -68,6 +83,13 @@ export default function CheckoutPage() {
           />
         </div>
       </div>
+
+      <PaymentMethodModal
+        open={paymentOpen}
+        value={paymentMethod}
+        onClose={() => setPaymentOpen(false)}
+        onSelect={setPaymentMethod}
+      />
     </div>
   )
 }
@@ -227,12 +249,17 @@ function CommentCard() {
 function PaymentAndTotalCard({
   subtotal,
   isPremium,
+  paymentMethod,
+  onChangePayment,
   onPay,
 }: {
   subtotal: number
   isPremium: boolean
+  paymentMethod: PaymentMethod
+  onChangePayment: () => void
   onPay: () => void
 }) {
+  const pm = PAYMENT_LABEL[paymentMethod]
   // Subscription discount: backend применит max(promo, subscription).
   // На этом подшаге показываем только подписочную, без промокода.
   const subscriptionDiscount = isPremium ? Math.round(subtotal * 0.05) : 0
@@ -246,16 +273,16 @@ function PaymentAndTotalCard({
         </h2>
         <button
           type="button"
+          onClick={onChangePayment}
           className="rounded-full bg-white border border-[#E5E5E5] px-4 py-1.5 text-xs text-[#0C0310] hover:bg-[#F0F0F0]"
-          // TODO FE-3.2.2
         >
           Изменить
         </button>
       </header>
 
       <div className="flex items-center gap-3 text-sm text-[#0C0310]">
-        <span aria-hidden>💳</span>
-        <span>Карта при получении</span>
+        <span aria-hidden>{pm.icon}</span>
+        <span>{pm.label}</span>
       </div>
 
       <div className="border-t border-[#E5E5E5] pt-4 flex flex-col gap-2">
