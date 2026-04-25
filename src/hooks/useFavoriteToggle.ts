@@ -1,54 +1,38 @@
-import { useCallback, useEffect, useState } from 'react'
-import { addFavorite, getFavorites, removeFavorite } from '../api/favorites'
+import { useCallback } from 'react'
 import { useAuthStore } from '../store/authStore'
+import { useFavoritesStore } from '../store/favoritesStore'
+import { toast } from '../store/toastStore'
+import type { RestaurantPublic } from '../types/restaurant'
 
 /**
- * Tracks whether a restaurant is in the authenticated user's favorites list
- * and provides a toggler. For unauthenticated users `isFavorite` stays false
- * and `toggle` is a no-op — caller is expected to hide the UI control.
+ * Returns favorite-state and a toggler for a single restaurant. Reads the
+ * shared favorites store (loaded once at app start) — no per-card requests.
+ * For unauthenticated users `toggle` shows a toast prompting to log in.
  */
-export function useFavoriteToggle(restaurantId: number | null) {
+export function useFavoriteToggle(restaurant: RestaurantPublic | null) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
-  const [isFavorite, setIsFavorite] = useState(false)
-  const [pending, setPending] = useState(false)
-
-  useEffect(() => {
-    if (!isAuthenticated || restaurantId == null) {
-      setIsFavorite(false)
-      return
-    }
-    let cancelled = false
-    getFavorites()
-      .then((items) => {
-        if (cancelled) return
-        setIsFavorite(items.some((r) => r.id === restaurantId))
-      })
-      .catch(() => {
-        if (cancelled) return
-        setIsFavorite(false)
-      })
-    return () => {
-      cancelled = true
-    }
-  }, [isAuthenticated, restaurantId])
+  const id = restaurant?.id ?? null
+  const isFavorite = useFavoritesStore((s) =>
+    id == null ? false : s.isFavorite(id),
+  )
+  const pending = useFavoritesStore((s) =>
+    id == null ? false : s.pendingIds.has(id),
+  )
+  const add = useFavoritesStore((s) => s.add)
+  const remove = useFavoritesStore((s) => s.remove)
 
   const toggle = useCallback(async () => {
-    if (!isAuthenticated || restaurantId == null || pending) return
-    setPending(true)
-    const next = !isFavorite
-    setIsFavorite(next) // optimistic
-    try {
-      if (next) {
-        await addFavorite(restaurantId)
-      } else {
-        await removeFavorite(restaurantId)
-      }
-    } catch {
-      setIsFavorite(!next) // revert
-    } finally {
-      setPending(false)
+    if (!restaurant) return
+    if (!isAuthenticated) {
+      toast.error('Войдите, чтобы добавлять в избранное')
+      return
     }
-  }, [isAuthenticated, restaurantId, isFavorite, pending])
+    if (isFavorite) {
+      await remove(restaurant.id)
+    } else {
+      await add(restaurant)
+    }
+  }, [restaurant, isAuthenticated, isFavorite, add, remove])
 
-  return { isFavorite, toggle, pending, canToggle: isAuthenticated }
+  return { isFavorite, toggle, pending, isAuthenticated }
 }
