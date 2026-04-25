@@ -11,6 +11,7 @@ import RestaurantFormModal, {
   type SubmitBody,
 } from '../../components/admin/RestaurantFormModal'
 import ConfirmDialog from '../../components/ConfirmDialog'
+import Spinner from '../../components/Spinner'
 import { toast } from '../../store/toastStore'
 
 const PAGE_SIZE = 20
@@ -155,8 +156,8 @@ export default function AdminRestaurantsPage() {
           <tbody>
             {loading && (
               <tr>
-                <td colSpan={8} className="px-4 py-6 text-center text-[#8C8C8C]">
-                  Загрузка…
+                <td colSpan={8} className="px-4 py-6 text-center">
+                  <Spinner />
                 </td>
               </tr>
             )}

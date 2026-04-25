@@ -5,6 +5,7 @@ import { getOrders, reviewOrder } from '../api/orders'
 import { useOrder } from '../hooks/useOrder'
 import OrderDetailsPanel from '../components/OrderDetailsPanel'
 import OrderStatusBadge from '../components/OrderStatusBadge'
+import Spinner from '../components/Spinner'
 import StarRating from '../components/StarRating'
 import { toast } from '../store/toastStore'
 import { getReview, saveReview } from '../utils/orderReviews'
@@ -73,9 +74,7 @@ export default function OrdersPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 items-start">
         <aside className="flex flex-col gap-3">
-          {loading && (
-            <div className="text-sm text-[#8C8C8C]">Загрузка…</div>
-          )}
+          {loading && <Spinner />}
           {error && !loading && (
             <div className="text-sm text-red-600" role="alert">
               {error}
@@ -103,8 +102,8 @@ export default function OrdersPage() {
             </div>
           )}
           {selectedId != null && detail.loading && (
-            <div className="rounded-2xl bg-[#FAFAFA] p-6 text-sm text-[#8C8C8C]">
-              Загрузка…
+            <div className="rounded-2xl bg-[#FAFAFA] p-6">
+              <Spinner />
             </div>
           )}
           {selectedId != null && detail.error && !detail.loading && (

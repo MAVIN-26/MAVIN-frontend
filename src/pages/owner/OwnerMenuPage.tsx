@@ -13,6 +13,7 @@ import type { MenuCategory } from '../../types/menuCategory'
 import DishFormModal from '../../components/owner/DishFormModal'
 import MenuCategoriesBlock from '../../components/owner/MenuCategoriesBlock'
 import ConfirmDialog from '../../components/ConfirmDialog'
+import Spinner from '../../components/Spinner'
 import { toast } from '../../store/toastStore'
 
 export default function OwnerMenuPage() {
@@ -133,7 +134,7 @@ export default function OwnerMenuPage() {
       )}
 
       {loading ? (
-        <div className="text-sm text-[#8C8C8C]">Загрузка…</div>
+        <Spinner />
       ) : items.length === 0 ? (
         <div className="bg-white border border-[#E5E5E5] rounded-2xl p-6 text-[#8C8C8C]">
           Пока нет блюд. Добавьте первое.

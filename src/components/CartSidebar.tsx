@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useCartStore } from '../store/cartStore'
 import { useAuthStore } from '../store/authStore'
+import Spinner from './Spinner'
 import type { CartItem } from '../types/cart'
 
 const PICKUP_OPTIONS = [
@@ -57,9 +58,7 @@ export default function CartSidebar({
         )}
       </header>
 
-      {loading && !cart && (
-        <div className="text-sm text-[#8C8C8C]">Загрузка…</div>
-      )}
+      {loading && !cart && <Spinner />}
 
       {!loading && isEmpty && (
         <div className="flex-1 flex items-center justify-center py-16 text-sm text-[#8C8C8C] text-center px-4">

@@ -8,6 +8,7 @@ import PaymentMethodModal, {
   type PaymentMethod,
 } from '../components/PaymentMethodModal'
 import Modal from '../components/Modal'
+import Spinner from '../components/Spinner'
 import { validatePromo } from '../api/promo'
 import { createOrder } from '../api/orders'
 import { toast } from '../store/toastStore'
@@ -93,7 +94,7 @@ export default function CheckoutPage() {
 
   // Wait for cart to load before deciding to redirect
   if (loading && !cart) {
-    return <div className="text-sm text-[#8C8C8C]">Загрузка…</div>
+    return <Spinner />
   }
 
   // Empty cart → nothing to checkout

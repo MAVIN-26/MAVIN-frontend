@@ -11,6 +11,7 @@ import {
   deleteCategory,
 } from '../../api/adminReferences'
 import ConfirmDialog from '../../components/ConfirmDialog'
+import Spinner from '../../components/Spinner'
 import { toast } from '../../store/toastStore'
 
 interface RefItem {
@@ -191,7 +192,7 @@ function ReferenceColumn({
       )}
 
       {loading ? (
-        <div className="text-sm text-[#8C8C8C]">Загрузка…</div>
+        <Spinner />
       ) : (
         <ul className="flex flex-col gap-2">
           {visible.length === 0 && (

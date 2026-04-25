@@ -5,6 +5,7 @@ import type { UserProfile } from '../../types/auth'
 import { useDebounce } from '../../hooks/useDebounce'
 import { useAuthStore } from '../../store/authStore'
 import UserFormModal from '../../components/admin/UserFormModal'
+import Spinner from '../../components/Spinner'
 import { toast } from '../../store/toastStore'
 
 const PAGE_SIZE = 20
@@ -134,8 +135,8 @@ export default function AdminUsersPage() {
           <tbody>
             {loading && (
               <tr>
-                <td colSpan={7} className="px-4 py-6 text-center text-[#8C8C8C]">
-                  Загрузка…
+                <td colSpan={7} className="px-4 py-6 text-center">
+                  <Spinner />
                 </td>
               </tr>
             )}

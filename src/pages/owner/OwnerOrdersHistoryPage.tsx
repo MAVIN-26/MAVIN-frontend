@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getOwnerOrders } from '../../api/ownerOrders'
+import Spinner from '../../components/Spinner'
 import type { OrderStatus, OwnerOrderListItem } from '../../types/order'
 
 // План FE-3.6.4 — фильтр по статусу: completed / cancelled.
@@ -132,7 +133,7 @@ export default function OwnerOrdersHistoryPage() {
         )}
       </div>
 
-      {loading && <p className="text-sm text-[#8C8C8C]">Загрузка…</p>}
+      {loading && <Spinner />}
       {error && !loading && (
         <p className="text-sm text-red-600" role="alert">
           {error}
