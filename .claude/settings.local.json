@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(git checkout *)",
+      "Read(//c/1-tp/MAVIN/design/client/png/**)",
+      "Read(//c/1-tp/MAVIN/design/client/svg/**)",
+      "Read(//c/1-tp/MAVIN/docs/**)",
+      "Read(//c/1-tp/MAVIN/**)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(npx tsc *)",
+      "Bash(git merge *)",
+      "Bash(find ../MAVIN-backend -maxdepth 3 -name \"main.py\" -exec cat {} \\\\;)",
+      "Bash(python -c \"from app.schemas.restaurant import RestaurantFull, RestaurantAdminOut; print\\('OK'\\)\")",
+      "Bash(node -e \"const s=require\\('./docs/swagger.json'\\); const paths=Object.keys\\(s.paths\\).filter\\(p=>p.startsWith\\('/owner'\\)||p==='/upload'\\); for\\(const p of paths\\){for\\(const m of Object.keys\\(s.paths[p]\\)\\){console.log\\(m.toUpperCase\\(\\),p\\)}}\")",
+      "Bash(node -e \"const s=require\\('./docs/swagger.json'\\); const names=['MenuItemOwner','MenuItemCreate','MenuItemUpdate','MenuItemAvailabilityUpdate','MenuCategoryOwner','MenuCategoryCreate','MenuCategoryUpdate','UploadResponse']; for\\(const n of names\\){console.log\\('==',n\\); console.log\\(JSON.stringify\\(s.components.schemas[n],null,2\\)\\)}\")",
+      "Bash(node -e \"const s=require\\('./docs/swagger.json'\\); const paths=['/owner/menu','/owner/menu/{id}','/owner/menu/{id}/availability','/owner/menu-categories','/owner/menu-categories/{id}','/upload']; for\\(const p of paths\\){console.log\\('===',p\\); console.log\\(JSON.stringify\\(s.paths[p],null,2\\)\\)}\")",
+      "Bash(node -e \"const s=require\\('./docs/swagger.json'\\); for\\(const n of ['MenuItemPublic','MenuCategory','AllergenRead']\\){console.log\\('==',n\\);console.log\\(JSON.stringify\\(s.components.schemas[n],null,2\\)\\)}\")",
+      "Bash(node -e \"const s=require\\('./docs/swagger.json'\\); for\\(const p of ['/owner/restaurant']\\){console.log\\('==',p\\);console.log\\(JSON.stringify\\(s.paths[p],null,2\\)\\)}\")",
+      "Bash(node -e \"const s=require\\('./docs/swagger.json'\\); console.log\\(JSON.stringify\\(s.components.schemas.RestaurantOwner,null,2\\)\\)\")",
+      "Bash(cp CLAUDE.md /tmp/CLAUDE.md.backup)",
+      "Bash(cp .claude/settings.local.json /tmp/settings.local.json.backup)",
+      "Read(//tmp/**)",
+      "Bash(git update-ref *)",
+      "Bash(git reflog *)",
+      "Bash(git gc *)",
+      "Bash(git *)",
+      "Bash(python -c \"import main; print\\('ok'\\)\")",
+      "Bash(python -c \"from main import app; print\\([r.path for r in app.routes if 'admin' in r.path]\\)\")",
+      "Bash(ls C:\\\\1-tp\\\\MAVIN-frontend\\\\src *)"
+    ]
+  }
+}

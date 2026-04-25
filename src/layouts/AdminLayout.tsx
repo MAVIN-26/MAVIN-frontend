@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import MavinLogo from '../components/MavinLogo'
 import Footer from './Footer'
@@ -15,30 +15,46 @@ const navItems: { to: string; label: string; end?: boolean }[] = [
 ]
 
 export default function AdminLayout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const location = useLocation()
+
+  // Close drawer on route change
+  useEffect(() => {
+    setSidebarOpen(false)
+  }, [location.pathname])
+
   return (
     <div className="min-h-screen flex flex-col bg-[#ECF7FB]">
-      <AdminHeader />
-      <div className="flex-1 w-full max-w-[1440px] mx-auto px-8 pt-8 pb-10 flex gap-10">
-        <aside className="w-56 shrink-0">
-          <nav className="flex flex-col gap-4">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.end}
-                className={({ isActive }) =>
-                  `text-base transition-colors ${
-                    isActive
-                      ? 'text-[#FF7700] font-medium'
-                      : 'text-[#0C0310] hover:text-[#FF7700]'
-                  }`
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
+      <AdminHeader onBurgerClick={() => setSidebarOpen((v) => !v)} />
+      <div className="flex-1 w-full max-w-[1440px] mx-auto px-4 md:px-6 lg:px-8 pt-6 lg:pt-8 pb-10 flex gap-6 lg:gap-10 relative">
+        {/* Sidebar — visible from lg, drawer below */}
+        <aside className="hidden lg:block w-56 shrink-0">
+          <SidebarNav />
         </aside>
+
+        {/* Mobile/tablet drawer */}
+        {sidebarOpen && (
+          <>
+            <button
+              type="button"
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden fixed inset-0 z-30 bg-black/30"
+              aria-label="Закрыть меню"
+            />
+            <aside className="lg:hidden fixed left-0 top-0 bottom-0 z-40 w-64 bg-[#ECF7FB] shadow-xl px-6 pt-6 pb-10 overflow-y-auto">
+              <button
+                type="button"
+                onClick={() => setSidebarOpen(false)}
+                className="mb-6 text-[#0C0310] text-2xl leading-none"
+                aria-label="Закрыть"
+              >
+                ×
+              </button>
+              <SidebarNav />
+            </aside>
+          </>
+        )}
+
         <main className="flex-1 min-w-0">
           <Outlet />
         </main>
@@ -49,7 +65,30 @@ export default function AdminLayout() {
   )
 }
 
-function AdminHeader() {
+function SidebarNav() {
+  return (
+    <nav className="flex flex-col gap-4">
+      {navItems.map((item) => (
+        <NavLink
+          key={item.to}
+          to={item.to}
+          end={item.end}
+          className={({ isActive }) =>
+            `text-base transition-colors ${
+              isActive
+                ? 'text-[#FF7700] font-medium'
+                : 'text-[#0C0310] hover:text-[#FF7700]'
+            }`
+          }
+        >
+          {item.label}
+        </NavLink>
+      ))}
+    </nav>
+  )
+}
+
+function AdminHeader({ onBurgerClick }: { onBurgerClick: () => void }) {
   const { user, logout } = useAuthStore()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -65,7 +104,17 @@ function AdminHeader() {
 
   return (
     <header className="w-full bg-[#ECF7FB] sticky top-0 z-40">
-      <div className="max-w-[1440px] mx-auto px-8 h-20 flex items-center">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-6 lg:px-8 h-16 md:h-20 flex items-center gap-3">
+        <button
+          type="button"
+          onClick={onBurgerClick}
+          className="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5"
+          aria-label="Меню"
+        >
+          <span className="block w-6 h-0.5 bg-black rounded" />
+          <span className="block w-6 h-0.5 bg-black rounded" />
+          <span className="block w-6 h-0.5 bg-black rounded" />
+        </button>
         <MavinLogo />
         <div className="ml-auto relative" ref={ref}>
           <button

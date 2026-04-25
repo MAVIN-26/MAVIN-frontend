@@ -13,6 +13,7 @@ type Panel = 'login' | 'register' | null
 export default function Header() {
   const { isAuthenticated, user } = useAuthStore()
   const [panel, setPanel] = useState<Panel>(null)
+  const [mobileOpen, setMobileOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const navigate = useNavigate()
@@ -51,6 +52,11 @@ export default function Header() {
     setSearchParams(next, { replace: true })
   }, [debouncedSearch])
 
+  // Close mobile drawer on route change
+  useEffect(() => {
+    setMobileOpen(false)
+  }, [location.pathname])
+
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -71,14 +77,26 @@ export default function Header() {
 
   return (
     <header className="w-full bg-[#ECF7FB] sticky top-0 z-50 shadow-[0_10px_15px_rgba(0,0,0,0.05)]">
-      <div className="max-w-[1920px] mx-auto px-14 h-[100px] flex items-center gap-6">
+      <div className="max-w-[1920px] mx-auto px-4 md:px-8 lg:px-14 h-[70px] md:h-[100px] flex items-center gap-3 md:gap-6">
+        {/* Burger — mobile only */}
+        <button
+          type="button"
+          onClick={() => setMobileOpen((v) => !v)}
+          className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 shrink-0"
+          aria-label="Меню"
+        >
+          <span className="block w-6 h-0.5 bg-black rounded" />
+          <span className="block w-6 h-0.5 bg-black rounded" />
+          <span className="block w-6 h-0.5 bg-black rounded" />
+        </button>
+
         {/* Logo */}
         <Link to="/" className="shrink-0">
-          <MavinLogo className="h-[65px] w-auto" />
+          <MavinLogo className="h-[42px] md:h-[65px] w-auto" />
         </Link>
 
-        {/* Search — wide pill */}
-        <div className="flex-1">
+        {/* Search — wide pill, hidden on smallest screens (in drawer) */}
+        <div className="hidden md:block flex-1">
           <div className="relative">
             <svg
               className="absolute left-5 top-1/2 -translate-y-1/2"
@@ -103,11 +121,11 @@ export default function Header() {
           </div>
         </div>
 
-        <div className="flex items-center gap-6 ml-auto shrink-0">
-          {/* Location pill */}
+        <div className="flex items-center gap-3 md:gap-6 ml-auto shrink-0">
+          {/* Location pill — hidden on mobile */}
           <button
             type="button"
-            className="flex items-center gap-2 h-12 px-5 bg-white rounded-[20px] text-sm text-black hover:text-[#0C0310] transition-colors shrink-0"
+            className="hidden lg:flex items-center gap-2 h-12 px-5 bg-white rounded-[20px] text-sm text-black hover:text-[#0C0310] transition-colors shrink-0"
           >
             <svg
               width="23"
@@ -127,7 +145,9 @@ export default function Header() {
           </button>
 
           {/* Notifications — icon + dropdown with WS-driven feed */}
-          <NotificationsDropdown />
+          <div className="hidden md:block">
+            <NotificationsDropdown />
+          </div>
 
           {/* Avatar / dropdown */}
           <div className="relative" ref={dropdownRef}>
@@ -137,13 +157,12 @@ export default function Header() {
               aria-label="Аккаунт"
             >
               {isAuthenticated && user ? (
-                <div className="w-[50px] h-[50px] rounded-full bg-[#FF7700] text-white flex items-center justify-center text-base font-medium">
+                <div className="w-10 h-10 md:w-[50px] md:h-[50px] rounded-full bg-[#FF7700] text-white flex items-center justify-center text-base font-medium">
                   {user.first_name[0].toUpperCase()}
                 </div>
               ) : (
                 <svg
-                  width="50"
-                  height="50"
+                  className="w-10 h-10 md:w-[50px] md:h-[50px]"
                   viewBox="0 0 50 50"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -183,6 +202,52 @@ export default function Header() {
           </div>
         </div>
       </div>
+
+      {/* Mobile drawer */}
+      {mobileOpen && (
+        <div className="md:hidden border-t border-black/5 bg-[#ECF7FB] px-4 py-4 space-y-3">
+          {/* Search inside drawer */}
+          <div className="relative">
+            <svg
+              className="absolute left-4 top-1/2 -translate-y-1/2"
+              width="20"
+              height="20"
+              viewBox="0 0 34 34"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M33.69 32.186 23.4 21.796a13 13 0 1 0-1.774 1.82l10.275 10.377a1.04 1.04 0 0 0 1.497 0 1.04 1.04 0 0 0 0-1.807ZM13.238 24.464c-6.152 0-11.137-5.005-11.137-11.178S7.086 2.108 13.238 2.108c6.151 0 11.136 5.004 11.136 11.178 0 6.173-4.985 11.178-11.136 11.178Z"
+                fill="#000"
+              />
+            </svg>
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Искать"
+              className="w-full pl-12 pr-4 h-11 text-sm bg-white rounded-[16px] placeholder-[#616161]/50 text-[#0C0310] focus:outline-none focus:ring-2 focus:ring-[#FF7700]/40"
+            />
+          </div>
+          <button
+            type="button"
+            className="w-full flex items-center gap-2 h-11 px-4 bg-white rounded-[16px] text-sm text-black"
+          >
+            <svg width="16" height="20" viewBox="0 0 23 28" fill="none">
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M3 11.125C3 6.867 6.77 3 11.75 3c4.99 0 8.75 3.867 8.75 8.125 0 2.681-1.64 5.676-3.8 8.451a51.41 51.41 0 0 1-4.95 5.417c-1.35-1.327-3.5-3.447-5.42-5.88C4.14 16.3 3 13.782 3 11.125ZM11.75 0.5C5.5.5.5 5.383.5 11.125c0 3.569 2.11 7.137 4.33 9.986 1.92 2.466 4.08 4.586 5.42 5.91.24.23.45.434.62.613.24.235.56.366.88.366.33 0 .65-.131.89-.366.18-.179.39-.384.63-.612 1.34-1.325 3.5-3.445 5.42-5.91 2.21-2.85 4.32-6.418 4.32-9.987C23 5.383 18.01.5 11.75.5Zm0 13.75a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"
+                fill="#000"
+              />
+            </svg>
+            Геопозиция
+          </button>
+          <div className="bg-white rounded-[16px] px-4 py-3">
+            <NotificationsDropdown />
+          </div>
+        </div>
+      )}
     </header>
   )
 }
