@@ -44,7 +44,7 @@ export default function FavoritesPage() {
         </div>
       ) : (
         <div className="py-16 text-center text-[#616161] text-sm">
-          Нет добавленных ресторанов
+          Нет избранных ресторанов
         </div>
       )}
     </section>

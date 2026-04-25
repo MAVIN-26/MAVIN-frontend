@@ -1,4 +1,5 @@
 import axios, { type InternalAxiosRequestConfig, type AxiosResponse, type AxiosError } from 'axios'
+import { toast } from '../store/toastStore'
 
 const client = axios.create({
   baseURL: '/api/v1',
@@ -19,13 +20,16 @@ const AUTH_401_EXEMPT = ['/profile/password', '/auth/login', '/auth/register']
 client.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error: AxiosError) => {
-    if (error.response?.status === 401) {
+    const status = error.response?.status
+    if (status === 401) {
       const url = error.config?.url ?? ''
       const exempt = AUTH_401_EXEMPT.some((p) => url.endsWith(p))
       if (!exempt) {
         localStorage.removeItem('token')
         window.location.href = '/'
       }
+    } else if (status && status >= 500) {
+      toast.error('Произошла ошибка, попробуйте позже')
     }
     return Promise.reject(error)
   }
