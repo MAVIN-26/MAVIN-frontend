@@ -11,6 +11,7 @@ import PromoCodeFormModal, {
   type SubmitBody,
 } from '../../components/admin/PromoCodeFormModal'
 import ConfirmDialog from '../../components/ConfirmDialog'
+import Spinner from '../../components/Spinner'
 import { toast } from '../../store/toastStore'
 
 const PAGE_SIZE = 20
@@ -145,8 +146,8 @@ export default function AdminPromoPage() {
           <tbody>
             {loading && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-[#8C8C8C]">
-                  Загрузка…
+                <td colSpan={5} className="px-4 py-6 text-center">
+                  <Spinner />
                 </td>
               </tr>
             )}
