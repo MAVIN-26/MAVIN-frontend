@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import RoleRoute from './components/RoleRoute'
 import { useAuthStore } from './store/authStore'
 import { useCartStore } from './store/cartStore'
+import { useFavoritesStore } from './store/favoritesStore'
 import { useNotificationStore } from './store/notificationStore'
 import { toast } from './store/toastStore'
 import { orderEventsClient } from './services/websocket'
@@ -34,6 +35,8 @@ export default function App() {
   const { token, user, fetchMe } = useAuthStore()
   const fetchCart = useCartStore((s) => s.fetch)
   const resetCart = useCartStore((s) => s.reset)
+  const fetchFavorites = useFavoritesStore((s) => s.fetch)
+  const resetFavorites = useFavoritesStore((s) => s.reset)
   const addNotification = useNotificationStore((s) => s.add)
   const resetNotifications = useNotificationStore((s) => s.reset)
 
@@ -48,10 +51,12 @@ export default function App() {
   useEffect(() => {
     if (user && user.role === 'customer') {
       fetchCart()
+      fetchFavorites()
     } else {
       resetCart()
+      resetFavorites()
     }
-  }, [user, fetchCart, resetCart])
+  }, [user, fetchCart, resetCart, fetchFavorites, resetFavorites])
 
   // Open WS /ws/orders for customers; close for guests/owner/admin and on logout.
   useEffect(() => {

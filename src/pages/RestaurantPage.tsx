@@ -174,13 +174,12 @@ function RestaurantHeader({ restaurant }: { restaurant: RestaurantPublic }) {
     preparation_time_max,
     pickup_address,
     categories,
-    id,
   } = restaurant
 
   const rating = average_rating?.toFixed(1).replace('.', ',') ?? '—'
   const prep = formatPrepTime(preparation_time_min, preparation_time_max)
 
-  const { isFavorite, toggle, canToggle, pending } = useFavoriteToggle(id)
+  const { isFavorite, toggle, pending } = useFavoriteToggle(restaurant)
 
   return (
     <div className="flex items-start gap-4">
@@ -198,20 +197,18 @@ function RestaurantHeader({ restaurant }: { restaurant: RestaurantPublic }) {
           <h1 className="text-xl font-semibold text-[#0C0310] truncate">
             {name}
           </h1>
-          {canToggle && (
-            <button
-              type="button"
-              onClick={toggle}
-              disabled={pending}
-              aria-label={
-                isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'
-              }
-              aria-pressed={isFavorite}
-              className="shrink-0 text-[#FF7700] disabled:opacity-60"
-            >
-              <HeartIcon filled={isFavorite} />
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={toggle}
+            disabled={pending}
+            aria-label={
+              isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'
+            }
+            aria-pressed={isFavorite}
+            className="shrink-0 text-[#FF7700] disabled:opacity-60"
+          >
+            <HeartIcon filled={isFavorite} />
+          </button>
         </div>
 
         {categories.length > 0 && (
