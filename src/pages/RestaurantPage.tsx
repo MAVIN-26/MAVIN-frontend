@@ -16,6 +16,7 @@ import KbjuFilter from '../components/KbjuFilter'
 import AllergensFilter from '../components/AllergensFilter'
 import DishModal from '../components/DishModal'
 import CartSidebar from '../components/CartSidebar'
+import Spinner from '../components/Spinner'
 import { useCartStore } from '../store/cartStore'
 import type { RestaurantPublic } from '../types/restaurant'
 import type { MenuItemPublic } from '../types/menuItem'
@@ -127,7 +128,7 @@ function RestaurantContent({ restaurant }: { restaurant: RestaurantPublic }) {
         onItemAdd={handleCardAdd}
       />
 
-      {menuLoading && <div className="text-sm text-[#8C8C8C]">Загрузка меню…</div>}
+      {menuLoading && <Spinner label="Загрузка меню…" />}
       {menuError && (
         <div className="text-sm text-red-600" role="alert">
           {menuError}

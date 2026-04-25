@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getPromoCodes } from '../api/promo'
+import Spinner from '../components/Spinner'
 import { toast } from '../store/toastStore'
 import type { PromoCode } from '../types/promo'
 
@@ -44,7 +45,7 @@ export default function PromoPage() {
         </p>
       </header>
 
-      {loading && <p className="text-sm text-[#8C8C8C]">Загрузка…</p>}
+      {loading && <Spinner />}
 
       {error && !loading && (
         <p className="text-sm text-red-600" role="alert">
