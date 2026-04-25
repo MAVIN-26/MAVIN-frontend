@@ -10,6 +10,7 @@ import type {
   RestaurantOwnerUpdateBody,
 } from '../../types/restaurantOwner'
 import { toast } from '../../store/toastStore'
+import Spinner from '../../components/Spinner'
 
 interface FormState {
   name: string
@@ -139,7 +140,7 @@ export default function OwnerRestaurantProfilePage() {
   }
 
   if (loading) {
-    return <div className="text-sm text-[#8C8C8C]">Загрузка…</div>
+    return <Spinner />
   }
 
   if (error || !data) {

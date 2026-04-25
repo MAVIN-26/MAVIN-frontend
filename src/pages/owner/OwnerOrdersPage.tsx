@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getOwnerOrders } from '../../api/ownerOrders'
 import OwnerOrderCard from '../../components/owner/OwnerOrderCard'
+import Spinner from '../../components/Spinner'
 import {
   ownerOrderEventsClient,
   playNewOrderBeep,
@@ -149,9 +150,7 @@ function KanbanColumn({
         </span>
       </header>
 
-      {state.loading && (
-        <div className="text-xs text-[#8C8C8C]">Загрузка…</div>
-      )}
+      {state.loading && <Spinner size={16} />}
       {state.error && !state.loading && (
         <div className="text-xs text-red-600" role="alert">
           {state.error}
