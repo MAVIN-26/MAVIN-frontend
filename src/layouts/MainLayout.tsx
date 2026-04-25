@@ -3,6 +3,7 @@ import Header from './Header'
 import Footer from './Footer'
 import ToastContainer from '../components/ToastContainer'
 import CartConflictModal from '../components/CartConflictModal'
+import AiAssistantWidget from '../components/AiAssistantWidget'
 
 export default function MainLayout() {
   return (
@@ -14,6 +15,7 @@ export default function MainLayout() {
       <Footer />
       <ToastContainer />
       <CartConflictModal />
+      <AiAssistantWidget />
     </div>
   )
 }
