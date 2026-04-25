@@ -38,7 +38,7 @@ export default function HomePage() {
       )}
 
       {loading && items.length === 0 ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
           {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className="flex flex-col">
               <div className="aspect-[4/3] w-full rounded-xl bg-[#EBEBEB] animate-pulse" />
@@ -51,7 +51,7 @@ export default function HomePage() {
           Ничего не найдено
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
           {items.map((r) => (
             <RestaurantCard key={r.id} restaurant={r} />
           ))}
