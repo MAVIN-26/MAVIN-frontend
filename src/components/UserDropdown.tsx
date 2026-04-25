@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
 
 interface Props {
-  user: { first_name: string; last_name: string }
+  user: { first_name: string; last_name: string; is_premium?: boolean }
   onClose: () => void
 }
 
@@ -43,6 +43,14 @@ function IconAllergens() {
   )
 }
 
+function IconSubscription() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path d="M12 2l2.39 4.84L20 7.66l-3.91 3.81.92 5.39L12 14.77 6.99 16.86l.92-5.39L4 7.66l5.61-.82L12 2z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" fill="none"/>
+    </svg>
+  )
+}
+
 function IconLogout() {
   return (
     <svg width="18" height="18" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
@@ -58,15 +66,20 @@ interface MenuItem {
   icon: () => JSX.Element
 }
 
-const menuItems: MenuItem[] = [
-  { label: 'Заказы', to: '/orders', icon: IconOrders },
-  { label: 'Сохраненные рестораны', to: '/favorites', icon: IconFavorites },
-  { label: 'Промокоды', to: '/promo', icon: IconPromo },
-  { label: 'Аллергены', to: '/profile?modal=allergens', icon: IconAllergens },
-]
-
 export default function UserDropdown({ user, onClose }: Props) {
   const logout = useAuthStore((s) => s.logout)
+
+  const menuItems: MenuItem[] = [
+    { label: 'Заказы', to: '/orders', icon: IconOrders },
+    { label: 'Сохраненные рестораны', to: '/favorites', icon: IconFavorites },
+    { label: 'Промокоды', to: '/promo', icon: IconPromo },
+    {
+      label: user.is_premium ? 'Управление подпиской' : 'Оформить подписку',
+      to: '/subscription',
+      icon: IconSubscription,
+    },
+    { label: 'Аллергены', to: '/profile?modal=allergens', icon: IconAllergens },
+  ]
 
   return (
     <div
@@ -111,13 +124,15 @@ export default function UserDropdown({ user, onClose }: Props) {
         </li>
       </ul>
 
-      <button
-        type="button"
-        className="absolute bottom-3 right-3 w-[72px] h-[72px] rounded-full bg-[#E6752E] text-white font-bold text-[11px] leading-tight flex items-center justify-center text-center shadow-md hover:opacity-95 transition-opacity"
-        onClick={onClose}
-      >
-        Оформить<br />Студент+
-      </button>
+      {!user.is_premium && (
+        <Link
+          to="/subscription"
+          onClick={onClose}
+          className="absolute bottom-3 right-3 w-[72px] h-[72px] rounded-full bg-[#E6752E] text-white font-bold text-[11px] leading-tight flex items-center justify-center text-center shadow-md hover:opacity-95 transition-opacity"
+        >
+          Оформить<br />Студент+
+        </Link>
+      )}
     </div>
   )
 }
