@@ -1,9 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { getOrders } from '../api/orders'
+import axios from 'axios'
+import { getOrders, reviewOrder } from '../api/orders'
 import { useOrder } from '../hooks/useOrder'
 import OrderDetailsPanel from '../components/OrderDetailsPanel'
 import OrderStatusBadge from '../components/OrderStatusBadge'
+import StarRating from '../components/StarRating'
+import { toast } from '../store/toastStore'
+import { getReview, saveReview } from '../utils/orderReviews'
 import type { OrderListItem } from '../types/order'
 
 const formatPrice = (rub: number) =>
@@ -136,11 +140,18 @@ function OrderListCard({
   onClick: () => void
 }) {
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onClick()
+        }
+      }}
       className={
-        'text-left rounded-2xl border bg-white px-4 py-3 transition ' +
+        'text-left rounded-2xl border bg-white px-4 py-3 transition cursor-pointer ' +
         (selected
           ? 'border-[#FF7700] shadow-sm'
           : 'border-[#E5E5E5] hover:border-[#FFB266]')
@@ -160,6 +171,55 @@ function OrderListCard({
           {formatPrice(order.total)}
         </span>
       </div>
-    </button>
+      {order.status === 'completed' && (
+        <div onClick={(e) => e.stopPropagation()}>
+          <CardRating orderId={order.id} />
+        </div>
+      )}
+    </div>
+  )
+}
+
+function CardRating({ orderId }: { orderId: number }) {
+  const [rating, setRating] = useState<number>(() => getReview(orderId) ?? 0)
+  const [submitted, setSubmitted] = useState<boolean>(
+    () => getReview(orderId) != null,
+  )
+  const [submitting, setSubmitting] = useState(false)
+
+  const handleRate = async (value: number) => {
+    if (submitting || submitted) return
+    setRating(value)
+    setSubmitting(true)
+    try {
+      await reviewOrder(orderId, value)
+      saveReview(orderId, value)
+      setSubmitted(true)
+      toast.success('Спасибо за оценку!')
+    } catch (e) {
+      if (axios.isAxiosError(e) && e.response?.status === 422) {
+        toast.error('Заказ ещё не завершён')
+      } else {
+        toast.error('Не удалось сохранить оценку')
+      }
+      setRating(0)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <div className="mt-3 pt-3 border-t border-[#E5E5E5] flex items-center gap-2">
+      <StarRating
+        value={rating}
+        onChange={handleRate}
+        readOnly={submitted}
+        disabled={submitting}
+        size={18}
+      />
+      <span className="text-xs text-[#8C8C8C]">
+        {submitted ? `Отзыв оставлен ★ ${rating}` : 'Оставить отзыв'}
+      </span>
+    </div>
   )
 }
