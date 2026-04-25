@@ -2,9 +2,8 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import OrderStatusBadge from './OrderStatusBadge'
-import StarRating from './StarRating'
 import ConfirmDialog from './ConfirmDialog'
-import { cancelOrder, reviewOrder } from '../api/orders'
+import { cancelOrder } from '../api/orders'
 import { toast } from '../store/toastStore'
 import type { OrderDetail } from '../types/order'
 
@@ -147,8 +146,6 @@ export default function OrderDetailsPanel({
         </div>
       )}
 
-      {order.status === 'completed' && <RatingBlock orderId={order.id} />}
-
       <ConfirmDialog
         open={confirmOpen}
         title="Отменить заказ?"
@@ -164,42 +161,3 @@ export default function OrderDetailsPanel({
   )
 }
 
-function RatingBlock({ orderId }: { orderId: number }) {
-  const [rating, setRating] = useState(0)
-  const [submitted, setSubmitted] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
-
-  const handleRate = async (value: number) => {
-    if (submitting || submitted) return
-    setRating(value)
-    setSubmitting(true)
-    try {
-      await reviewOrder(orderId, value)
-      setSubmitted(true)
-      toast.success('Спасибо за оценку!')
-    } catch (e) {
-      if (axios.isAxiosError(e) && e.response?.status === 422) {
-        toast.error('Заказ ещё не завершён')
-      } else {
-        toast.error('Не удалось сохранить оценку')
-      }
-      setRating(0)
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  return (
-    <section className="flex items-center gap-3 border-t border-[#E5E5E5] pt-4">
-      <StarRating
-        value={rating}
-        onChange={handleRate}
-        readOnly={submitted}
-        disabled={submitting}
-      />
-      <span className="text-xs text-[#8C8C8C]">
-        {submitted ? 'Оценка сохранена' : 'Оцените заказ'}
-      </span>
-    </section>
-  )
-}
