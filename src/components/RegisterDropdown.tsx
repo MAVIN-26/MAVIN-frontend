@@ -86,7 +86,6 @@ export default function RegisterDropdown({ onClose }: Props) {
   return (
     <div
       className="absolute right-0 top-14 w-[280px] bg-white rounded-[30px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] px-6 py-5 z-50"
-      style={{ fontFamily: "'Balsamiq Sans', cursive" }}
     >
       <h3 className="text-lg font-bold text-black text-center mb-4">РЕГИСТРАЦИЯ</h3>
 

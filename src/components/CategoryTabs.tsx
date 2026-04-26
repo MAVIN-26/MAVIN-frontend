@@ -34,7 +34,6 @@ export default function CategoryTabs() {
         type="button"
         onClick={() => setCategory(null)}
         className={`${chipBase} ${current === null ? chipActive : chipIdle}`}
-        style={{ fontFamily: "'Balsamiq Sans', sans-serif" }}
       >
         Все
       </button>
@@ -52,7 +51,6 @@ export default function CategoryTabs() {
               type="button"
               onClick={() => setCategory(c.id)}
               className={`${chipBase} ${current === c.id ? chipActive : chipIdle}`}
-              style={{ fontFamily: "'Balsamiq Sans', sans-serif" }}
             >
               {c.name}
             </button>

@@ -65,10 +65,10 @@ function OwnerHeader() {
               to={item.to}
               end={item.end}
               className={({ isActive }) =>
-                `px-5 py-2 rounded-full text-sm transition-colors ${
+                `px-5 py-2 rounded-full text-sm text-black transition-colors ${
                   isActive
-                    ? 'bg-white text-[#0C0310] shadow-[0_1px_2px_rgba(0,0,0,0.06)]'
-                    : 'text-[#0C0310] hover:text-[#FF7700]'
+                    ? 'bg-[#FF7700]'
+                    : 'bg-white hover:bg-[#FF7700]/10'
                 }`
               }
             >
@@ -80,7 +80,7 @@ function OwnerHeader() {
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="w-11 h-11 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.06)] flex items-center justify-center text-[#3C3C3C] hover:text-[#0C0310]"
+            className="w-11 h-11 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.06)] flex items-center justify-center text-[#3C3C3C] hover:text-black"
             aria-label="Меню пользователя"
           >
             {user ? (
@@ -106,7 +106,7 @@ function OwnerHeader() {
           {open && user && (
             <div className="absolute right-0 top-12 w-56 bg-white border border-[#E5E5E5] rounded-xl shadow-lg py-2">
               <div className="px-4 py-2 border-b border-[#F0F0F0]">
-                <div className="text-sm font-semibold text-[#0C0310] truncate">
+                <div className="text-sm font-semibold text-black truncate">
                   {user.first_name} {user.last_name}
                 </div>
                 <div className="text-xs text-[#8C8C8C]">Администратор ресторана</div>
