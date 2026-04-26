@@ -84,11 +84,9 @@ export default function RestaurantCard({ restaurant }: Props) {
         </button>
       </div>
       <div className="mt-3 flex items-center justify-between gap-3">
-        <span className="text-sm text-[#0C0310] truncate">{name}</span>
-        <span className="flex items-center gap-1 text-sm text-[#3C3C3C] shrink-0">
-          <span className="text-[#3C3C3C]">
-            <StarIcon />
-          </span>
+        <span className="text-sm text-black truncate">{name}</span>
+        <span className="flex items-center gap-1 text-sm text-black shrink-0">
+          <StarIcon />
           <span>{rating}</span>
         </span>
       </div>

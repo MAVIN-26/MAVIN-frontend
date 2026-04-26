@@ -73,11 +73,12 @@ function SidebarNav() {
           key={item.to}
           to={item.to}
           end={item.end}
+          style={{ fontFamily: "'Hachi Maru Pop', cursive" }}
           className={({ isActive }) =>
             `text-base transition-colors ${
               isActive
-                ? 'text-[#FF7700] font-medium'
-                : 'text-[#0C0310] hover:text-[#FF7700]'
+                ? 'text-[#FF7700]'
+                : 'text-black hover:text-[#FF7700]'
             }`
           }
         >

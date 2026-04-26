@@ -3,12 +3,14 @@
 @theme {
   --color-primary: #FF7700;
   --color-primary-hover: #E56A00;
-  --color-text: #1A1A1A;
-  --color-text-secondary: #6B7280;
+  --color-text: #000000;
+  --color-text-secondary: #777777;
   --color-bg: #FFFFFF;
-  --color-bg-light: #F5F8FF;
-  --color-border: #E5E7EB;
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --color-bg-light: #ECF7FB;
+  --color-border: #E4E4E4;
+  --color-input-bg: #F0F0F0;
+  --font-sans: 'Balsamiq Sans', cursive;
+  --font-display: 'Hachi Maru Pop', cursive;
 }
 
 * {

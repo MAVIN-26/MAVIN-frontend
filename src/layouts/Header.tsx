@@ -141,7 +141,7 @@ export default function Header() {
                 fill="#000"
               />
             </svg>
-            <span style={{ fontFamily: "'Balsamiq Sans', cursive" }}>Геопозиция</span>
+            <span>Геопозиция</span>
           </button>
 
           {/* Notifications — icon + dropdown with WS-driven feed */}
