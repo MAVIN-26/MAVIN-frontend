@@ -1,3 +1,4 @@
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
 
@@ -63,7 +64,7 @@ function IconLogout() {
 interface MenuItem {
   label: string
   to: string
-  icon: () => JSX.Element
+  icon: () => React.ReactElement
 }
 
 export default function UserDropdown({ user, onClose }: Props) {
