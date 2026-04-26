@@ -116,7 +116,7 @@ export default function Header() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Искать"
-              className="w-full pl-[64px] pr-5 h-12 text-base bg-white rounded-[20px] placeholder-[#616161]/50 text-[#0C0310] focus:outline-none focus:ring-2 focus:ring-[#FF7700]/40"
+              className="w-full pl-[64px] pr-5 h-12 text-base bg-white rounded-[20px] placeholder-[#616161]/50 text-black focus:outline-none focus:ring-2 focus:ring-[#FF7700]/40"
             />
           </div>
         </div>
@@ -125,7 +125,7 @@ export default function Header() {
           {/* Location pill — hidden on mobile */}
           <button
             type="button"
-            className="hidden lg:flex items-center gap-2 h-12 px-5 bg-white rounded-[20px] text-sm text-black hover:text-[#0C0310] transition-colors shrink-0"
+            className="hidden lg:flex items-center gap-2 h-12 px-5 bg-white rounded-[20px] text-sm text-black hover:text-black transition-colors shrink-0"
           >
             <svg
               width="23"
@@ -226,7 +226,7 @@ export default function Header() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Искать"
-              className="w-full pl-12 pr-4 h-11 text-sm bg-white rounded-[16px] placeholder-[#616161]/50 text-[#0C0310] focus:outline-none focus:ring-2 focus:ring-[#FF7700]/40"
+              className="w-full pl-12 pr-4 h-11 text-sm bg-white rounded-[16px] placeholder-[#616161]/50 text-black focus:outline-none focus:ring-2 focus:ring-[#FF7700]/40"
             />
           </div>
           <button
