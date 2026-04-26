@@ -23,8 +23,8 @@ export default function HomePage() {
   return (
     <section>
       <h1
-        className="text-2xl text-[#0C0310] mb-6"
-        style={{ fontFamily: "'Hachi Maru Pop', cursive" }}
+        className="text-2xl text-black mb-6"
+        style={{ fontFamily: "var(--font-display)" }}
       >
         Рестораны
       </h1>

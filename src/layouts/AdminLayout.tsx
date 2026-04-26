@@ -45,7 +45,7 @@ export default function AdminLayout() {
               <button
                 type="button"
                 onClick={() => setSidebarOpen(false)}
-                className="mb-6 text-[#0C0310] text-2xl leading-none"
+                className="mb-6 text-black text-2xl leading-none"
                 aria-label="Закрыть"
               >
                 ×
@@ -73,11 +73,12 @@ function SidebarNav() {
           key={item.to}
           to={item.to}
           end={item.end}
+          style={{ fontFamily: "'Hachi Maru Pop', cursive" }}
           className={({ isActive }) =>
             `text-base transition-colors ${
               isActive
-                ? 'text-[#FF7700] font-medium'
-                : 'text-[#0C0310] hover:text-[#FF7700]'
+                ? 'text-[#FF7700]'
+                : 'text-black hover:text-[#FF7700]'
             }`
           }
         >
@@ -120,7 +121,7 @@ function AdminHeader({ onBurgerClick }: { onBurgerClick: () => void }) {
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="w-11 h-11 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.06)] flex items-center justify-center text-[#3C3C3C] hover:text-[#0C0310]"
+            className="w-11 h-11 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.06)] flex items-center justify-center text-[#3C3C3C] hover:text-black"
             aria-label="Меню пользователя"
           >
             {user ? (
@@ -146,7 +147,7 @@ function AdminHeader({ onBurgerClick }: { onBurgerClick: () => void }) {
           {open && user && (
             <div className="absolute right-0 top-12 w-56 bg-white border border-[#E5E5E5] rounded-xl shadow-lg py-2">
               <div className="px-4 py-2 border-b border-[#F0F0F0]">
-                <div className="text-sm font-semibold text-[#0C0310] truncate">
+                <div className="text-sm font-semibold text-black truncate">
                   {user.first_name} {user.last_name}
                 </div>
                 <div className="text-xs text-[#8C8C8C]">Администратор</div>
