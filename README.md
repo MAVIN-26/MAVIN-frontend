@@ -1,73 +1,145 @@
-# React + TypeScript + Vite
+# MAVIN Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Фронтенд веб-сервиса предзаказа еды с самовывозом (Click & Collect) и персональным ИИ-ассистентом по питанию.
 
-Currently, two official plugins are available:
+[![CI](https://github.com/MAVIN-26/MAVIN-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/MAVIN-26/MAVIN-frontend/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Proprietary-red)](./LICENSE)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## О проекте
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+MAVIN позволяет пользователям заранее выбирать блюда в ресторанах и забирать готовый заказ без ожидания. Доставка курьером не предусмотрена — только самовывоз.
 
-## Expanding the ESLint configuration
+Приложение поддерживает три роли:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| Роль | Возможности |
+|---|---|
+| `customer` | Каталог ресторанов, корзина, заказы, избранное, промокоды, подписка, ИИ-ассистент |
+| `restaurant_admin` | Управление меню, просмотр и обработка заказов, профиль ресторана |
+| `site_admin` | Управление пользователями, ресторанами, промокодами, справочниками |
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Стек технологий
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Технология | Версия | Назначение |
+|---|---|---|
+| React | 19 | UI-фреймворк |
+| TypeScript | 6 | Типизация |
+| Vite | 8 | Сборщик |
+| React Router | 7 | Маршрутизация |
+| Zustand | 5 | Управление состоянием |
+| Axios | 1.14 | HTTP-клиент |
+| Tailwind CSS | 4 | Стили |
+| react-hook-form | — | Формы и валидация |
+
+---
+
+## Структура проекта
+
+```
+src/
+├── api/          # HTTP-запросы к бэкенду (по Swagger)
+├── components/   # Переиспользуемые компоненты
+│   ├── admin/    # Компоненты панели администратора сайта
+│   └── owner/    # Компоненты панели администратора ресторана
+├── hooks/        # Пользовательские хуки
+├── layouts/      # Обёртки страниц (MainLayout, AdminLayout, OwnerLayout)
+├── pages/        # Страницы приложения
+│   ├── admin/    # Страницы панели администратора сайта
+│   └── owner/    # Страницы панели администратора ресторана
+├── services/     # WebSocket-клиенты
+├── store/        # Zustand-сторы (auth, cart, notifications, toast)
+├── types/        # TypeScript-типы
+└── utils/        # Утилиты
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Быстрый старт
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Требования
+
+- Node.js ≥ 20
+- Запущенный [MAVIN-backend](https://github.com/MAVIN-26/MAVIN-backend)
+
+### Установка и запуск
+
+```bash
+git clone https://github.com/MAVIN-26/MAVIN-frontend.git
+cd MAVIN-frontend
+
+npm install
+npm run dev
 ```
+
+Приложение будет доступно на `http://localhost:5173`.
+
+Все запросы к `/api/v1` автоматически проксируются на `http://localhost:8000` — переменные окружения не нужны.
+
+---
+
+## Скрипты
+
+| Команда | Описание |
+|---|---|
+| `npm run dev` | Запуск dev-сервера с HMR |
+| `npm run build` | Сборка для продакшена |
+| `npm run lint` | Проверка кода ESLint |
+| `npm run preview` | Предпросмотр собранного приложения |
+
+---
+
+## Связанные репозитории
+
+| Репозиторий | Описание                                         |
+|---|--------------------------------------------------|
+| [MAVIN](https://github.com/MAVIN-26/MAVIN) | Документация, аналитика, дизайн |
+| [MAVIN-backend](https://github.com/MAVIN-26/MAVIN-backend) | FastAPI-бэкенд                                   |
+
+---
+
+## Дизайн
+
+Макеты интерфейса (PNG, SVG) находятся в папке [`design/`](https://github.com/MAVIN-26/MAVIN/tree/main/design) репозитория MAVIN.
+
+Figma: https://www.figma.com/design/EdTWgg9UkCrqUpKciIxGuJ/MAVIN
+
+---
+
+## Git Workflow
+
+- Основная ветка разработки: `develop`
+- Ветки: `feature/<описание>`, `fix/<описание>`, `hotfix/<описание>`
+- Каждая задача — отдельная ветка, несколько коммитов, merge в `develop`
+
+**Пример ветки:** `feature/fe-2-1-order-page`
+
+**Стиль коммитов** ([Conventional Commits](https://www.conventionalcommits.org/)):
+
+```
+feat: add order page
+feat: connect API
+fix: validation bug
+refactor: simplify component
+```
+
+---
+
+## Команда
+
+| Участник | Роль                   | Зона ответственности                                    |
+|---|------------------------|---------------------------------------------------------|
+| Дегальцева Алина | Team Lead, Разработчик | Фронтенд (React), бэкенд (Python), деплой, CI/CD        |
+| Юрьева Мария | Дизайнер               | UX/UI дизайн, дизайн-система            |
+| Гиричев Виктор | Проджект-менеджер      | Планирование, управление задачами, коммуникация в команде |
+| Баженов Никита | Аналитик               | Сбор требований, постановка задач, бизнес-логика        |
+| Червоный Иван | Тестировщик            | Тестирование, баг-репорты, контроль качества            |
+
+---
+
+## Лицензия
+
+Copyright © 2026 Команда MAVIN. Все права защищены.  
+Использование, копирование и распространение без письменного разрешения авторов запрещено.
