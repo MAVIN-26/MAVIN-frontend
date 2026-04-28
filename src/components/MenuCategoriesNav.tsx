@@ -69,7 +69,7 @@ export default function MenuCategoriesNav({
   return (
     <div
       ref={navRef}
-      className="sticky top-0 z-10 -mx-4 px-4 py-2 bg-white/95 backdrop-blur border-b border-[#F0F0F0]"
+      className="sticky top-0 z-10 -mx-4 px-4 py-2 bg-[#FAFAFA] border-b border-[#F0F0F0]"
     >
       <div className="flex items-center gap-2 overflow-x-auto">
         <Chip label="Все" active={activeId === ALL_ID} onClick={() => scrollTo(ALL_ID)} />
