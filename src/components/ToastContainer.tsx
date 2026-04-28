@@ -14,7 +14,7 @@ export default function ToastContainer() {
             key={t.id}
             role="status"
             className={`pointer-events-auto min-w-[260px] max-w-[360px] px-4 py-3 rounded-xl shadow-lg text-sm text-white flex items-start gap-3 ${
-              isSuccess ? 'bg-[#2F8F2F]' : 'bg-[#D94B4B]'
+              isSuccess ? 'bg-[#CCFF53]' : 'bg-[#FF5757]'
             }`}
           >
             <span className="flex-1 leading-snug">{t.message}</span>

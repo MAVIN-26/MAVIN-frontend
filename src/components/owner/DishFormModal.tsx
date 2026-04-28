@@ -305,7 +305,7 @@ export default function DishFormModal({
         <div>
           <div className="text-sm text-[#3C3C3C] mb-2">Фото</div>
           <div className="flex items-center gap-3">
-            <label className="px-4 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium cursor-pointer hover:bg-[#E66A00]">
+            <label className="px-4 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium cursor-pointer hover:bg-[#E56A00]">
               {uploading ? 'Загрузка…' : 'Выбрать файл'}
               <input
                 type="file"
@@ -342,7 +342,7 @@ export default function DishFormModal({
           <button
             type="submit"
             disabled={submitting || uploading}
-            className="px-5 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E66A00] disabled:opacity-60"
+            className="px-5 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00] disabled:opacity-60"
           >
             {submitting ? 'Сохранение…' : 'Сохранить'}
           </button>

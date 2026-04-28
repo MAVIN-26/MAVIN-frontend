@@ -226,7 +226,7 @@ function ReferenceColumn({
                       type="button"
                       onClick={() => handleSaveEdit(item.id)}
                       disabled={isSaving}
-                      className="px-3 py-1.5 rounded-full bg-[#FF7700] text-white text-xs hover:bg-[#E66A00] disabled:opacity-60"
+                      className="px-3 py-1.5 rounded-full bg-[#FF7700] text-white text-xs hover:bg-[#E56A00] disabled:opacity-60"
                     >
                       {isSaving ? 'Сохраняем…' : 'Сохранить'}
                     </button>
@@ -251,7 +251,7 @@ function ReferenceColumn({
                     <button
                       type="button"
                       onClick={() => setToDelete(item)}
-                      className="px-3 py-1.5 rounded-full bg-[#D94B4B] text-white text-xs hover:bg-[#C13E3E]"
+                      className="px-3 py-1.5 rounded-full bg-[#FF5757] text-white text-xs hover:bg-[#FF5757]"
                     >
                       Удалить
                     </button>
@@ -278,7 +278,7 @@ function ReferenceColumn({
           type="button"
           onClick={handleCreate}
           disabled={creating || !newName.trim()}
-          className="shrink-0 px-5 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E66A00] disabled:opacity-60"
+          className="shrink-0 px-5 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00] disabled:opacity-60"
         >
           {addLabel}
         </button>

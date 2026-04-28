@@ -151,7 +151,7 @@ function AiAssistantWidgetInner({
                   setShowSubTooltip(false)
                   navigate('/subscription')
                 }}
-                className="w-full py-2.5 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E66A00]"
+                className="w-full py-2.5 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00]"
               >
                 Оформить за 199 р/мес
               </button>
@@ -161,7 +161,7 @@ function AiAssistantWidgetInner({
             type="button"
             onClick={handleLauncherClick}
             aria-label="Открыть ИИ-ассистента"
-            className="w-14 h-14 rounded-full bg-[#FF7700] text-white shadow-lg hover:bg-[#E66A00] flex items-center justify-center"
+            className="w-14 h-14 rounded-full bg-[#FF7700] text-white shadow-lg hover:bg-[#E56A00] flex items-center justify-center"
           >
             <SunflowerIcon />
           </button>
@@ -257,7 +257,7 @@ function AiAssistantWidgetInner({
             )}
 
             {showSubPrompt && (
-              <div className="self-start max-w-[85%] rounded-2xl rounded-bl-sm px-3 py-2 bg-[#FFF4E5] border border-[#FFD9A8] text-xs text-[#0C0310]">
+              <div className="self-start max-w-[85%] rounded-2xl rounded-bl-sm px-3 py-2 bg-[#FFBA7D] border border-[#FFBA7D] text-xs text-[#0C0310]">
                 <div className="font-medium mb-1">
                   Нужна подписка «Студент+»
                 </div>
@@ -267,7 +267,7 @@ function AiAssistantWidgetInner({
                 <Link
                   to="/subscription"
                   onClick={() => setOpen(false)}
-                  className="inline-block px-3 py-1.5 rounded-full bg-[#FF7700] text-white text-xs hover:bg-[#E66A00]"
+                  className="inline-block px-3 py-1.5 rounded-full bg-[#FF7700] text-white text-xs hover:bg-[#E56A00]"
                 >
                   Оформить подписку
                 </Link>
@@ -296,7 +296,7 @@ function AiAssistantWidgetInner({
                 sending || !input.trim() || restaurantId == null
               }
               aria-label="Отправить"
-              className="w-9 h-9 rounded-full bg-[#FF7700] text-white flex items-center justify-center hover:bg-[#E66A00] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-9 h-9 rounded-full bg-[#FF7700] text-white flex items-center justify-center hover:bg-[#E56A00] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <SendIcon />
             </button>
@@ -393,7 +393,7 @@ function RecommendedCarousel({
                 title={
                   !isAuthenticated ? 'Войдите, чтобы добавить' : undefined
                 }
-                className="px-2 py-1 rounded-full bg-[#FF7700] text-white text-[10px] hover:bg-[#E66A00] disabled:opacity-60 disabled:cursor-not-allowed"
+                className="px-2 py-1 rounded-full bg-[#FF7700] text-white text-[10px] hover:bg-[#E56A00] disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 В корзину
               </button>

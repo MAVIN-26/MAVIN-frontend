@@ -95,7 +95,7 @@ export default function SubscriptionPage() {
                   type="button"
                   onClick={handleBuy}
                   disabled={busy || !plan}
-                  className="w-full max-w-[640px] h-12 rounded-full bg-[#FF7700] text-white text-sm font-semibold uppercase tracking-wide hover:bg-[#E66A00] disabled:opacity-60 transition-colors"
+                  className="w-full max-w-[640px] h-12 rounded-full bg-[#FF7700] text-white text-sm font-semibold uppercase tracking-wide hover:bg-[#E56A00] disabled:opacity-60 transition-colors"
                 >
                   {busy
                     ? 'Оформляем…'
@@ -129,7 +129,7 @@ export default function SubscriptionPage() {
                   type="button"
                   onClick={handleBuy}
                   disabled={busy || !plan}
-                  className="h-11 px-6 rounded-full bg-[#FF7700] text-white text-sm font-semibold hover:bg-[#E66A00] disabled:opacity-60 transition-colors"
+                  className="h-11 px-6 rounded-full bg-[#FF7700] text-white text-sm font-semibold hover:bg-[#E56A00] disabled:opacity-60 transition-colors"
                 >
                   {busy ? 'Продлеваем…' : 'Продлить'}
                 </button>
@@ -147,7 +147,7 @@ export default function SubscriptionPage() {
                   type="button"
                   onClick={handleBuy}
                   disabled={busy || !plan}
-                  className="h-11 px-6 rounded-full bg-[#FF7700] text-white text-sm font-semibold hover:bg-[#E66A00] disabled:opacity-60 transition-colors"
+                  className="h-11 px-6 rounded-full bg-[#FF7700] text-white text-sm font-semibold hover:bg-[#E56A00] disabled:opacity-60 transition-colors"
                 >
                   {busy ? 'Возобновляем…' : 'Возобновить'}
                 </button>

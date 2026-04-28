@@ -201,7 +201,7 @@ export default function MyAllergensModal({ open, onClose }: Props) {
             <button
               type="submit"
               disabled={submitting || loading}
-              className="w-full py-4 rounded-2xl bg-[#FF7700] text-white text-base font-bold hover:bg-[#E66A00] transition-colors disabled:opacity-60"
+              className="w-full py-4 rounded-2xl bg-[#FF7700] text-white text-base font-bold hover:bg-[#E56A00] transition-colors disabled:opacity-60"
             >
               {submitting ? 'Сохраняем…' : 'Сохранить изменения'}
             </button>

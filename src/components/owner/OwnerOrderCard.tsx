@@ -153,7 +153,7 @@ export default function OwnerOrderCard({ order, onTransitioned }: Props) {
           type="button"
           onClick={handleAction}
           disabled={acting}
-          className="w-full h-9 rounded-lg bg-[#FF7700] text-white text-xs font-semibold hover:bg-[#E56B00] disabled:opacity-60"
+          className="w-full h-9 rounded-lg bg-[#FF7700] text-white text-xs font-semibold hover:bg-[#E56A00] disabled:opacity-60"
         >
           {acting ? 'Обновляем…' : ACTION_LABEL[status]}
         </button>

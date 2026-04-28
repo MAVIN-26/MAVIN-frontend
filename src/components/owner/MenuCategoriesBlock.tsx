@@ -108,7 +108,7 @@ export default function MenuCategoriesBlock({ items, onChanged }: Props) {
                   type="button"
                   onClick={() => saveEdit(c.id)}
                   disabled={busy}
-                  className="text-xs px-2 py-1 rounded-full bg-[#FF7700] text-white hover:bg-[#E66A00] disabled:opacity-60"
+                  className="text-xs px-2 py-1 rounded-full bg-[#FF7700] text-white hover:bg-[#E56A00] disabled:opacity-60"
                 >
                   OK
                 </button>
@@ -142,7 +142,7 @@ export default function MenuCategoriesBlock({ items, onChanged }: Props) {
               <button
                 type="button"
                 onClick={() => setToDelete(c)}
-                className="w-6 h-6 rounded-full hover:bg-[#D94B4B]/10 text-[#D94B4B] flex items-center justify-center"
+                className="w-6 h-6 rounded-full hover:bg-[#FF5757]/10 text-[#FF5757] flex items-center justify-center"
                 aria-label="Удалить"
                 title="Удалить"
               >
@@ -172,7 +172,7 @@ export default function MenuCategoriesBlock({ items, onChanged }: Props) {
             type="button"
             onClick={addNew}
             disabled={busy || !newName.trim()}
-            className="px-3 py-1.5 rounded-full bg-[#FF7700] text-white text-xs hover:bg-[#E66A00] disabled:opacity-60"
+            className="px-3 py-1.5 rounded-full bg-[#FF7700] text-white text-xs hover:bg-[#E56A00] disabled:opacity-60"
           >
             Добавить
           </button>

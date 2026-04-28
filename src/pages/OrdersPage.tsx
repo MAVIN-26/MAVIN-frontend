@@ -153,7 +153,7 @@ function OrderListCard({
         'text-left rounded-2xl border bg-white px-4 py-3 transition cursor-pointer ' +
         (selected
           ? 'border-[#FF7700] shadow-sm'
-          : 'border-[#E5E5E5] hover:border-[#FFB266]')
+          : 'border-[#E5E5E5] hover:border-[#FFBA7D]')
       }
     >
       <div className="flex items-start justify-between gap-3">

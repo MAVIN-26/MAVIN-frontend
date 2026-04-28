@@ -127,7 +127,7 @@ export default function AdminRestaurantsPage() {
         <button
           type="button"
           onClick={openCreate}
-          className="px-5 py-2.5 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E66A00]"
+          className="px-5 py-2.5 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00]"
         >
           + Создать ресторан
         </button>
@@ -228,7 +228,7 @@ export default function AdminRestaurantsPage() {
                       <button
                         type="button"
                         onClick={() => openEdit(r)}
-                        className="px-3 py-1 rounded-full bg-[#FF7700] text-white text-xs hover:bg-[#E66A00]"
+                        className="px-3 py-1 rounded-full bg-[#FF7700] text-white text-xs hover:bg-[#E56A00]"
                       >
                         Редактировать
                       </button>
@@ -243,7 +243,7 @@ export default function AdminRestaurantsPage() {
                       <button
                         type="button"
                         onClick={() => setToDelete(r)}
-                        className="px-3 py-1 rounded-full bg-[#D94B4B] text-white text-xs hover:bg-[#C13E3E]"
+                        className="px-3 py-1 rounded-full bg-[#FF5757] text-white text-xs hover:bg-[#FF5757]"
                       >
                         Удалить
                       </button>
@@ -251,11 +251,11 @@ export default function AdminRestaurantsPage() {
                   </Td>
                   <Td>
                     {r.is_active ? (
-                      <span className="inline-block px-3 py-1 rounded-full bg-[#2F8F2F] text-white text-xs">
+                      <span className="inline-block px-3 py-1 rounded-full bg-[#CCFF53] text-white text-xs">
                         Активен
                       </span>
                     ) : (
-                      <span className="inline-block px-3 py-1 rounded-full bg-[#D94B4B] text-white text-xs">
+                      <span className="inline-block px-3 py-1 rounded-full bg-[#FF5757] text-white text-xs">
                         Заблокирован
                       </span>
                     )}

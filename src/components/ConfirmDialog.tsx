@@ -25,8 +25,8 @@ export default function ConfirmDialog({
 }: Props) {
   const confirmClass =
     tone === 'danger'
-      ? 'bg-[#D94B4B] hover:bg-[#C13E3E]'
-      : 'bg-[#FF7700] hover:bg-[#E66A00]'
+      ? 'bg-[#FF5757] hover:bg-[#FF5757]'
+      : 'bg-[#FF7700] hover:bg-[#E56A00]'
 
   return (
     <Modal open={open} onClose={onClose} title={title} maxWidth="sm">
