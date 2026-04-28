@@ -88,75 +88,77 @@ function RestaurantContent({ restaurant }: { restaurant: RestaurantPublic }) {
       <div className="flex-1 min-w-0 flex flex-col gap-6">
       <RestaurantHeader restaurant={restaurant} />
 
-      <MenuCategoriesNav
-        categories={categories}
-        hasUserChoice={!userChoiceEmpty}
-        kbjuActive={kbjuActive}
-        allergensActive={allergensActive}
-        onOpenKbju={() =>
-          setOpenFilter((f) => (f === 'kbju' ? null : 'kbju'))
-        }
-        onOpenAllergens={() =>
-          setOpenFilter((f) => (f === 'allergens' ? null : 'allergens'))
-        }
-        kbjuSlot={
-          <KbjuFilter
-            open={openFilter === 'kbju'}
-            initial={filters}
-            onClose={() => setOpenFilter(null)}
-            onApply={setKbju}
-          />
-        }
-        allergensSlot={
-          <AllergensFilter
-            open={openFilter === 'allergens'}
-            initialIds={excludeAllergenIds}
-            onClose={() => setOpenFilter(null)}
-            onApply={setExcludeAllergenIds}
-          />
-        }
-      />
-
-      {/* Anchor for the "Все" tab — whole menu area starts here. */}
-      <div id={ALL_ID} className="scroll-mt-24" />
-
-      <UserChoiceSection
-        restaurantId={restaurantId}
-        id={USER_CHOICE_ID}
-        onEmptyChange={setUserChoiceEmpty}
-        onItemClick={setSelectedItem}
-        onItemAdd={handleCardAdd}
-      />
-
-      {menuLoading && <Spinner label="Загрузка меню…" />}
-      {menuError && (
-        <div className="text-sm text-red-600" role="alert">
-          {menuError}
-        </div>
-      )}
-      {categoriesError && (
-        <div className="text-sm text-red-600" role="alert">
-          {categoriesError}
-        </div>
-      )}
-
-      {!menuLoading && !categoriesLoading && (
-        <>
-          {categories.map((cat) => (
-            <MenuCategorySection
-              key={cat.id}
-              id={categoryId(cat.id)}
-              title={cat.name}
-              items={itemsByCategory.get(cat.id) ?? []}
-              onItemClick={setSelectedItem}
-              onItemAdd={handleCardAdd}
+      <div className="rounded-2xl bg-[#FAFAFA] p-4 flex flex-col gap-6">
+        <MenuCategoriesNav
+          categories={categories}
+          hasUserChoice={!userChoiceEmpty}
+          kbjuActive={kbjuActive}
+          allergensActive={allergensActive}
+          onOpenKbju={() =>
+            setOpenFilter((f) => (f === 'kbju' ? null : 'kbju'))
+          }
+          onOpenAllergens={() =>
+            setOpenFilter((f) => (f === 'allergens' ? null : 'allergens'))
+          }
+          kbjuSlot={
+            <KbjuFilter
+              open={openFilter === 'kbju'}
+              initial={filters}
+              onClose={() => setOpenFilter(null)}
+              onApply={setKbju}
             />
-          ))}
-          {categories.length === 0 && menu.length === 0 && (
-            <div className="text-sm text-[#8C8C8C]">Меню пока пустое</div>
-          )}
-        </>
-      )}
+          }
+          allergensSlot={
+            <AllergensFilter
+              open={openFilter === 'allergens'}
+              initialIds={excludeAllergenIds}
+              onClose={() => setOpenFilter(null)}
+              onApply={setExcludeAllergenIds}
+            />
+          }
+        />
+
+        {/* Anchor for the "Все" tab — whole menu area starts here. */}
+        <div id={ALL_ID} className="scroll-mt-24" />
+
+        <UserChoiceSection
+          restaurantId={restaurantId}
+          id={USER_CHOICE_ID}
+          onEmptyChange={setUserChoiceEmpty}
+          onItemClick={setSelectedItem}
+          onItemAdd={handleCardAdd}
+        />
+
+        {menuLoading && <Spinner label="Загрузка меню…" />}
+        {menuError && (
+          <div className="text-sm text-red-600" role="alert">
+            {menuError}
+          </div>
+        )}
+        {categoriesError && (
+          <div className="text-sm text-red-600" role="alert">
+            {categoriesError}
+          </div>
+        )}
+
+        {!menuLoading && !categoriesLoading && (
+          <>
+            {categories.map((cat) => (
+              <MenuCategorySection
+                key={cat.id}
+                id={categoryId(cat.id)}
+                title={cat.name}
+                items={itemsByCategory.get(cat.id) ?? []}
+                onItemClick={setSelectedItem}
+                onItemAdd={handleCardAdd}
+              />
+            ))}
+            {categories.length === 0 && menu.length === 0 && (
+              <div className="text-sm text-[#8C8C8C]">Меню пока пустое</div>
+            )}
+          </>
+        )}
+      </div>
 
       <DishModal item={selectedItem} onClose={() => setSelectedItem(null)} />
       </div>
@@ -193,7 +195,7 @@ function RestaurantHeader({ restaurant }: { restaurant: RestaurantPublic }) {
         <ArrowLeftIcon />
       </button>
 
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 rounded-2xl bg-[#FAFAFA] p-4">
         <div className="flex items-center gap-2">
           <h1 className="text-xl font-semibold text-[#0C0310] truncate">
             {name}
@@ -208,7 +210,7 @@ function RestaurantHeader({ restaurant }: { restaurant: RestaurantPublic }) {
             aria-pressed={isFavorite}
             className="shrink-0 text-[#FF7700] disabled:opacity-60"
           >
-            <HeartIcon filled={isFavorite} />
+            <BookmarkIcon filled={isFavorite} />
           </button>
         </div>
 
@@ -329,20 +331,14 @@ function PinIcon() {
   )
 }
 
-function HeartIcon({ filled }: { filled: boolean }) {
+function BookmarkIcon({ filled }: { filled: boolean }) {
   return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill={filled ? 'currentColor' : 'none'}
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z" />
+    <svg width="17" height="23" viewBox="0 0 17 23" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      {filled ? (
+        <path d="M0 1.22634L1.21429 0H15.7857L17 1.22634V23L8.5 17.913L0 23V1.22634Z" fill="currentColor" />
+      ) : (
+        <path fillRule="evenodd" clipRule="evenodd" d="M0 1.22634L1.21429 0H15.7857L17 1.22634V23L8.5 17.913L0 23V1.22634ZM2.42857 2.45269V18.6957L8.5 15.062L14.5714 18.6957V2.45269H2.42857Z" fill="currentColor" />
+      )}
     </svg>
   )
 }
