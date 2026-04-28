@@ -160,7 +160,7 @@ function RestaurantContent({ restaurant }: { restaurant: RestaurantPublic }) {
 
       <DishModal item={selectedItem} onClose={() => setSelectedItem(null)} />
       </div>
-      <CartSidebar restaurantId={restaurantId} />
+      <CartSidebar restaurantId={restaurantId} menuItems={menu} />
     </div>
   )
 }
@@ -247,18 +247,13 @@ function RestaurantHeader({ restaurant }: { restaurant: RestaurantPublic }) {
   )
 }
 
-// "~30 мин" (midpoint) when both present; single value when one is null.
 function formatPrepTime(
   min: number | null,
   max: number | null,
 ): string | null {
   if (min == null && max == null) return null
-  if (min != null && max != null) {
-    const avg = Math.round((min + max) / 2)
-    return `~${avg} мин`
-  }
-  const single = (min ?? max) as number
-  return `~${single} мин`
+  if (min != null && max != null) return `${min}–${max} мин`
+  return `${min ?? max} мин`
 }
 
 function HeaderSkeleton() {

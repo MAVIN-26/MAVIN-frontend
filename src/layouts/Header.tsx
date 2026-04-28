@@ -157,7 +157,7 @@ export default function Header() {
               aria-label="Аккаунт"
             >
               {isAuthenticated && user ? (
-                <div className="w-10 h-10 md:w-[50px] md:h-[50px] rounded-full bg-[#FF7700] text-white flex items-center justify-center text-base font-medium">
+                <div className="w-10 h-10 md:w-[50px] md:h-[50px] rounded-full bg-[#FF7700] text-white flex items-center justify-center text-base font-medium" style={{ fontFamily: "var(--font-display)" }}>
                   {user.first_name[0].toUpperCase()}
                 </div>
               ) : (

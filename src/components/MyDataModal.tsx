@@ -88,12 +88,7 @@ export default function MyDataModal({ open, onClose }: Props) {
           onChange={setLastName}
           autoComplete="family-name"
         />
-        <Field
-          label="Телефон"
-          value={user.phone}
-          onChange={() => {}}
-          disabled
-        />
+        <PhoneField value={user.phone} />
         <Field
           label="Эл. почта"
           value={email}
@@ -160,5 +155,41 @@ function Field({
         }`}
       />
     </label>
+  )
+}
+
+function PhoneField({ value }: { value: string }) {
+  const [show, setShow] = useState(false)
+
+  return (
+    <div
+      className="block relative"
+      onMouseEnter={() => setShow(true)}
+      onMouseLeave={() => setShow(false)}
+    >
+      <span className="block text-xs text-[#8C8C8C] mb-1">Телефон</span>
+      <input
+        type="text"
+        value={value}
+        readOnly
+        className="w-full h-11 px-4 rounded-xl border text-sm bg-[#F0F0F0] text-[#8C8C8C] border-[#E5E5E5] cursor-not-allowed focus:outline-none"
+      />
+      {show && (
+        <div
+          className="absolute left-1/2 -translate-x-1/2 bottom-[calc(100%+8px)] z-50 pointer-events-none"
+          style={{ width: 200 }}
+        >
+          <div
+            className="w-full h-9 flex items-center justify-center rounded-[18px] bg-white text-sm text-[#3C3C3C]"
+            style={{
+              boxShadow: '0 4px 4px rgba(0,0,0,0.25)',
+              fontFamily: 'var(--font-sans)',
+            }}
+          >
+            Телефон нельзя изменить
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
