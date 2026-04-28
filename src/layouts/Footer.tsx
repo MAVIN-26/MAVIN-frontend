@@ -76,7 +76,7 @@ export default function Footer() {
       {/* Copyright strip */}
       <div className="bg-white border-t border-[#E4E4E4]">
         <div className="max-w-[1200px] mx-auto px-4 py-4">
-          <p className="text-xs text-[#777777]">© 2018—2026 ООО «MAVIN»</p>
+          <p className="text-xs text-[#777777]">© 2026 ООО «MAVIN»</p>
         </div>
       </div>
     </footer>

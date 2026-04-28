@@ -77,7 +77,7 @@ export default function Header() {
 
   return (
     <header className="w-full bg-[#ECF7FB] sticky top-0 z-50 shadow-[0_10px_15px_rgba(0,0,0,0.05)]">
-      <div className="max-w-[1920px] mx-auto px-4 md:px-8 lg:px-14 h-[70px] md:h-[100px] flex items-center gap-3 md:gap-6">
+      <div className="max-w-[1920px] mx-auto px-4 md:px-8 lg:px-14 h-[70px] md:h-[72px] flex items-center gap-3 md:gap-6">
         {/* Burger — mobile only */}
         <button
           type="button"
@@ -92,7 +92,7 @@ export default function Header() {
 
         {/* Logo */}
         <Link to="/" className="shrink-0">
-          <MavinLogo className="h-[42px] md:h-[65px] w-auto" />
+          <MavinLogo className="h-[42px] md:h-[48px] w-auto" />
         </Link>
 
         {/* Search — wide pill, hidden on smallest screens (in drawer) */}
@@ -157,12 +157,12 @@ export default function Header() {
               aria-label="Аккаунт"
             >
               {isAuthenticated && user ? (
-                <div className="w-10 h-10 md:w-[50px] md:h-[50px] rounded-full bg-[#FF7700] text-white flex items-center justify-center text-base font-medium" style={{ fontFamily: "var(--font-display)" }}>
+                <div className="w-10 h-10 md:w-10 md:h-10 rounded-full bg-[#FF7700] text-white flex items-center justify-center text-base font-medium" style={{ fontFamily: "var(--font-display)" }}>
                   {user.first_name[0].toUpperCase()}
                 </div>
               ) : (
                 <svg
-                  className="w-10 h-10 md:w-[50px] md:h-[50px]"
+                  className="w-10 h-10 md:w-10 md:h-10"
                   viewBox="0 0 50 50"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
