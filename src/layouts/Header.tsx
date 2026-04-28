@@ -197,7 +197,10 @@ export default function Header() {
               />
             )}
             {panel === 'register' && !isAuthenticated && (
-              <RegisterDropdown onClose={() => setPanel(null)} />
+              <RegisterDropdown
+                onClose={() => setPanel(null)}
+                onSwitchToLogin={() => setPanel('login')}
+              />
             )}
           </div>
         </div>
