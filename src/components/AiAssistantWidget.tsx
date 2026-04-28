@@ -359,42 +359,38 @@ function RecommendedCarousel({
 
 function SunflowerIcon() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <circle cx="12" cy="12" r="3.5" fill="#0C0310" />
-      <g fill="currentColor">
-        <ellipse cx="12" cy="4.5" rx="1.6" ry="2.5" />
-        <ellipse cx="12" cy="19.5" rx="1.6" ry="2.5" />
-        <ellipse cx="4.5" cy="12" rx="2.5" ry="1.6" />
-        <ellipse cx="19.5" cy="12" rx="2.5" ry="1.6" />
-        <ellipse
-          cx="6.7"
-          cy="6.7"
-          rx="2.4"
-          ry="1.5"
-          transform="rotate(-45 6.7 6.7)"
-        />
-        <ellipse
-          cx="17.3"
-          cy="6.7"
-          rx="2.4"
-          ry="1.5"
-          transform="rotate(45 17.3 6.7)"
-        />
-        <ellipse
-          cx="6.7"
-          cy="17.3"
-          rx="2.4"
-          ry="1.5"
-          transform="rotate(45 6.7 17.3)"
-        />
-        <ellipse
-          cx="17.3"
-          cy="17.3"
-          rx="2.4"
-          ry="1.5"
-          transform="rotate(-45 17.3 17.3)"
-        />
-      </g>
+    <svg
+      width="26"
+      height="26"
+      viewBox="0 0 32 32"
+      fill="none"
+      stroke="#0C0310"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      {/* connections */}
+      <line x1="9" y1="7" x2="22" y2="9" />
+      <line x1="9" y1="7" x2="6" y2="18" />
+      <line x1="9" y1="7" x2="16" y2="17" />
+      <line x1="22" y1="9" x2="26" y2="18" />
+      <line x1="22" y1="9" x2="16" y2="17" />
+      <line x1="6" y1="18" x2="16" y2="17" />
+      <line x1="6" y1="18" x2="13" y2="26" />
+      <line x1="26" y1="18" x2="16" y2="17" />
+      <line x1="26" y1="18" x2="22" y2="26" />
+      <line x1="16" y1="17" x2="13" y2="26" />
+      <line x1="16" y1="17" x2="22" y2="26" />
+      <line x1="13" y1="26" x2="22" y2="26" />
+      {/* nodes */}
+      <circle cx="9" cy="7" r="2.4" fill="#FF7700" />
+      <circle cx="22" cy="9" r="2.4" fill="#FF7700" />
+      <circle cx="6" cy="18" r="2.4" fill="#FF7700" />
+      <circle cx="26" cy="18" r="2.4" fill="#FF7700" />
+      <circle cx="16" cy="17" r="2.4" fill="#FF7700" />
+      <circle cx="13" cy="26" r="2.4" fill="#FF7700" />
+      <circle cx="22" cy="26" r="2.4" fill="#FF7700" />
     </svg>
   )
 }

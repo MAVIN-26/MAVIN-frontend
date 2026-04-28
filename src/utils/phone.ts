@@ -32,3 +32,20 @@ export function formatPhoneInput(input: string): string {
   if (d) out += '-' + d
   return out
 }
+
+// Хелпер для onChange: учитывает удаление символа маски (скобки/пробела/дефиса).
+// Если пользователь стёр символ маски, цифры не изменились — снимаем последнюю цифру,
+// иначе форматтер тут же возвращает удалённый символ обратно и удаление "застревает".
+export function handlePhoneChange(newValue: string, prevValue: string): string {
+  const newDigits = newValue.replace(/\D/g, '')
+  const prevDigits = prevValue.replace(/\D/g, '')
+  let digits = newDigits
+  if (
+    newValue.length < prevValue.length &&
+    newDigits.length === prevDigits.length &&
+    digits.length > 0
+  ) {
+    digits = digits.slice(0, -1)
+  }
+  return formatPhoneInput(digits)
+}

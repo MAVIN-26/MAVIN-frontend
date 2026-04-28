@@ -4,6 +4,7 @@ import Modal from '../Modal'
 import { createAdminUser } from '../../api/adminUsers'
 import type { AdminCreatableRole } from '../../types/adminUser'
 import { toast } from '../../store/toastStore'
+import { handlePhoneChange, normalizePhone } from '../../utils/phone'
 
 interface Props {
   open: boolean
@@ -42,7 +43,7 @@ export default function UserFormModal({ open, onClose, onCreated }: Props) {
     const fn = firstName.trim()
     const ln = lastName.trim()
     const em = email.trim()
-    const ph = phone.trim()
+    const ph = normalizePhone(phone)
 
     if (!fn || !ln || !em || !ph || !password) {
       setError('Заполните все поля')
@@ -50,6 +51,10 @@ export default function UserFormModal({ open, onClose, onCreated }: Props) {
     }
     if (!EMAIL_RE.test(em)) {
       setError('Некорректный email')
+      return
+    }
+    if (!/^\+7\d{10}$/.test(ph)) {
+      setError('Некорректный формат телефона')
       return
     }
     if (password.length < MIN_PASSWORD) {
@@ -105,7 +110,15 @@ export default function UserFormModal({ open, onClose, onCreated }: Props) {
           <TextInput value={email} onChange={setEmail} type="email" autoComplete="email" />
         </Field>
         <Field label="Телефон">
-          <TextInput value={phone} onChange={setPhone} autoComplete="tel" />
+          <input
+            type="tel"
+            inputMode="tel"
+            placeholder="+7 (___) ___-__-__"
+            value={phone}
+            onChange={(e) => setPhone(handlePhoneChange(e.target.value, phone))}
+            autoComplete="tel"
+            className="w-full h-11 px-4 rounded-xl border border-[#E5E5E5] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FF7700]/40"
+          />
         </Field>
         <Field label="Пароль">
           <TextInput value={password} onChange={setPassword} type="password" autoComplete="new-password" />

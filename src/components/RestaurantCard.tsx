@@ -25,20 +25,14 @@ function StarIcon() {
   )
 }
 
-function HeartIcon({ filled }: { filled: boolean }) {
+function BookmarkIcon({ filled }: { filled: boolean }) {
   return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill={filled ? 'currentColor' : 'none'}
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z" />
+    <svg width="17" height="23" viewBox="0 0 17 23" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      {filled ? (
+        <path d="M0 1.22634L1.21429 0H15.7857L17 1.22634V23L8.5 17.913L0 23V1.22634Z" fill="currentColor" />
+      ) : (
+        <path fillRule="evenodd" clipRule="evenodd" d="M0 1.22634L1.21429 0H15.7857L17 1.22634V23L8.5 17.913L0 23V1.22634ZM2.42857 2.45269V18.6957L8.5 15.062L14.5714 18.6957V2.45269H2.42857Z" fill="currentColor" />
+      )}
     </svg>
   )
 }
@@ -49,8 +43,7 @@ export default function RestaurantCard({ restaurant }: Props) {
 
   const { isFavorite, toggle, pending } = useFavoriteToggle(restaurant)
 
-  const onHeartClick = (e: React.MouseEvent) => {
-    // Heart sits inside <Link> — stop the card-wide navigation.
+  const onBookmarkClick = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
     toggle()
@@ -72,7 +65,7 @@ export default function RestaurantCard({ restaurant }: Props) {
         )}
         <button
           type="button"
-          onClick={onHeartClick}
+          onClick={onBookmarkClick}
           disabled={pending}
           aria-label={
             isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'
@@ -80,7 +73,7 @@ export default function RestaurantCard({ restaurant }: Props) {
           aria-pressed={isFavorite}
           className="absolute top-2 right-2 w-9 h-9 rounded-full bg-white/90 backdrop-blur flex items-center justify-center text-[#FF7700] hover:bg-white disabled:opacity-60 transition-colors"
         >
-          <HeartIcon filled={isFavorite} />
+          <BookmarkIcon filled={isFavorite} />
         </button>
       </div>
       <div className="mt-3 flex items-center justify-between gap-3">

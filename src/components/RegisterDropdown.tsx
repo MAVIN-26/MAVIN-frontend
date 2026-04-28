@@ -3,7 +3,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useAuthStore } from '../store/authStore'
-import { formatPhoneInput, normalizePhone } from '../utils/phone'
+import { handlePhoneChange, normalizePhone } from '../utils/phone'
 
 const schema = z
   .object({
@@ -28,9 +28,10 @@ type FormData = z.infer<typeof schema>
 
 interface Props {
   onClose: () => void
+  onSwitchToLogin: () => void
 }
 
-export default function RegisterDropdown({ onClose }: Props) {
+export default function RegisterDropdown({ onClose, onSwitchToLogin }: Props) {
   const register_ = useAuthStore((s) => s.register)
   const [apiError, setApiError] = useState('')
 
@@ -104,7 +105,7 @@ export default function RegisterDropdown({ onClose }: Props) {
                 placeholder="+7 (___) ___-__-__"
                 className={inputClass}
                 value={f.value}
-                onChange={(e) => f.onChange(formatPhoneInput(e.target.value))}
+                onChange={(e) => f.onChange(handlePhoneChange(e.target.value, f.value))}
                 onBlur={f.onBlur}
               />
             )}
@@ -119,6 +120,17 @@ export default function RegisterDropdown({ onClose }: Props) {
         {apiError && (
           <p className="text-xs text-red-500 text-center">{apiError}</p>
         )}
+
+        <p className="text-xs text-black text-center font-bold">
+          Уже зарегистрированы?{' '}
+          <button
+            type="button"
+            onClick={onSwitchToLogin}
+            className="underline font-bold"
+          >
+            Войти
+          </button>
+        </p>
 
         <div className="flex justify-center pt-1">
           <button
