@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useLocation, useMatch } from 'react-router-dom'
+import { Link, useLocation, useMatch, useNavigate } from 'react-router-dom'
 import { useAiAssistant } from '../hooks/useAiAssistant'
 import { getRestaurants } from '../api/restaurants'
 import type { RestaurantPublic } from '../types/restaurant'
@@ -31,8 +31,6 @@ export default function AiAssistantWidget() {
     : null
 
   const user = useAuthStore((s) => s.user)
-  // Show only for customers and guests on the main layout. Owners/admins use
-  // their own layouts and don't get the widget mounted at all, but for safety:
   if (user && user.role !== 'customer') return null
 
   return (
@@ -49,6 +47,7 @@ function AiAssistantWidgetInner({
   routeRestaurantId: number | null
 }) {
   const [open, setOpen] = useState(false)
+  const [showSubTooltip, setShowSubTooltip] = useState(false)
   const [input, setInput] = useState('')
   const [selectedRestaurantId, setSelectedRestaurantId] = useState<number | null>(
     routeRestaurantId,
@@ -58,8 +57,22 @@ function AiAssistantWidgetInner({
   const [showSubPrompt, setShowSubPrompt] = useState(false)
   const [previewDish, setPreviewDish] = useState<MenuItemPublic | null>(null)
 
+  const user = useAuthStore((s) => s.user)
+  const navigate = useNavigate()
   const { messages, sending, send } = useAiAssistant()
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
+  const tooltipRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (!showSubTooltip) return
+    function handleClick(e: MouseEvent) {
+      if (tooltipRef.current && !tooltipRef.current.contains(e.target as Node)) {
+        setShowSubTooltip(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [showSubTooltip])
 
   // Sync with route changes: while the panel is open and the user navigates
   // to a restaurant page, auto-pick that restaurant.
@@ -106,18 +119,53 @@ function AiAssistantWidgetInner({
 
   const showTemplates = messages.length === 0
 
+  const handleLauncherClick = () => {
+    if (!user?.is_premium) {
+      setShowSubTooltip((v) => !v)
+    } else {
+      setOpen(true)
+    }
+  }
+
   return (
     <>
-      {/* Floating launcher */}
+      {/* Floating launcher + subscription tooltip */}
       {!open && (
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-label="Открыть ИИ-ассистента"
-          className="fixed bottom-6 right-6 z-30 w-14 h-14 rounded-full bg-[#FF7700] text-white shadow-lg hover:bg-[#E66A00] flex items-center justify-center"
-        >
-          <SunflowerIcon />
-        </button>
+        <div className="fixed bottom-6 right-6 z-30 flex flex-col items-end gap-3">
+          {showSubTooltip && (
+            <div
+              ref={tooltipRef}
+              className="w-[280px] bg-white rounded-2xl shadow-xl border border-[#EBEBEB] p-4 flex flex-col gap-3"
+            >
+              <div className="flex items-start gap-3">
+                <div className="shrink-0 w-12 h-12 rounded-full bg-[#FF7700] flex items-center justify-center">
+                  <SunflowerIcon />
+                </div>
+                <p className="text-sm text-[#0C0310] leading-snug">
+                  Нейро-нутрициолог доступен только по подписке. А ещё она даёт скидку 5% на всё меню!
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowSubTooltip(false)
+                  navigate('/subscription')
+                }}
+                className="w-full py-2.5 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E66A00]"
+              >
+                Оформить за 199 р/мес
+              </button>
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={handleLauncherClick}
+            aria-label="Открыть ИИ-ассистента"
+            className="w-14 h-14 rounded-full bg-[#FF7700] text-white shadow-lg hover:bg-[#E66A00] flex items-center justify-center"
+          >
+            <SunflowerIcon />
+          </button>
+        </div>
       )}
 
       {/* Chat panel */}

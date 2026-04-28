@@ -10,7 +10,7 @@ interface Props {
 export default function MenuItemCard({ item, onClick, onAdd }: Props) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
   const canAdd = isAuthenticated && !!onAdd
-  const { name, photo_url, price, weight_grams } = item
+  const { name, photo_url, price, weight_grams, calories } = item
   const priceLabel = formatPrice(price)
 
   return (
@@ -42,14 +42,15 @@ export default function MenuItemCard({ item, onClick, onAdd }: Props) {
           <PlusIcon />
         </button>
       </div>
-      <div className="mt-2">
-        <div className="text-sm font-medium text-[#0C0310]">
+      <div className="mt-2 flex flex-col gap-0.5">
+        <div className="text-xs text-[#8C8C8C]">
           {priceLabel}
-          {weight_grams != null && (
-            <span className="text-[#8C8C8C] font-normal"> · {weight_grams} г</span>
-          )}
+          {calories > 0 && <span>  {calories} ккал</span>}
         </div>
-        <div className="text-xs text-[#3C3C3C] line-clamp-2">{name}</div>
+        <div className="text-xs font-medium text-[#0C0310] line-clamp-2">{name}</div>
+        {weight_grams != null && (
+          <div className="text-xs text-[#8C8C8C]">{weight_grams} г</div>
+        )}
       </div>
     </button>
   )
