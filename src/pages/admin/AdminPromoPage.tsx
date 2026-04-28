@@ -180,7 +180,7 @@ export default function AdminPromoPage() {
                       )}
                     </Td>
                     <Td>
-                      <div className="flex gap-2">
+                      <div className="flex flex-col gap-2 items-start">
                         <button
                           type="button"
                           onClick={() => openEdit(p)}
