@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react'
-import Modal from './Modal'
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { useAuthStore } from '../store/authStore'
 import { useAllergens } from '../hooks/useAllergens'
 import { updateProfile } from '../api/profile'
@@ -17,27 +16,66 @@ export default function MyAllergensModal({ open, onClose }: Props) {
 
   const [selected, setSelected] = useState<Set<number>>(new Set())
   const [submitting, setSubmitting] = useState(false)
+  const [showPicker, setShowPicker] = useState(false)
+  const pickerRef = useRef<HTMLDivElement>(null)
 
-  // Seed selection from current user's allergens each time modal opens.
   useEffect(() => {
     if (!open || !user) return
     setSelected(new Set(user.allergens.map((a) => a.id)))
+    setShowPicker(false)
   }, [open, user])
+
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', onKey)
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = prev
+    }
+  }, [open, onClose])
+
+  useEffect(() => {
+    if (!showPicker) return
+    const onClick = (e: MouseEvent) => {
+      if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
+        setShowPicker(false)
+      }
+    }
+    document.addEventListener('mousedown', onClick)
+    return () => document.removeEventListener('mousedown', onClick)
+  }, [showPicker])
 
   const sorted = useMemo(
     () => [...items].sort((a, b) => a.name.localeCompare(b.name, 'ru')),
     [items],
   )
 
-  if (!user) return null
+  const selectedItems = useMemo(
+    () => sorted.filter((a) => selected.has(a.id)),
+    [sorted, selected],
+  )
 
-  const toggle = (id: number) => {
+  const unselectedItems = useMemo(
+    () => sorted.filter((a) => !selected.has(a.id)),
+    [sorted, selected],
+  )
+
+  if (!open || !user) return null
+
+  const remove = (id: number) => {
     setSelected((prev) => {
       const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
+      next.delete(id)
       return next
     })
+  }
+
+  const add = (id: number) => {
+    setSelected((prev) => new Set([...prev, id]))
+    if (unselectedItems.length <= 1) setShowPicker(false)
   }
 
   const clearAll = () => setSelected(new Set())
@@ -66,66 +104,110 @@ export default function MyAllergensModal({ open, onClose }: Props) {
   }
 
   return (
-    <Modal open={open} onClose={onClose} title="Мои аллергены" maxWidth="md">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {loading && (
-          <div className="text-sm text-[#8C8C8C]">Загрузка…</div>
-        )}
-        {error && (
-          <div className="text-sm text-red-600" role="alert">
-            {error}
-          </div>
-        )}
-        {!loading && !error && sorted.length === 0 && (
-          <div className="text-sm text-[#8C8C8C]">Список пуст</div>
-        )}
-        {!loading && !error && sorted.length > 0 && (
-          <ul className="max-h-[320px] overflow-y-auto flex flex-col gap-1 pr-1">
-            {sorted.map((a) => {
-              const checked = selected.has(a.id)
-              return (
-                <li key={a.id}>
-                  <label className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#FAFAFA] cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onChange={() => toggle(a.id)}
-                      className="w-4 h-4 accent-[#FF7700]"
-                    />
-                    <span className="text-sm text-[#0C0310]">{a.name}</span>
-                  </label>
-                </li>
-              )
-            })}
-          </ul>
-        )}
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Аллергены"
+      className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/40"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-[480px] bg-white rounded-3xl shadow-xl overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <form onSubmit={handleSubmit}>
+          {/* Header */}
+          <div className="grid grid-cols-[48px_1fr_48px] items-center px-6 pt-6 pb-4">
+            <div className="relative" ref={pickerRef}>
+              <button
+                type="button"
+                onClick={() => setShowPicker((v) => !v)}
+                aria-label="Добавить аллерген"
+                className="w-8 h-8 flex items-center justify-center text-[#0C0310] hover:text-[#FF7700] transition-colors"
+              >
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+                </svg>
+              </button>
 
-        <div className="flex items-center justify-between gap-3 pt-2 border-t border-[#F0F0F0]">
-          <button
-            type="button"
-            onClick={clearAll}
-            className="text-sm text-[#3C3C3C] hover:text-[#0C0310]"
-          >
-            Очистить
-          </button>
-          <div className="flex items-center gap-3">
+              {showPicker && (
+                <div className="absolute top-10 left-0 z-50 w-56 bg-white rounded-2xl shadow-lg border border-[#F0F0F0] py-2 max-h-52 overflow-y-auto">
+                  {loading && (
+                    <p className="px-4 py-2 text-sm text-[#8C8C8C]">Загрузка…</p>
+                  )}
+                  {!loading && unselectedItems.length === 0 && (
+                    <p className="px-4 py-2 text-sm text-[#8C8C8C]">Все добавлены</p>
+                  )}
+                  {!loading && unselectedItems.map((a) => (
+                    <button
+                      key={a.id}
+                      type="button"
+                      onClick={() => add(a.id)}
+                      className="w-full text-left px-4 py-2 text-sm text-[#0C0310] hover:bg-[#F5F5F5]"
+                    >
+                      {a.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <h2 className="text-xl font-bold text-[#0C0310] text-center">Аллергены</h2>
+            <div />
+          </div>
+
+          {/* Allergen rows */}
+          <div className="px-6 flex flex-col gap-3 max-h-[320px] overflow-y-auto">
+            {error && (
+              <p className="text-sm text-red-600" role="alert">{error}</p>
+            )}
+            {!loading && !error && selectedItems.length === 0 && (
+              <p className="text-sm text-[#8C8C8C] py-2">
+                Нет выбранных аллергенов. Нажмите «+» чтобы добавить.
+              </p>
+            )}
+            {selectedItems.map((a) => (
+              <div
+                key={a.id}
+                className="flex items-center justify-between px-5 py-4 bg-[#F5F5F5] rounded-2xl"
+              >
+                <span className="text-base text-[#8C8C8C]">{a.name}</span>
+                <button
+                  type="button"
+                  onClick={() => remove(a.id)}
+                  aria-label={`Удалить ${a.name}`}
+                  className="text-[#3C3C3C] hover:text-red-500 transition-colors"
+                >
+                  <svg width="22" height="4" viewBox="0 0 22 4" fill="none" aria-hidden>
+                    <rect x="0" y="1" width="22" height="2.5" rx="1.25" fill="currentColor"/>
+                  </svg>
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Clear button */}
+          <div className="px-6 pt-4">
             <button
               type="button"
-              onClick={onClose}
-              className="px-4 py-2 rounded-full text-sm text-[#3C3C3C] hover:bg-[#F0F0F0]"
+              onClick={clearAll}
+              className="px-5 py-2 rounded-full bg-[#F0F0F0] text-sm text-[#3C3C3C] hover:bg-[#E0E0E0] transition-colors"
             >
-              Отмена
+              Очистить
             </button>
+          </div>
+
+          {/* Save button */}
+          <div className="px-6 pt-4 pb-6">
             <button
               type="submit"
               disabled={submitting || loading}
-              className="px-5 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E66A00] disabled:opacity-60"
+              className="w-full py-4 rounded-2xl bg-[#FF7700] text-white text-base font-bold hover:bg-[#E66A00] transition-colors disabled:opacity-60"
             >
               {submitting ? 'Сохраняем…' : 'Сохранить изменения'}
             </button>
           </div>
-        </div>
-      </form>
-    </Modal>
+        </form>
+      </div>
+    </div>
   )
 }
