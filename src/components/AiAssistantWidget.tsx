@@ -6,6 +6,7 @@ import type { RestaurantPublic } from '../types/restaurant'
 import type { MenuItemPublic } from '../types/menuItem'
 import { useAuthStore } from '../store/authStore'
 import { useCartStore } from '../store/cartStore'
+import { toast } from '../store/toastStore'
 import DishModal from './DishModal'
 
 const TEMPLATES: { label: string; prompt: string }[] = [
@@ -58,6 +59,7 @@ function AiAssistantWidgetInner({
   const [previewDish, setPreviewDish] = useState<MenuItemPublic | null>(null)
 
   const user = useAuthStore((s) => s.user)
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
   const navigate = useNavigate()
   const { messages, sending, send } = useAiAssistant()
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
@@ -149,6 +151,10 @@ function AiAssistantWidgetInner({
                 type="button"
                 onClick={() => {
                   setShowSubTooltip(false)
+                  if (!isAuthenticated) {
+                    toast.error('Войдите, чтобы оформить подписку')
+                    return
+                  }
                   navigate('/subscription')
                 }}
                 className="w-full py-2.5 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00]"
