@@ -29,7 +29,7 @@ export default function OwnerLayout() {
   }, [token, role])
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#ECF7FB]">
+    <div className="min-h-screen flex flex-col bg-white">
       <OwnerHeader />
       <main className="flex-1 w-full max-w-[1440px] mx-auto px-8 pt-6 pb-10">
         <Outlet />
@@ -65,10 +65,10 @@ function OwnerHeader() {
               to={item.to}
               end={item.end}
               className={({ isActive }) =>
-                `px-5 py-2 rounded-full text-sm text-black transition-colors ${
+                `px-8 py-2 rounded-lg text-sm text-black transition-colors ${
                   isActive
                     ? 'bg-[#FF7700]'
-                    : 'bg-white hover:bg-[#FF7700]/10'
+                    : 'bg-white border border-[#E5E5E5] hover:bg-[#FF7700]/10'
                 }`
               }
             >
