@@ -152,7 +152,7 @@ export default function OwnerRestaurantProfilePage() {
   }
 
   return (
-    <div className="flex flex-col gap-5 max-w-[720px]">
+    <div className="flex flex-col gap-5 max-w-[720px] w-full mx-auto">
       <h1 className="text-2xl font-semibold text-[#0C0310]">Профиль ресторана</h1>
 
       <form
