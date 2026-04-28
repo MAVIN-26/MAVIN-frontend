@@ -96,7 +96,7 @@ export default function PaymentMethodModal({
       <button
         type="button"
         onClick={handleConfirm}
-        className="mt-5 w-full h-11 rounded-xl bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56B00]"
+        className="mt-5 w-full h-11 rounded-xl bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00]"
       >
         Выбрать
       </button>

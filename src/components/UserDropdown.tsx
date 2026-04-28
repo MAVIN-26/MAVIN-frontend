@@ -129,7 +129,7 @@ export default function UserDropdown({ user, onClose }: Props) {
         <Link
           to="/subscription"
           onClick={onClose}
-          className="absolute bottom-3 right-3 w-[72px] h-[72px] rounded-full bg-[#E6752E] text-white font-bold text-[11px] leading-tight flex items-center justify-center text-center shadow-md hover:opacity-95 transition-opacity"
+          className="absolute bottom-3 right-3 w-[72px] h-[72px] rounded-full bg-[#E56A00] text-white font-bold text-[11px] leading-tight flex items-center justify-center text-center shadow-md hover:opacity-95 transition-opacity"
         >
           Оформить<br />Студент+
         </Link>

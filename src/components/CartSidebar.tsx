@@ -149,7 +149,7 @@ export default function CartSidebar({
               <button
                 type="button"
                 onClick={() => setKbjuOpen((v) => !v)}
-                className="text-xs font-medium text-[#FF7700] border border-[#FF7700] rounded-lg px-2 py-1 hover:bg-[#FFF3E8]"
+                className="text-xs font-medium text-[#FF7700] border border-[#FF7700] rounded-lg px-2 py-1 hover:bg-[#FFBA7D]"
               >
                 КБЖУ
               </button>
@@ -184,7 +184,7 @@ export default function CartSidebar({
           <button
             type="button"
             onClick={() => navigate('/checkout')}
-            className="w-full h-11 rounded-xl bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56B00]"
+            className="w-full h-11 rounded-xl bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00]"
           >
             Далее
           </button>

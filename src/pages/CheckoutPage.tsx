@@ -165,7 +165,7 @@ export default function CheckoutPage() {
           <button
             type="button"
             onClick={() => setUnavailableOpen(false)}
-            className="px-5 py-2 rounded-full bg-[#FF7700] hover:bg-[#E66A00] text-white text-sm font-medium"
+            className="px-5 py-2 rounded-full bg-[#FF7700] hover:bg-[#E56A00] text-white text-sm font-medium"
           >
             Понятно
           </button>
@@ -270,7 +270,7 @@ function YourOrderCard({
         className={
           'self-start rounded-xl border px-4 py-2 text-sm transition ' +
           (cutlery
-            ? 'bg-[#FF7700] border-[#FF7700] text-white hover:bg-[#E56B00]'
+            ? 'bg-[#FF7700] border-[#FF7700] text-white hover:bg-[#E56A00]'
             : 'bg-white border-[#E5E5E5] text-[#0C0310] hover:bg-[#F0F0F0]')
         }
       >
@@ -431,7 +431,7 @@ function PaymentAndTotalCard({
           type="button"
           onClick={onPay}
           disabled={submitting}
-          className="flex-1 h-11 rounded-xl bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56B00] disabled:opacity-60 disabled:cursor-not-allowed"
+          className="flex-1 h-11 rounded-xl bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00] disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {submitting ? 'Оформляем…' : 'Оплатить'}
         </button>

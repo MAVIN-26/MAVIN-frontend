@@ -114,7 +114,7 @@ export default function MyDataModal({ open, onClose }: Props) {
           <button
             type="submit"
             disabled={submitting}
-            className="px-5 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E66A00] disabled:opacity-60"
+            className="px-5 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00] disabled:opacity-60"
           >
             {submitting ? 'Сохраняем…' : 'Сохранить изменения'}
           </button>

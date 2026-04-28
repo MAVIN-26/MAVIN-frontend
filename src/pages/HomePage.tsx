@@ -64,7 +64,7 @@ export default function HomePage() {
             type="button"
             onClick={loadMore}
             disabled={loading}
-            className="h-11 px-6 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#e66b00] disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+            className="h-11 px-6 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00] disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? 'Загрузка...' : 'Показать ещё'}
           </button>

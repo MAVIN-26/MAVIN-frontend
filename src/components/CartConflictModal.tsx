@@ -32,7 +32,7 @@ export default function CartConflictModal() {
         <button
           type="button"
           onClick={() => resolve()}
-          className="px-4 h-10 rounded-xl bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56B00]"
+          className="px-4 h-10 rounded-xl bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00]"
         >
           Очистить и добавить
         </button>

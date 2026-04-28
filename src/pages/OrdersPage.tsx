@@ -94,7 +94,7 @@ export default function OrdersPage() {
         </aside>
 
         <section className="min-h-[200px]">
-          {selectedId == null && (
+          {selectedId == null && orders.length > 0 && (
             <div className="rounded-2xl bg-[#FAFAFA] p-6">
               <p className="text-sm text-[#8C8C8C]">
                 Выберите заказ слева, чтобы увидеть детали.
@@ -153,7 +153,7 @@ function OrderListCard({
         'text-left rounded-2xl border bg-white px-4 py-3 transition cursor-pointer ' +
         (selected
           ? 'border-[#FF7700] shadow-sm'
-          : 'border-[#E5E5E5] hover:border-[#FFB266]')
+          : 'border-[#E5E5E5] hover:border-[#FFBA7D]')
       }
     >
       <div className="flex items-start justify-between gap-3">

@@ -152,7 +152,7 @@ export default function OwnerRestaurantProfilePage() {
   }
 
   return (
-    <div className="flex flex-col gap-5 max-w-[720px]">
+    <div className="flex flex-col gap-5 max-w-[720px] w-full mx-auto">
       <h1 className="text-2xl font-semibold text-[#0C0310]">Профиль ресторана</h1>
 
       <form
@@ -268,7 +268,7 @@ export default function OwnerRestaurantProfilePage() {
                 />
               )}
             </div>
-            <label className="px-4 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium cursor-pointer hover:bg-[#E66A00]">
+            <label className="px-4 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium cursor-pointer hover:bg-[#E56A00]">
               {uploading ? 'Загрузка…' : 'Загрузить'}
               <input
                 type="file"
@@ -287,7 +287,7 @@ export default function OwnerRestaurantProfilePage() {
           <button
             type="submit"
             disabled={saving || uploading}
-            className="px-5 py-2.5 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E66A00] disabled:opacity-60"
+            className="px-5 py-2.5 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00] disabled:opacity-60"
           >
             {saving ? 'Сохранение…' : 'Сохранить'}
           </button>

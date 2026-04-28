@@ -158,7 +158,7 @@ function AdminHeader({ onBurgerClick }: { onBurgerClick: () => void }) {
                   await logout()
                   navigate('/')
                 }}
-                className="w-full text-left px-4 py-2 text-sm text-[#D94B4B] hover:bg-[#FAFAFA]"
+                className="w-full text-left px-4 py-2 text-sm text-[#FF5757] hover:bg-[#FAFAFA]"
               >
                 Выйти
               </button>

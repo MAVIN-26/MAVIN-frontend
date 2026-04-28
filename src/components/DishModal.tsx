@@ -106,7 +106,7 @@ export default function DishModal({ item, onClose }: Props) {
               title={
                 !isAuthenticated ? 'Войдите, чтобы добавить' : undefined
               }
-              className="px-5 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E66A00] disabled:opacity-60 disabled:cursor-not-allowed"
+              className="px-5 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00] disabled:opacity-60 disabled:cursor-not-allowed"
             >
               Добавить
             </button>

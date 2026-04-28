@@ -47,10 +47,10 @@ export default function Modal({
       onClick={onClose}
     >
       <div
-        className={`relative w-full ${widthClass[maxWidth]} bg-white rounded-2xl shadow-xl overflow-hidden`}
+        className={`relative w-full ${widthClass[maxWidth]} max-h-[calc(100vh-2rem)] flex flex-col bg-white rounded-2xl shadow-xl overflow-hidden`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-5 pt-5 pb-3">
+        <div className="shrink-0 flex items-center justify-between px-5 pt-5 pb-3">
           <h2 className="text-lg font-semibold text-[#0C0310]">{title}</h2>
           <button
             type="button"
@@ -68,7 +68,7 @@ export default function Modal({
             </svg>
           </button>
         </div>
-        <div className="px-5 pb-5">{children}</div>
+        <div className="px-5 pb-5 overflow-y-auto">{children}</div>
       </div>
     </div>
   )

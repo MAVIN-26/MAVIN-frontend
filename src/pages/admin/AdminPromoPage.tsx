@@ -120,7 +120,7 @@ export default function AdminPromoPage() {
         <button
           type="button"
           onClick={openCreate}
-          className="px-5 py-2.5 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E66A00]"
+          className="px-5 py-2.5 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00]"
         >
           + Создать промокод
         </button>
@@ -174,24 +174,24 @@ export default function AdminPromoPage() {
                       {!p.is_active ? (
                         <Badge color="#8C8C8C">Неактивен</Badge>
                       ) : expired ? (
-                        <Badge color="#D94B4B">Истёк</Badge>
+                        <Badge color="#FF5757">Истёк</Badge>
                       ) : (
-                        <Badge color="#2F8F2F">Активен</Badge>
+                        <Badge color="#CCFF53">Активен</Badge>
                       )}
                     </Td>
                     <Td>
-                      <div className="flex gap-2">
+                      <div className="flex flex-col gap-2 items-start">
                         <button
                           type="button"
                           onClick={() => openEdit(p)}
-                          className="px-3 py-1 rounded-full bg-[#FF7700] text-white text-xs hover:bg-[#E66A00]"
+                          className="px-3 py-1 rounded-full bg-[#FF7700] text-white text-xs hover:bg-[#E56A00]"
                         >
                           Редактировать
                         </button>
                         <button
                           type="button"
                           onClick={() => setToDelete(p)}
-                          className="px-3 py-1 rounded-full bg-[#D94B4B] text-white text-xs hover:bg-[#C13E3E]"
+                          className="px-3 py-1 rounded-full bg-[#FF5757] text-white text-xs hover:bg-[#FF5757]"
                         >
                           Удалить
                         </button>

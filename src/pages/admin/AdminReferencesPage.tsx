@@ -185,6 +185,27 @@ function ReferenceColumn({
         className="h-10 px-4 rounded-full border border-[#E5E5E5] bg-white text-sm text-[#0C0310] focus:outline-none focus:ring-2 focus:ring-[#FF7700]/40"
       />
 
+      <div className="flex items-center gap-2">
+        <input
+          type="text"
+          value={newName}
+          onChange={(e) => setNewName(e.target.value)}
+          placeholder="Название"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && newName.trim()) handleCreate()
+          }}
+          className="flex-1 h-10 px-4 rounded-full border border-[#E5E5E5] bg-white text-sm text-[#0C0310] focus:outline-none focus:ring-2 focus:ring-[#FF7700]/40"
+        />
+        <button
+          type="button"
+          onClick={handleCreate}
+          disabled={creating || !newName.trim()}
+          className="shrink-0 px-5 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00] disabled:opacity-60"
+        >
+          {addLabel}
+        </button>
+      </div>
+
       {loadError && (
         <div className="text-sm text-red-600" role="alert">
           {loadError}
@@ -226,7 +247,7 @@ function ReferenceColumn({
                       type="button"
                       onClick={() => handleSaveEdit(item.id)}
                       disabled={isSaving}
-                      className="px-3 py-1.5 rounded-full bg-[#FF7700] text-white text-xs hover:bg-[#E66A00] disabled:opacity-60"
+                      className="px-3 py-1.5 rounded-full bg-[#FF7700] text-white text-xs hover:bg-[#E56A00] disabled:opacity-60"
                     >
                       {isSaving ? 'Сохраняем…' : 'Сохранить'}
                     </button>
@@ -251,7 +272,7 @@ function ReferenceColumn({
                     <button
                       type="button"
                       onClick={() => setToDelete(item)}
-                      className="px-3 py-1.5 rounded-full bg-[#D94B4B] text-white text-xs hover:bg-[#C13E3E]"
+                      className="px-3 py-1.5 rounded-full bg-[#FF5757] text-white text-xs hover:bg-[#FF5757]"
                     >
                       Удалить
                     </button>
@@ -262,27 +283,6 @@ function ReferenceColumn({
           })}
         </ul>
       )}
-
-      <div className="flex items-center gap-2 pt-2">
-        <input
-          type="text"
-          value={newName}
-          onChange={(e) => setNewName(e.target.value)}
-          placeholder="Название"
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && newName.trim()) handleCreate()
-          }}
-          className="flex-1 h-10 px-4 rounded-full border border-[#E5E5E5] bg-white text-sm text-[#0C0310] focus:outline-none focus:ring-2 focus:ring-[#FF7700]/40"
-        />
-        <button
-          type="button"
-          onClick={handleCreate}
-          disabled={creating || !newName.trim()}
-          className="shrink-0 px-5 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E66A00] disabled:opacity-60"
-        >
-          {addLabel}
-        </button>
-      </div>
 
       <ConfirmDialog
         open={toDelete !== null}

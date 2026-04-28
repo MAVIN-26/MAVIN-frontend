@@ -8,12 +8,14 @@ export async function getPlans(): Promise<SubscriptionPlan[]> {
 }
 
 // GET /subscriptions/my — auth
+// Бек возвращает либо подписку, либо {is_active: false} когда активной нет.
+// На всякий случай поддерживаем и 404 — нормализуем оба варианта к null.
 export async function getMySubscription(): Promise<UserSubscription | null> {
   try {
     const res = await client.get<UserSubscription>('/subscriptions/my')
+    if (res.data?.is_active !== true) return null
     return res.data
   } catch (e: unknown) {
-    // Backend returns 404 when no active subscription exists
     const status = (e as { response?: { status?: number } })?.response?.status
     if (status === 404) return null
     throw e

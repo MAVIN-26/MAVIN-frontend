@@ -173,11 +173,11 @@ export default function AdminUsersPage() {
                     </Td>
                     <Td>
                       {u.is_blocked ? (
-                        <span className="px-3 py-1 rounded-full bg-[#D94B4B] text-white text-xs">
+                        <span className="px-3 py-1 rounded-full bg-[#FF5757] text-white text-xs">
                           Заблокирован
                         </span>
                       ) : (
-                        <span className="px-3 py-1 rounded-full bg-[#2F8F2F] text-white text-xs">
+                        <span className="px-3 py-1 rounded-full bg-[#CCFF53] text-white text-xs">
                           Активен
                         </span>
                       )}
@@ -231,7 +231,7 @@ export default function AdminUsersPage() {
         <button
           type="button"
           onClick={() => setFormOpen(true)}
-          className="px-5 py-2.5 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E66A00]"
+          className="px-5 py-2.5 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00]"
         >
           + Создать пользователя
         </button>
@@ -277,7 +277,7 @@ function RoleBadge({ role }: { role: UserProfile['role'] }) {
   }
   if (role === 'site_admin') {
     return (
-      <span className="px-3 py-1 rounded-full bg-[#FFF6EC] text-[#FF7700] text-xs">
+      <span className="px-3 py-1 rounded-full bg-[#FFBA7D] text-[#FF7700] text-xs">
         Адм. сайта
       </span>
     )

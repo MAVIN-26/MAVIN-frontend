@@ -79,8 +79,8 @@ export default function PromoCodeFormModal({
       setError('Введите код')
       return
     }
-    if (!Number.isFinite(p) || p <= 0 || p > 100) {
-      setError('Скидка должна быть от 1 до 100')
+    if (!Number.isInteger(p) || p < 1 || p > 100) {
+      setError('Скидка должна быть целым числом от 1 до 100')
       return
     }
 
@@ -130,11 +130,23 @@ export default function PromoCodeFormModal({
         <label className="flex flex-col gap-1">
           <span className="text-xs text-[#3C3C3C]">Скидка, %</span>
           <input
-            type="number"
-            min={1}
-            max={100}
+            type="text"
+            inputMode="numeric"
             value={percent}
-            onChange={(e) => setPercent(e.target.value)}
+            onChange={(e) => {
+              const digits = e.target.value.replace(/\D/g, '')
+              if (digits === '') {
+                setPercent('')
+                return
+              }
+              const n = Number(digits)
+              if (n > 100) {
+                setPercent('100')
+              } else {
+                setPercent(String(n))
+              }
+            }}
+            maxLength={3}
             className="px-3 py-2 rounded-lg border border-[#E5E5E5] text-sm"
             placeholder="15"
           />
@@ -182,7 +194,7 @@ export default function PromoCodeFormModal({
           <button
             type="submit"
             disabled={submitting}
-            className="px-5 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E66A00] disabled:opacity-60"
+            className="px-5 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00] disabled:opacity-60"
           >
             {submitting ? 'Сохранение…' : 'Сохранить'}
           </button>

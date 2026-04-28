@@ -83,7 +83,7 @@ export default function KbjuFilter({ open, initial, onClose, onApply }: Props) {
           <button
             type="button"
             onClick={handleApply}
-            className="flex-1 py-2 rounded-full bg-[#FF7700] text-white text-sm hover:bg-[#E66A00]"
+            className="flex-1 py-2 rounded-full bg-[#FF7700] text-white text-sm hover:bg-[#E56A00]"
           >
             Применить
           </button>

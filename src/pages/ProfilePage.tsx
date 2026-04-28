@@ -41,7 +41,7 @@ export default function ProfilePage() {
       {/* «Студент+» placeholder — real subscription flow is in another phase. */}
       <Link
         to="/subscription"
-        className="inline-flex self-start items-center gap-2 px-5 py-2.5 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E66A00]"
+        className="inline-flex self-start items-center gap-2 px-5 py-2.5 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00]"
       >
         Оформить студент+
       </Link>
@@ -87,7 +87,7 @@ export default function ProfilePage() {
                   {user.allergens.map((a) => (
                     <span
                       key={a.id}
-                      className="px-3 py-1 rounded-full bg-[#FFF6EC] text-[#FF7700] text-xs"
+                      className="px-3 py-1 rounded-full bg-[#FFBA7D] text-[#FF7700] text-xs"
                     >
                       {a.name}
                     </span>

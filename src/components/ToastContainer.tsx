@@ -1,7 +1,7 @@
 import { useToastStore } from '../store/toastStore'
 
 export default function ToastContainer() {
-  const { toasts, dismiss } = useToastStore()
+  const { toasts } = useToastStore()
 
   if (toasts.length === 0) return null
 
@@ -13,19 +13,11 @@ export default function ToastContainer() {
           <div
             key={t.id}
             role="status"
-            className={`pointer-events-auto min-w-[260px] max-w-[360px] px-4 py-3 rounded-xl shadow-lg text-sm text-white flex items-start gap-3 ${
-              isSuccess ? 'bg-[#2F8F2F]' : 'bg-[#D94B4B]'
+            className={`pointer-events-auto min-w-[260px] max-w-[360px] px-5 py-3 rounded-2xl shadow-lg text-sm text-black ${
+              isSuccess ? 'bg-[#EFFFD4]' : 'bg-[#FFD4D4]'
             }`}
           >
-            <span className="flex-1 leading-snug">{t.message}</span>
-            <button
-              type="button"
-              onClick={() => dismiss(t.id)}
-              aria-label="Закрыть"
-              className="shrink-0 text-white/80 hover:text-white"
-            >
-              ✕
-            </button>
+            <span className="leading-snug">{t.message}</span>
           </div>
         )
       })}
