@@ -48,10 +48,10 @@ export default function PartnersPage() {
         <p>
           Напишите нам на{' '}
           <a
-            href="mailto:partners@mavin.ru"
+            href="mailto:mavin26.official@yandex.ru"
             className="text-[#FF7700] hover:underline"
           >
-            partners@mavin.ru
+            mavin26.official@yandex.ru
           </a>{' '}
           — укажите название кафе, город, телефон владельца и тип кухни.
           Мы свяжемся с вами и расскажем подробности подключения.

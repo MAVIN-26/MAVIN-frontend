@@ -42,11 +42,6 @@ export default function AboutSubscriptionPage() {
                 <td className="px-4 py-2 text-[#FF7700] font-semibold">280 ₽</td>
               </tr>
               <tr className="border-t border-[#E4E4E4]">
-                <td className="px-4 py-2">Очередь на выдаче</td>
-                <td className="px-4 py-2">обычная</td>
-                <td className="px-4 py-2 text-[#FF7700] font-semibold">приоритет</td>
-              </tr>
-              <tr className="border-t border-[#E4E4E4]">
                 <td className="px-4 py-2">ИИ-нутрициолог</td>
                 <td className="px-4 py-2">—</td>
                 <td className="px-4 py-2 text-[#FF7700] font-semibold">включён</td>
@@ -60,7 +55,7 @@ export default function AboutSubscriptionPage() {
         <p>
           При 20 обедах в месяц по подписке «Студент+» экономия составит около
           <strong> 1 400 ₽</strong> — это больше, чем стоимость самой подписки.
-          А ещё — меньше времени в очередях и персональный ИИ-помощник в чате.
+          А ещё — персональный ИИ-помощник в чате.
         </p>
       </InfoSection>
     </InfoPage>

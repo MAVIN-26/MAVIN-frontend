@@ -10,14 +10,8 @@ export default function ContactsPage() {
       <InfoSection title="Электронная почта">
         <p>
           Техническая поддержка:{' '}
-          <a href="mailto:support@mavin.ru" className="text-[#FF7700] hover:underline">
-            support@mavin.ru
-          </a>
-        </p>
-        <p>
-          Отдел маркетинга:{' '}
-          <a href="mailto:marketing@mavin.ru" className="text-[#FF7700] hover:underline">
-            marketing@mavin.ru
+          <a href="mailto:mavin26.official@yandex.ru" className="text-[#FF7700] hover:underline">
+            mavin26.official@yandex.ru
           </a>
         </p>
       </InfoSection>
@@ -25,8 +19,8 @@ export default function ContactsPage() {
       <InfoSection title="Телефон">
         <p>
           Горячая линия для покупателей:{' '}
-          <a href="tel:+78001234567" className="text-[#FF7700] hover:underline">
-            8 (800) 123-45-67
+          <a href="tel:+89515427636" className="text-[#FF7700] hover:underline">
+            8 (951) 542-76-36
           </a>
         </p>
       </InfoSection>
