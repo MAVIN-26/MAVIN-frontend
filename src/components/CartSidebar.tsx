@@ -9,6 +9,14 @@ import type { MenuItemPublic } from '../types/menuItem'
 const formatPrice = (rub: number) =>
   rub.toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + ' ₽'
 
+const itemsWord = (n: number) => {
+  const mod10 = n % 10
+  const mod100 = n % 100
+  if (mod10 === 1 && mod100 !== 11) return 'блюдо'
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return 'блюда'
+  return 'блюд'
+}
+
 export default function CartSidebar({
   restaurantId,
   menuItems = [],
@@ -25,6 +33,7 @@ export default function CartSidebar({
   const clear = useCartStore((s) => s.clear)
 
   const [kbjuOpen, setKbjuOpen] = useState(false)
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false)
 
   if (!user || user.role !== 'customer') return null
 
@@ -32,6 +41,7 @@ export default function CartSidebar({
     cart && cart.restaurant_id !== null && cart.restaurant_id === restaurantId
   const items: CartItem[] = belongsHere ? cart!.items : []
   const isEmpty = items.length === 0
+  const itemsCount = items.reduce((s, it) => s + it.quantity, 0)
 
   const menuMap = new Map(menuItems.map((m) => [m.id, m]))
 
@@ -55,21 +65,13 @@ export default function CartSidebar({
     return sum + (mi?.carbs ?? 0) * it.quantity
   }, 0)
 
-  return (
-    <aside className="w-[280px] shrink-0 rounded-2xl bg-[#FAFAFA] p-4 flex flex-col gap-4 self-start sticky top-24">
-      <header className="flex items-center justify-between">
-        <h2 className="text-base font-semibold text-[#0C0310]">Корзина</h2>
-        {!isEmpty && (
-          <button
-            type="button"
-            onClick={() => clear()}
-            className="text-xs text-[#8C8C8C] hover:text-[#0C0310]"
-          >
-            Очистить
-          </button>
-        )}
-      </header>
+  const goCheckout = () => {
+    setMobileSheetOpen(false)
+    navigate('/checkout')
+  }
 
+  const cartBody = (
+    <>
       {loading && !cart && <Spinner />}
 
       {!loading && isEmpty && (
@@ -152,7 +154,7 @@ export default function CartSidebar({
                 КБЖУ
               </button>
               {kbjuOpen && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-[#E5E5E5] rounded-xl shadow-md p-3 z-10">
+                <div className="absolute right-0 bottom-full mb-2 w-48 bg-white border border-[#E5E5E5] rounded-xl shadow-md p-3 z-10">
                   <div className="text-xs font-medium text-[#0C0310] mb-2">
                     Из чего сложилась КБЖУ
                   </div>
@@ -181,13 +183,87 @@ export default function CartSidebar({
 
           <button
             type="button"
-            onClick={() => navigate('/checkout')}
+            onClick={goCheckout}
             className="w-full h-11 rounded-xl bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00]"
           >
             Далее
           </button>
         </>
       )}
-    </aside>
+    </>
+  )
+
+  const cartHeader = (
+    <header className="flex items-center justify-between">
+      <h2 className="text-base font-semibold text-[#0C0310]">Корзина</h2>
+      {!isEmpty && (
+        <button
+          type="button"
+          onClick={() => clear()}
+          className="text-xs text-[#8C8C8C] hover:text-[#0C0310]"
+        >
+          Очистить
+        </button>
+      )}
+    </header>
+  )
+
+  return (
+    <>
+      <aside className="hidden lg:flex w-[280px] shrink-0 rounded-2xl bg-[#FAFAFA] p-4 flex-col gap-4 self-start sticky top-24">
+        {cartHeader}
+        {cartBody}
+      </aside>
+
+      {!isEmpty && !mobileSheetOpen && (
+        <button
+          type="button"
+          onClick={() => setMobileSheetOpen(true)}
+          className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-[#FF7700] text-white px-4 py-3 flex items-center justify-between shadow-[0_-4px_16px_rgba(0,0,0,0.12)]"
+        >
+          <span className="text-sm font-medium">
+            Корзина · {itemsCount} {itemsWord(itemsCount)}
+          </span>
+          <span className="text-sm font-medium">
+            {Math.round(totalKcal)} ккал
+          </span>
+        </button>
+      )}
+
+      {mobileSheetOpen && (
+        <div className="lg:hidden fixed inset-0 z-40 flex flex-col">
+          <div
+            className="flex-1 bg-black/40"
+            onClick={() => setMobileSheetOpen(false)}
+            aria-hidden="true"
+          />
+          <div className="bg-[#FAFAFA] rounded-t-2xl p-4 flex flex-col gap-4 max-h-[85vh] overflow-y-auto">
+            <div className="flex items-center justify-between">
+              <h2 className="text-base font-semibold text-[#0C0310]">Корзина</h2>
+              <div className="flex items-center gap-3">
+                {!isEmpty && (
+                  <button
+                    type="button"
+                    onClick={() => clear()}
+                    className="text-xs text-[#8C8C8C] hover:text-[#0C0310]"
+                  >
+                    Очистить
+                  </button>
+                )}
+                <button
+                  type="button"
+                  aria-label="Закрыть"
+                  onClick={() => setMobileSheetOpen(false)}
+                  className="text-[#8C8C8C] hover:text-[#0C0310] text-2xl leading-none w-6 h-6 flex items-center justify-center"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+            {cartBody}
+          </div>
+        </div>
+      )}
+    </>
   )
 }
