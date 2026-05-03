@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { RestaurantPublic } from '../types/restaurant'
 import { useFavoriteToggle } from '../hooks/useFavoriteToggle'
@@ -43,6 +44,19 @@ export default function RestaurantCard({ restaurant }: Props) {
 
   const { isFavorite, toggle, pending } = useFavoriteToggle(restaurant)
 
+  const isSvg = /\.svg(\?|$)/i.test(photo_url ?? '')
+  const [fit, setFit] = useState<'cover' | 'contain'>(isSvg ? 'contain' : 'cover')
+
+  const onImgLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    if (isSvg) return
+    const { naturalWidth: w, naturalHeight: h } = e.currentTarget
+    if (!w || !h) return
+    const cardRatio = 4 / 3
+    const imgRatio = w / h
+    const diff = Math.abs(imgRatio - cardRatio) / cardRatio
+    setFit(diff > 0.2 ? 'contain' : 'cover')
+  }
+
   const onBookmarkClick = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -60,7 +74,10 @@ export default function RestaurantCard({ restaurant }: Props) {
             src={photo_url}
             alt={name}
             loading="lazy"
-            className="absolute inset-0 w-full h-full object-cover"
+            onLoad={onImgLoad}
+            className={`absolute inset-0 w-full h-full ${
+              fit === 'contain' ? 'object-contain p-3' : 'object-cover'
+            }`}
           />
         )}
         <button
