@@ -43,9 +43,11 @@ export default function MenuItemCard({ item, onClick, onAdd }: Props) {
         </button>
       </div>
       <div className="mt-2 flex flex-col gap-0.5">
-        <div className="text-xs text-[#8C8C8C]">
-          {priceLabel}
-          {calories > 0 && <span>  {calories} ккал</span>}
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-sm font-bold text-[#FF7700]">{priceLabel}</span>
+          {calories > 0 && (
+            <span className="text-xs text-[#8C8C8C]">{calories} ккал</span>
+          )}
         </div>
         <div className="text-xs font-medium text-[#0C0310] line-clamp-2">{name}</div>
         {weight_grams != null && (
