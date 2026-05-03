@@ -64,8 +64,8 @@ const storeCreator: StateCreator<CartState> = (set, get) => ({
   add: async (menu_item_id, quantity = 1) => {
     set({ error: null })
     try {
-      const cart = await addCartItem(menu_item_id, quantity)
-      set({ cart })
+      await addCartItem(menu_item_id, quantity)
+      await get().fetch()
     } catch (e) {
       if (axios.isAxiosError(e) && e.response?.status === 409) {
         set({ conflict: { menu_item_id, quantity } })
@@ -83,8 +83,8 @@ const storeCreator: StateCreator<CartState> = (set, get) => ({
         await get().fetch()
         return
       }
-      const cart = await updateCartItem(item_id, quantity)
-      set({ cart })
+      await updateCartItem(item_id, quantity)
+      await get().fetch()
     } catch (e) {
       set({ error: toMessage(e, 'Не удалось изменить количество') })
     }
@@ -116,8 +116,8 @@ const storeCreator: StateCreator<CartState> = (set, get) => ({
     set({ conflict: null, error: null })
     try {
       await clearCart()
-      const cart = await addCartItem(pending.menu_item_id, pending.quantity)
-      set({ cart })
+      await addCartItem(pending.menu_item_id, pending.quantity)
+      await get().fetch()
     } catch (e) {
       set({ error: toMessage(e, 'Не удалось обновить корзину') })
     }
