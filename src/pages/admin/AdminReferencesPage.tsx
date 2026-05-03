@@ -247,7 +247,7 @@ function ReferenceColumn({
                       type="button"
                       onClick={() => handleSaveEdit(item.id)}
                       disabled={isSaving}
-                      className="px-3 py-1.5 rounded-full bg-[#FF7700] text-white text-xs hover:bg-[#E56A00] disabled:opacity-60"
+                      className="px-3 py-1.5 rounded-full bg-[#FF7700] text-[#0C0310] text-xs hover:bg-[#E56A00] disabled:opacity-60"
                     >
                       {isSaving ? 'Сохраняем…' : 'Сохранить'}
                     </button>
@@ -272,7 +272,7 @@ function ReferenceColumn({
                     <button
                       type="button"
                       onClick={() => setToDelete(item)}
-                      className="px-3 py-1.5 rounded-full bg-[#FF5757] text-white text-xs hover:bg-[#FF5757]"
+                      className="px-3 py-1.5 rounded-full bg-[#FF5757] text-[#0C0310] text-xs hover:bg-[#FF5757]"
                     >
                       Удалить
                     </button>

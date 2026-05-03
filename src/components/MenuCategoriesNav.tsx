@@ -71,27 +71,29 @@ export default function MenuCategoriesNav({
       ref={navRef}
       className="sticky top-0 z-10 -mx-4 px-4 py-2 bg-[#FAFAFA] border-b border-[#F0F0F0]"
     >
-      <div className="flex items-center gap-2 overflow-x-auto">
-        <Chip label="Все" active={activeId === ALL_ID} onClick={() => scrollTo(ALL_ID)} />
-        {hasUserChoice && (
-          <Chip
-            label="Выбор пользователей"
-            active={activeId === USER_CHOICE_ID}
-            onClick={() => scrollTo(USER_CHOICE_ID)}
-          />
-        )}
-        {categories.map((c) => {
-          const id = categoryId(c.id)
-          return (
+      <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 overflow-x-auto min-w-0 flex-1">
+          <Chip label="Все" active={activeId === ALL_ID} onClick={() => scrollTo(ALL_ID)} />
+          {hasUserChoice && (
             <Chip
-              key={c.id}
-              label={c.name}
-              active={activeId === id}
-              onClick={() => scrollTo(id)}
+              label="Выбор пользователей"
+              active={activeId === USER_CHOICE_ID}
+              onClick={() => scrollTo(USER_CHOICE_ID)}
             />
-          )
-        })}
-        <div className="ml-auto flex gap-2 shrink-0">
+          )}
+          {categories.map((c) => {
+            const id = categoryId(c.id)
+            return (
+              <Chip
+                key={c.id}
+                label={c.name}
+                active={activeId === id}
+                onClick={() => scrollTo(id)}
+              />
+            )
+          })}
+        </div>
+        <div className="flex gap-2 shrink-0">
           <div className="relative">
             <Chip label="КБЖУ" active={kbjuActive} onClick={onOpenKbju} />
             {kbjuSlot}
