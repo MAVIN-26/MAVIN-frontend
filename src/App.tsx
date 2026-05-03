@@ -30,6 +30,11 @@ import AdminUsersPage from './pages/admin/AdminUsersPage'
 import AdminPromoPage from './pages/admin/AdminPromoPage'
 import AdminReferencesPage from './pages/admin/AdminReferencesPage'
 import NotFoundPage from './pages/NotFoundPage'
+import TermsPage from './pages/info/TermsPage'
+import ContactsPage from './pages/info/ContactsPage'
+import FaqPage from './pages/info/FaqPage'
+import PartnersPage from './pages/info/PartnersPage'
+import AboutSubscriptionPage from './pages/info/AboutSubscriptionPage'
 
 export default function App() {
   const { token, user, fetchMe } = useAuthStore()
@@ -93,6 +98,11 @@ export default function App() {
           {/* Public */}
           <Route path="/" element={<HomePage />} />
           <Route path="/restaurants/:id" element={<RestaurantPage />} />
+          <Route path="/legal/terms" element={<TermsPage />} />
+          <Route path="/contacts" element={<ContactsPage />} />
+          <Route path="/faq" element={<FaqPage />} />
+          <Route path="/partners" element={<PartnersPage />} />
+          <Route path="/about-subscription" element={<AboutSubscriptionPage />} />
 
           {/* Protected: any authenticated user */}
           <Route element={<ProtectedRoute />}>
