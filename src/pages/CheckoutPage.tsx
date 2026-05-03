@@ -114,7 +114,6 @@ export default function CheckoutPage() {
             address={restaurant?.pickup_address ?? '—'}
             prepMin={restaurant?.preparation_time_min ?? null}
             prepMax={restaurant?.preparation_time_max ?? null}
-            isPremium={!!user?.is_premium}
           />
           <YourOrderCard
             items={cart.items}
@@ -179,12 +178,10 @@ function PickupConditionsCard({
   address,
   prepMin,
   prepMax,
-  isPremium,
 }: {
   address: string
   prepMin: number | null
   prepMax: number | null
-  isPremium: boolean
 }) {
   const prepLabel =
     prepMin != null && prepMax != null
@@ -198,27 +195,6 @@ function PickupConditionsCard({
       <h2 className="text-base font-semibold text-[#0C0310]">
         Условия самовывоза
       </h2>
-
-      <div className="flex flex-wrap gap-3">
-        <div className="rounded-xl bg-white border border-[#E5E5E5] px-4 py-2 text-sm text-[#0C0310]">
-          Стандарт
-        </div>
-        <div
-          className={
-            'rounded-xl border px-4 py-2 text-sm ' +
-            (isPremium
-              ? 'bg-white border-[#FF7700] text-[#0C0310]'
-              : 'bg-white border-[#E5E5E5] text-[#8C8C8C]')
-          }
-          title={
-            isPremium
-              ? 'Доступно по подписке Студент+'
-              : 'Доступно с подпиской Студент+'
-          }
-        >
-          Приоритетное приготовление
-        </div>
-      </div>
 
       <div className="flex items-start gap-2 text-sm text-[#0C0310]">
         <span aria-hidden>📍</span>
@@ -293,7 +269,7 @@ function YourOrderCard({
                 aria-label={
                   it.quantity === 1 ? 'Убрать блюдо' : 'Уменьшить количество'
                 }
-                onClick={() => onDec(it.menu_item_id, it.quantity)}
+                onClick={() => onDec(it.id, it.quantity)}
                 className="w-7 h-7 rounded-lg bg-white border border-[#E5E5E5] text-[#0C0310] hover:bg-[#F0F0F0]"
               >
                 −
@@ -304,7 +280,7 @@ function YourOrderCard({
               <button
                 type="button"
                 aria-label="Увеличить количество"
-                onClick={() => onInc(it.menu_item_id, it.quantity)}
+                onClick={() => onInc(it.id, it.quantity)}
                 className="w-7 h-7 rounded-lg bg-white border border-[#E5E5E5] text-[#0C0310] hover:bg-[#F0F0F0]"
               >
                 +
