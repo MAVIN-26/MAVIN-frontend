@@ -24,7 +24,9 @@ export default function SubscriptionPage() {
   // Иначе — не оформлена
 
   const headerName = plan?.name ? `«${plan.name}»` : '«Студент+»'
-  const features = plan?.features ?? []
+  const features = (plan?.features ?? []).filter(
+    (f) => !/приоритет/i.test(f),
+  )
 
   const handleBuy = async () => {
     if (!plan) return
@@ -76,7 +78,7 @@ export default function SubscriptionPage() {
               {features.length > 0 ? (
                 <>Что входит: {features.join(', ')}.</>
               ) : (
-                <>Что входит: ИИ-ассистент, скидка 5% на все заказы, приоритетная готовка.</>
+                <>Что входит: ИИ-ассистент, скидка 5% на все заказы.</>
               )}
             </p>
             <p className="mt-1 text-sm text-[#9A9A9A]">
