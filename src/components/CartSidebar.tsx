@@ -112,8 +112,8 @@ export default function CartSidebar({
                       }
                       onClick={() =>
                         it.quantity === 1
-                          ? remove(it.menu_item_id)
-                          : updateQuantity(it.menu_item_id, it.quantity - 1)
+                          ? remove(it.id)
+                          : updateQuantity(it.id, it.quantity - 1)
                       }
                       className="w-7 h-7 rounded-lg bg-white border border-[#E5E5E5] text-[#0C0310] hover:bg-[#F0F0F0] flex items-center justify-center text-sm"
                     >
@@ -125,9 +125,7 @@ export default function CartSidebar({
                     <button
                       type="button"
                       aria-label="Увеличить количество"
-                      onClick={() =>
-                        updateQuantity(it.menu_item_id, it.quantity + 1)
-                      }
+                      onClick={() => updateQuantity(it.id, it.quantity + 1)}
                       className="w-7 h-7 rounded-lg bg-white border border-[#E5E5E5] text-[#0C0310] hover:bg-[#F0F0F0] flex items-center justify-center text-sm"
                     >
                       +
