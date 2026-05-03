@@ -173,11 +173,11 @@ export default function AdminUsersPage() {
                     </Td>
                     <Td>
                       {u.is_blocked ? (
-                        <span className="px-3 py-1 rounded-full bg-[#FF5757] text-white text-xs">
+                        <span className="px-3 py-1 rounded-full bg-[#FF5757] text-[#0C0310] text-xs">
                           Заблокирован
                         </span>
                       ) : (
-                        <span className="px-3 py-1 rounded-full bg-[#CCFF53] text-white text-xs">
+                        <span className="px-3 py-1 rounded-full bg-[#CCFF53] text-[#0C0310] text-xs">
                           Активен
                         </span>
                       )}

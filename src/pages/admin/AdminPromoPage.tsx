@@ -184,14 +184,14 @@ export default function AdminPromoPage() {
                         <button
                           type="button"
                           onClick={() => openEdit(p)}
-                          className="px-3 py-1 rounded-full bg-[#FF7700] text-white text-xs hover:bg-[#E56A00]"
+                          className="px-3 py-1 rounded-full bg-[#FF7700] text-[#0C0310] text-xs hover:bg-[#E56A00]"
                         >
                           Редактировать
                         </button>
                         <button
                           type="button"
                           onClick={() => setToDelete(p)}
-                          className="px-3 py-1 rounded-full bg-[#FF5757] text-white text-xs hover:bg-[#FF5757]"
+                          className="px-3 py-1 rounded-full bg-[#FF5757] text-[#0C0310] text-xs hover:bg-[#FF5757]"
                         >
                           Удалить
                         </button>
@@ -273,7 +273,7 @@ function Badge({
 }) {
   return (
     <span
-      className="inline-block px-3 py-1 rounded-full text-white text-xs"
+      className="inline-block px-3 py-1 rounded-full text-[#0C0310] text-xs"
       style={{ backgroundColor: color }}
     >
       {children}
