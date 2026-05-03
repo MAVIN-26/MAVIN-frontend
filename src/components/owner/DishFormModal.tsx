@@ -4,8 +4,6 @@ import Modal from '../Modal'
 import type { MenuCategory } from '../../types/menuCategory'
 import type { MenuItemOwner, MenuItemCreateBody } from '../../types/menuItemOwner'
 import { useAllergens } from '../../hooks/useAllergens'
-import { uploadImage } from '../../api/upload'
-import { toast } from '../../store/toastStore'
 
 type Mode = 'create' | 'edit'
 
@@ -57,7 +55,6 @@ export default function DishFormModal({
   const { items: allergens } = useAllergens()
   const [state, setState] = useState<FormState>(EMPTY)
   const [submitting, setSubmitting] = useState(false)
-  const [uploading, setUploading] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [formError, setFormError] = useState<string | null>(null)
 
@@ -100,23 +97,6 @@ export default function DishFormModal({
       else next.add(id)
       return { ...s, allergen_ids: next }
     })
-  }
-
-  const handlePhotoPick = async (file: File | null) => {
-    if (!file) return
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('Файл больше 5 МБ')
-      return
-    }
-    setUploading(true)
-    try {
-      const url = await uploadImage(file)
-      setState((s) => ({ ...s, photo_url: url }))
-    } catch (e: unknown) {
-      toast.error(apiMessage(e, 'Не удалось загрузить фото'))
-    } finally {
-      setUploading(false)
-    }
   }
 
   const validate = (): boolean => {
@@ -302,28 +282,26 @@ export default function DishFormModal({
           </div>
         </div>
 
-        <div>
-          <div className="text-sm text-[#3C3C3C] mb-2">Фото</div>
+        <Field label="URL фото">
           <div className="flex items-center gap-3">
-            <label className="px-4 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium cursor-pointer hover:bg-[#E56A00]">
-              {uploading ? 'Загрузка…' : 'Выбрать файл'}
-              <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                hidden
-                onChange={(e) => handlePhotoPick(e.target.files?.[0] ?? null)}
-              />
-            </label>
             {state.photo_url && (
               <img
                 src={state.photo_url}
                 alt=""
-                className="w-12 h-12 rounded-lg object-cover border border-[#E5E5E5]"
+                className="w-12 h-12 rounded-lg object-cover border border-[#E5E5E5] shrink-0"
               />
             )}
-            <span className="text-xs text-[#8C8C8C]">макс. 5 МБ · JPEG/PNG/WebP</span>
+            <input
+              type="text"
+              placeholder="https://..."
+              value={state.photo_url}
+              onChange={(e) =>
+                setState((s) => ({ ...s, photo_url: e.target.value }))
+              }
+              className={`${inputCls} flex-1`}
+            />
           </div>
-        </div>
+        </Field>
 
         {formError && (
           <div className="text-sm text-red-600" role="alert">
@@ -341,7 +319,7 @@ export default function DishFormModal({
           </button>
           <button
             type="submit"
-            disabled={submitting || uploading}
+            disabled={submitting}
             className="px-5 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00] disabled:opacity-60"
           >
             {submitting ? 'Сохранение…' : 'Сохранить'}
