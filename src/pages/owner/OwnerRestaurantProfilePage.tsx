@@ -4,7 +4,6 @@ import {
   getOwnerRestaurant,
   updateOwnerRestaurant,
 } from '../../api/ownerRestaurant'
-import { uploadImage } from '../../api/upload'
 import type {
   RestaurantOwner,
   RestaurantOwnerUpdateBody,
@@ -35,7 +34,6 @@ export default function OwnerRestaurantProfilePage() {
   const [state, setState] = useState<FormState>(EMPTY)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -69,23 +67,6 @@ export default function OwnerRestaurantProfilePage() {
       cancelled = true
     }
   }, [])
-
-  const handlePhotoPick = async (file: File | null) => {
-    if (!file) return
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('Файл больше 5 МБ')
-      return
-    }
-    setUploading(true)
-    try {
-      const url = await uploadImage(file)
-      setState((s) => ({ ...s, photo_url: url }))
-    } catch (e: unknown) {
-      toast.error(apiMessage(e, 'Не удалось загрузить фото'))
-    } finally {
-      setUploading(false)
-    }
-  }
 
   const validate = (): boolean => {
     const next: Record<string, string> = {}
@@ -268,25 +249,22 @@ export default function OwnerRestaurantProfilePage() {
                 />
               )}
             </div>
-            <label className="px-4 py-2 rounded-full bg-[#FF7700] text-white text-sm font-medium cursor-pointer hover:bg-[#E56A00]">
-              {uploading ? 'Загрузка…' : 'Загрузить'}
-              <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                hidden
-                onChange={(e) => handlePhotoPick(e.target.files?.[0] ?? null)}
-              />
-            </label>
-            <span className="text-xs text-[#8C8C8C]">
-              макс. 5 МБ · JPEG/PNG/WebP
-            </span>
+            <input
+              type="text"
+              placeholder="https://..."
+              value={state.photo_url}
+              onChange={(e) =>
+                setState((s) => ({ ...s, photo_url: e.target.value }))
+              }
+              className={`${inputCls} flex-1`}
+            />
           </div>
         </div>
 
         <div className="flex items-center justify-end pt-2">
           <button
             type="submit"
-            disabled={saving || uploading}
+            disabled={saving}
             className="px-5 py-2.5 rounded-full bg-[#FF7700] text-white text-sm font-medium hover:bg-[#E56A00] disabled:opacity-60"
           >
             {saving ? 'Сохранение…' : 'Сохранить'}
