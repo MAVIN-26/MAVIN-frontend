@@ -124,6 +124,7 @@ function RestaurantContent({ restaurant }: { restaurant: RestaurantPublic }) {
         <UserChoiceSection
           restaurantId={restaurantId}
           id={USER_CHOICE_ID}
+          filters={filters}
           onEmptyChange={setUserChoiceEmpty}
           onItemClick={setSelectedItem}
           onItemAdd={handleCardAdd}

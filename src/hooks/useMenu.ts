@@ -10,14 +10,32 @@ interface State {
 
 const INITIAL: State = { items: [], loading: false, error: null }
 
-export function useUserChoice(restaurantId: number | null) {
+export function useUserChoice(
+  restaurantId: number | null,
+  filters: MenuQuery = {},
+) {
   const [state, setState] = useState<State>(INITIAL)
+  const {
+    max_calories,
+    max_price,
+    max_proteins,
+    max_fats,
+    max_carbs,
+    exclude_allergen_ids,
+  } = filters
 
   useEffect(() => {
     if (restaurantId == null) return
     let cancelled = false
     setState({ items: [], loading: true, error: null })
-    getMenuUserChoice(restaurantId)
+    getMenuUserChoice(restaurantId, {
+      max_calories,
+      max_price,
+      max_proteins,
+      max_fats,
+      max_carbs,
+      exclude_allergen_ids,
+    })
       .then((items) => {
         if (cancelled) return
         setState({ items, loading: false, error: null })
@@ -31,7 +49,15 @@ export function useUserChoice(restaurantId: number | null) {
     return () => {
       cancelled = true
     }
-  }, [restaurantId])
+  }, [
+    restaurantId,
+    max_calories,
+    max_price,
+    max_proteins,
+    max_fats,
+    max_carbs,
+    exclude_allergen_ids,
+  ])
 
   return state
 }

@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
 import { useUserChoice } from '../hooks/useMenu'
 import MenuItemCard from './MenuItemCard'
-import type { MenuItemPublic } from '../types/menuItem'
+import type { MenuItemPublic, MenuQuery } from '../types/menuItem'
 
 interface Props {
   restaurantId: number
   id?: string
+  filters?: MenuQuery
   onItemClick?: (item: MenuItemPublic) => void
   onItemAdd?: (item: MenuItemPublic) => void
   onEmptyChange?: (isEmpty: boolean) => void
@@ -14,11 +15,12 @@ interface Props {
 export default function UserChoiceSection({
   restaurantId,
   id,
+  filters,
   onItemClick,
   onItemAdd,
   onEmptyChange,
 }: Props) {
-  const { items, loading, error } = useUserChoice(restaurantId)
+  const { items, loading, error } = useUserChoice(restaurantId, filters)
 
   // Expose emptiness so parent can hide the nav chip for this section.
   useEffect(() => {
