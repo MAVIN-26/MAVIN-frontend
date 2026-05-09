@@ -82,6 +82,8 @@ export default function AdminRestaurantsPage() {
         preparation_time_max: body.preparation_time_max,
         description: body.description,
         photo_url: body.photo_url,
+        card_bg_color: body.card_bg_color,
+        card_bg_image_url: body.card_bg_image_url,
       })
       toast.success('Изменения сохранены')
     }
