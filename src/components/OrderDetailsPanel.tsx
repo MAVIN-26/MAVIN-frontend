@@ -33,9 +33,10 @@ export default function OrderDetailsPanel({
   restaurantId,
   onCancelled,
 }: Props) {
-  const subtotal = order.items.reduce((s, it) => s + it.subtotal, 0)
+  const subtotal = order.subtotal
   const total = order.total
-  const discount = order.total_discount
+  const discount = Math.max(0, subtotal - total)
+  const discountPercent = order.discount_percent
 
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [cancelling, setCancelling] = useState(false)
@@ -116,7 +117,9 @@ export default function OrderDetailsPanel({
           <span className="tabular-nums">{formatPrice(subtotal)}</span>
         </div>
         <div className="flex justify-between text-sm text-[#0C0310]">
-          <span>Скидка</span>
+          <span>
+            Скидка{discountPercent > 0 ? ` (${discountPercent}%)` : ''}
+          </span>
           <span className="tabular-nums">
             {discount > 0 ? `−${formatPrice(discount)}` : formatPrice(0)}
           </span>
