@@ -39,7 +39,7 @@ function BookmarkIcon({ filled }: { filled: boolean }) {
 }
 
 export default function RestaurantCard({ restaurant }: Props) {
-  const { id, name, photo_url, average_rating } = restaurant
+  const { id, name, photo_url, average_rating, card_bg_color, card_bg_image_url } = restaurant
   const rating = average_rating?.toFixed(1).replace('.', ',') ?? '—'
 
   const { isFavorite, toggle, pending } = useFavoriteToggle(restaurant)
@@ -68,7 +68,13 @@ export default function RestaurantCard({ restaurant }: Props) {
       to={`/restaurants/${id}`}
       className="group flex flex-col focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF7700]/60 rounded-lg"
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-[#D9D9D9]">
+      <div
+        className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-[#D9D9D9] bg-center bg-cover"
+        style={{
+          backgroundColor: card_bg_color ?? undefined,
+          backgroundImage: card_bg_image_url ? `url(${card_bg_image_url})` : undefined,
+        }}
+      >
         {photo_url && (
           <img
             src={photo_url}

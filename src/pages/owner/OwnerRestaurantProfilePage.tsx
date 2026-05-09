@@ -18,6 +18,8 @@ interface FormState {
   photo_url: string
   preparation_time_min: string
   preparation_time_max: string
+  card_bg_color: string
+  card_bg_image_url: string
 }
 
 const EMPTY: FormState = {
@@ -27,6 +29,8 @@ const EMPTY: FormState = {
   photo_url: '',
   preparation_time_min: '',
   preparation_time_max: '',
+  card_bg_color: '',
+  card_bg_image_url: '',
 }
 
 export default function OwnerRestaurantProfilePage() {
@@ -53,6 +57,8 @@ export default function OwnerRestaurantProfilePage() {
             r.preparation_time_min != null ? String(r.preparation_time_min) : '',
           preparation_time_max:
             r.preparation_time_max != null ? String(r.preparation_time_max) : '',
+          card_bg_color: r.card_bg_color ?? '',
+          card_bg_image_url: r.card_bg_image_url ?? '',
         })
         setError(null)
       })
@@ -109,6 +115,8 @@ export default function OwnerRestaurantProfilePage() {
           state.preparation_time_max === ''
             ? null
             : Number(state.preparation_time_max),
+        card_bg_color: state.card_bg_color.trim() || null,
+        card_bg_image_url: state.card_bg_image_url.trim() || null,
       }
       const updated = await updateOwnerRestaurant(body)
       setData(updated)
@@ -258,6 +266,71 @@ export default function OwnerRestaurantProfilePage() {
               }
               className={`${inputCls} flex-1`}
             />
+          </div>
+        </div>
+
+        <div>
+          <div className="text-sm text-[#3C3C3C] mb-2">Фон карточки ресторана</div>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2">
+              <input
+                type="color"
+                value={state.card_bg_color || '#FFFFFF'}
+                onChange={(e) =>
+                  setState((s) => ({ ...s, card_bg_color: e.target.value }))
+                }
+                className="h-10 w-14 rounded-lg border border-[#E5E5E5] cursor-pointer"
+              />
+              <input
+                type="text"
+                placeholder="#FFE5B4"
+                value={state.card_bg_color}
+                onChange={(e) =>
+                  setState((s) => ({ ...s, card_bg_color: e.target.value }))
+                }
+                className={`${inputCls} w-32`}
+              />
+              {state.card_bg_color && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    setState((s) => ({ ...s, card_bg_color: '' }))
+                  }
+                  className="text-xs text-[#8C8C8C] hover:text-[#0C0310] underline"
+                >
+                  сброс
+                </button>
+              )}
+            </div>
+            <input
+              type="text"
+              placeholder="URL фонового изображения (https://...)"
+              value={state.card_bg_image_url}
+              onChange={(e) =>
+                setState((s) => ({ ...s, card_bg_image_url: e.target.value }))
+              }
+              className={inputCls}
+            />
+            <div>
+              <div className="text-xs text-[#8C8C8C] mb-1">Превью</div>
+              <div
+                className="aspect-[4/3] w-40 rounded-xl border border-[#E5E5E5] bg-[#D9D9D9] bg-center bg-cover overflow-hidden relative"
+                style={{
+                  backgroundColor: state.card_bg_color || undefined,
+                  backgroundImage: state.card_bg_image_url
+                    ? `url(${state.card_bg_image_url})`
+                    : undefined,
+                }}
+              >
+                {state.photo_url && (
+                  <img
+                    src={state.photo_url}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                )}
+              </div>
+            </div>
           </div>
         </div>
 

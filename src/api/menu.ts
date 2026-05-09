@@ -16,9 +16,11 @@ export async function getMenu(
 // GET /restaurants/{id}/menu/user-choice — top dishes (last 30 days)
 export async function getMenuUserChoice(
   restaurantId: number,
+  params: MenuQuery = {},
 ): Promise<MenuItemPublic[]> {
   const res = await client.get<MenuItemPublic[]>(
     `/restaurants/${restaurantId}/menu/user-choice`,
+    { params },
   )
   return res.data
 }

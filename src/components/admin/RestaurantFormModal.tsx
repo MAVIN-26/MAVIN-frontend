@@ -25,6 +25,8 @@ export interface SubmitBody {
   preparation_time_max: number | null
   description?: string
   photo_url?: string
+  card_bg_color?: string | null
+  card_bg_image_url?: string | null
 }
 
 export default function RestaurantFormModal({
@@ -46,6 +48,8 @@ export default function RestaurantFormModal({
   const [prepMax, setPrepMax] = useState('')
   const [description, setDescription] = useState('')
   const [photoUrl, setPhotoUrl] = useState('')
+  const [cardBgColor, setCardBgColor] = useState('')
+  const [cardBgImageUrl, setCardBgImageUrl] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
 
@@ -70,6 +74,8 @@ export default function RestaurantFormModal({
       )
       setDescription(initial.description ?? '')
       setPhotoUrl(initial.photo_url ?? '')
+      setCardBgColor(initial.card_bg_color ?? '')
+      setCardBgImageUrl(initial.card_bg_image_url ?? '')
     } else {
       setName('')
       setAddress('')
@@ -79,6 +85,8 @@ export default function RestaurantFormModal({
       setPrepMax('')
       setDescription('')
       setPhotoUrl('')
+      setCardBgColor('')
+      setCardBgImageUrl('')
     }
   }, [open, mode, initial])
 
@@ -153,6 +161,8 @@ export default function RestaurantFormModal({
     if (mode === 'edit') {
       body.description = description
       body.photo_url = photoUrl
+      body.card_bg_color = cardBgColor.trim() || null
+      body.card_bg_image_url = cardBgImageUrl.trim() || null
     }
 
     setError(null)
@@ -284,6 +294,63 @@ export default function RestaurantFormModal({
                 className="w-full h-11 px-4 rounded-xl border border-[#E5E5E5] text-sm focus:outline-none focus:ring-2 focus:ring-[#FF7700]/40"
               />
             </Field>
+
+            <div className="grid grid-cols-[auto_1fr] gap-3 items-end">
+              <Field label="Цвет фона карточки">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={cardBgColor || '#FFFFFF'}
+                    onChange={(e) => setCardBgColor(e.target.value)}
+                    className="h-11 w-14 rounded-xl border border-[#E5E5E5] cursor-pointer"
+                  />
+                  <input
+                    type="text"
+                    placeholder="#FFE5B4"
+                    value={cardBgColor}
+                    onChange={(e) => setCardBgColor(e.target.value)}
+                    className="w-28 h-11 px-3 rounded-xl border border-[#E5E5E5] text-sm focus:outline-none focus:ring-2 focus:ring-[#FF7700]/40"
+                  />
+                  {cardBgColor && (
+                    <button
+                      type="button"
+                      onClick={() => setCardBgColor('')}
+                      className="text-xs text-[#8C8C8C] hover:text-[#0C0310] underline"
+                    >
+                      сброс
+                    </button>
+                  )}
+                </div>
+              </Field>
+              <Field label="URL фона карточки">
+                <input
+                  type="text"
+                  placeholder="https://..."
+                  value={cardBgImageUrl}
+                  onChange={(e) => setCardBgImageUrl(e.target.value)}
+                  className="w-full h-11 px-4 rounded-xl border border-[#E5E5E5] text-sm focus:outline-none focus:ring-2 focus:ring-[#FF7700]/40"
+                />
+              </Field>
+            </div>
+
+            <div>
+              <span className="block text-xs text-[#8C8C8C] mb-1">Превью карточки</span>
+              <div
+                className="aspect-[4/3] w-40 rounded-xl border border-[#E5E5E5] bg-[#D9D9D9] bg-center bg-cover overflow-hidden relative"
+                style={{
+                  backgroundColor: cardBgColor || undefined,
+                  backgroundImage: cardBgImageUrl ? `url(${cardBgImageUrl})` : undefined,
+                }}
+              >
+                {photoUrl && (
+                  <img
+                    src={photoUrl}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                )}
+              </div>
+            </div>
           </>
         )}
 
