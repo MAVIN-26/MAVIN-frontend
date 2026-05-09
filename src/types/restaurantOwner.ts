@@ -12,6 +12,8 @@ export interface RestaurantOwner {
   review_count: number
   preparation_time_min: number | null
   preparation_time_max: number | null
+  card_bg_color: string | null
+  card_bg_image_url: string | null
   categories: Category[]
 }
 
@@ -22,4 +24,6 @@ export interface RestaurantOwnerUpdateBody {
   pickup_address?: string
   preparation_time_min?: number | null
   preparation_time_max?: number | null
+  card_bg_color?: string | null
+  card_bg_image_url?: string | null
 }
