@@ -256,7 +256,15 @@ function YourOrderCard({
       <ul className="flex flex-col gap-3">
         {items.map((it) => (
           <li key={it.menu_item_id} className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-lg bg-[#E5E5E5] shrink-0" />
+            <div className="w-12 h-12 rounded-lg bg-[#E5E5E5] shrink-0 overflow-hidden">
+              {it.photo_url && (
+                <img
+                  src={it.photo_url}
+                  alt={it.name}
+                  className="w-full h-full object-cover"
+                />
+              )}
+            </div>
             <div className="flex-1 min-w-0">
               <div className="text-sm text-[#0C0310] truncate">{it.name}</div>
               <div className="text-xs text-[#8C8C8C]">

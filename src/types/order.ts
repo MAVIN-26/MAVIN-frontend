@@ -1,5 +1,5 @@
 // Strictly matches swagger schemas: OrderListItem, OrderDetail.
-import type { CartItem } from './cart'
+// Денежные поля (Decimal) приходят с бэкенда строками — нормализуются в number в api/orders.ts.
 
 export type OrderStatus =
   | 'created'
@@ -12,22 +12,37 @@ export type PaymentMethod = 'card_online' | 'cash_on_receipt'
 
 export interface OrderListItem {
   id: number
+  created_at: string
+  total: number
+  restaurant_id: number
   restaurant_name: string
   status: OrderStatus
-  total: number
-  pickup_time: string
-  created_at: string
 }
 
-export interface OrderDetail extends OrderListItem {
-  pickup_address: string
-  items: CartItem[]
-  comment?: string
+export interface OrderItem {
+  id: number
+  menu_item_id: number | null
+  name: string
+  price: number
+  quantity: number
+  subtotal: number
+}
+
+export interface OrderDetail {
+  id: number
+  status: OrderStatus
+  pickup_time: string
+  comment?: string | null
   payment_method: PaymentMethod
+  subtotal: number
+  discount_percent: number
+  total: number
   promo_code: string | null
-  promo_discount_percent: number | null
-  subscription_discount_percent: number | null
-  total_discount: number
+  restaurant_id: number
+  restaurant_name: string
+  pickup_address: string
+  created_at: string
+  items: OrderItem[]
 }
 
 export interface CreateOrderPayload {
